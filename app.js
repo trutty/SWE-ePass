@@ -63,7 +63,11 @@ app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/login', routes.login);
 app.get('/signup', routes.signup);
-app.get('/logout', routes.logout);
+app.get('/logout', function(req, res) {
+    //req.session.destory();
+    res.redirect('/login');
+});
+
 
 app.post('/login',
   passport.authenticate('local', {  successfullRedirect: '/',
@@ -83,11 +87,6 @@ app.post('/signup', function(req, res) {
     //req.session.user_id = user._id;
     res.redirect('/');
   });
-});
-
-app.post('/logout', function(req, res) {
-    //req.session.destory();
-    res.redirect('/login');
 });
 
 http.createServer(app).listen(app.get('port'), function(){
