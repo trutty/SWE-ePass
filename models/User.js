@@ -46,8 +46,8 @@ var UserSchema = new Schema({
 
   role: {
   	type: String,
-  	'enum': ['user', 'admin'],
-  	'default': 'user',
+  	'enum': ['tutor', 'evaluator', 'student', 'admin'],
+  	'default': 'student',
   	required: true
   }
 });
