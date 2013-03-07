@@ -62,6 +62,7 @@ app.configure('development', function(){
 app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/login', routes.login);
+app.get('/signup', routes.signup);
 
 app.post('/login',
   passport.authenticate('local', {  successfullRedirect: '/',
@@ -69,6 +70,19 @@ app.post('/login',
                                     failureFlash: 'Invalid Username or Password'
                                   })
 );
+
+app.post('/signup', function(req, res) {
+  var user = new User(req.body);
+
+  user.save(function(err) {
+    if(err) {
+      res.redirect('/signup', routes.signup, user);
+    }
+
+    //req.session.user_id = user._id;
+    res.redirect('/');
+  });
+});
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

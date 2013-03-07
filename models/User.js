@@ -60,7 +60,10 @@ UserSchema.virtual('password')
   .set(function(value) {
   	this._password = value;
   	var salt = uuid();
-  	this.passwordHash = bcrypt.encrypt_sync(value, salt);
+  	//this.passwordHash = bcrypt.encrypt_sync(value, salt);
+    var cryptoSalt = crypto.createHash('sha512');
+    this.passwordHash = cryptoSalt.update(value);
+
   });
 
 UserSchema.virtual('passwordConfirm')
