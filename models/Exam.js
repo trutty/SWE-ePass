@@ -17,6 +17,15 @@ var ExamSchema = new Schema({
   },
 
   //user is tutor
+  user: {
+    type: User,
+    required: true
+  },
+
+  accessor: {
+    type: User
+  },
+
   course: {
     type: [Course]
   },
