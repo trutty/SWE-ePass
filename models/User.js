@@ -105,9 +105,6 @@ UserSchema.path('emailAddress').validate(function(v) {
     }
 }, null);
 
-<<<<<<< HEAD
-module.exports = mongoose.model('User', UserSchema);
-=======
 /*
 authSchema.methods.validPassword = function( pwd ) {
     // EXAMPLE CODE!
@@ -120,4 +117,3 @@ var validPassword = function(password) {
 }
 
 module.exports = mongoose.model('User', UserSchema);
->>>>>>> tinkering with passport

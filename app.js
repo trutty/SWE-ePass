@@ -99,17 +99,6 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-<<<<<<< HEAD
-app.get('/', routes.index);
-app.get('/users', user.list);
-app.get('/login', routes.login);
-app.get('/signup', routes.signup);
-app.get('/logout', function(req, res) {
-    //req.session.destory();
-    res.redirect('/login');
-});
-
-=======
 mongoose.connect(app.set('db-uri'), function(err){
     if(err) console.log(err);
 });
@@ -125,7 +114,6 @@ app.get('/login', function(req, res) {
 app.get('/signup', function(req, res, signupInformation) {
   res.render('signup', { title: 'Signup', message: req.flash('error'), information: signupInformation});
 });
->>>>>>> tinkering with passport
 
 app.post('/login',
   passport.authenticate('local', {  successfullRedirect: '/',
