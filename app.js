@@ -31,7 +31,7 @@ app.configure(function(){
   app.use(express.cookieParser());
   app.use(express.session(
     {
-      secret: 'topsecret'
+      secret: 'cockring'
     }
   ));
   app.use(flash());
@@ -47,7 +47,6 @@ passport.serializeUser(function(user, done) {
 });
 
 passport.deserializeUser(function(id, done) {
-  console.log('wuuut');
   User.findOne({ _id: id }, function(err, user) {
     console.log(user);
     done(err, user);

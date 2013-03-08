@@ -16,8 +16,13 @@ var ExamSchema = new Schema({
   	required: true
   },
   
-  score:: {
+  score: {
     type: Number,
+    required: true
+  },
+
+  criteria: {
+    type: [Criteria],
     required: true
   }
 
