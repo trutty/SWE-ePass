@@ -111,6 +111,11 @@ app.get('/login', function(req, res) {
   res.render('login', { title: 'Login', message: req.flash('error'), user: req.user });
 });
 
+app.get('/logout', function(req, res) {
+  req.session.destroy();
+  res.redirect('/login');
+});
+
 app.get('/signup', function(req, res, signupInformation) {
   res.render('signup', { title: 'Signup', message: req.flash('error'), information: signupInformation});
 });
