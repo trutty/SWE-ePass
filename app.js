@@ -10,17 +10,15 @@ var express = require('express')
   , path = require('path')
   , flash = require('connect-flash')
   , passport = require('passport')
+  , util = require('util')
   , LocalStrategy = require('passport-local').Strategy
   , mongoose = require('mongoose')
-  , Schema = mongoose.Schema
+  , mongoStore = require('connect-mongodb')
   , User = require('./models/User.js');
 
-
-mongoose.connect('mongodb://localhost/epass', function(err){
-    if(err) console.log(err);
-});
-
 var app = express();
+
+app.set('db-uri', 'mongodb://localhost/epass');
 
 app.configure(function(){
   app.set('port', process.env.PORT || 3000);
@@ -30,8 +28,12 @@ app.configure(function(){
   app.use(express.logger('dev'));
   app.use(express.bodyParser());
   app.use(express.methodOverride());
-  app.use(express.cookieParser('your secret here'));
-  app.use(express.session());
+  app.use(express.cookieParser());
+  app.use(express.session(
+    {
+      secret: 'topsecret'
+    }
+  ));
   app.use(flash());
   app.use(passport.initialize());
   app.use(passport.session());
@@ -40,25 +42,64 @@ app.configure(function(){
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
+passport.serializeUser(function(user, done) {
+  done(null, user._id);
+});
+
+passport.deserializeUser(function(id, done) {
+  console.log('wuuut');
+  User.findOne({ _id: id }, function(err, user) {
+    console.log(user);
+    done(err, user);
+  });
+
+  done(null, null);
+});
+
 passport.use(new LocalStrategy(
   function(username, password, done) {
-    User.findOne({ username: username }, function(err, user) {
-      if (err) { return done(err); }
-      if (!user) {
-        return done(null, false, { message: 'Incorrect username.' });
-      }
-      if (!user.validPassword(password)) {
-        return done(null, false, { message: 'Incorrect password.' });
-      }
-      return done(null, user);
-    });
+
+        process.nextTick(function () {
+
+          User.findOne({ username: username }, function( err, user ) {
+
+            if(err) { return done(err); }
+            if( !user ) { return done(null, false, {message: 'Unknown User ' + username}); }
+            if( !user.validPassword(password) ) { return done(null, false, {message: 'Invalid password'}); }
+
+            return done(null, user);
+
+          })
+
+        });
   }
 ));
+
+// app.use(function(req, res, next){
+//     // set current_user
+
+//     //console.log(req.session);
+
+//     if(req.session.user_id){
+//         User.find({
+//             _id: req.session.user_id
+//         }, function(err, docs){
+//             if(docs.length == 1){
+//                 req.current_user = docs[0];
+//             }
+//             next();
+//         });
+//     }
+//     else{
+//         next();
+//     }
+// });
 
 app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+<<<<<<< HEAD
 app.get('/', routes.index);
 app.get('/users', user.list);
 app.get('/login', routes.login);
@@ -68,11 +109,28 @@ app.get('/logout', function(req, res) {
     res.redirect('/login');
 });
 
+=======
+mongoose.connect(app.set('db-uri'), function(err){
+    if(err) console.log(err);
+});
+
+app.get('/', function(req, res) {
+  res.render('index', { title: 'Express', user: req.user });
+});
+
+app.get('/login', function(req, res) {
+  res.render('login', { title: 'Login', message: req.flash('error'), user: req.user });
+});
+
+app.get('/signup', function(req, res, signupInformation) {
+  res.render('signup', { title: 'Signup', message: req.flash('error'), information: signupInformation});
+});
+>>>>>>> tinkering with passport
 
 app.post('/login',
   passport.authenticate('local', {  successfullRedirect: '/',
                                     failureRedirect: '/login',
-                                    failureFlash: 'Invalid Username or Password'
+                                    failureFlash: true
                                   })
 );
 

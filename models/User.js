@@ -62,8 +62,7 @@ UserSchema.virtual('password')
   	var salt = uuid();
   	//this.passwordHash = bcrypt.encrypt_sync(value, salt);
     var cryptoSalt = crypto.createHash('sha512');
-    this.passwordHash = cryptoSalt.update(value);
-
+    this.passwordHash = cryptoSalt.update(value).digest('hex');
   });
 
 UserSchema.virtual('passwordConfirm')
@@ -81,13 +80,24 @@ UserSchema.path('passwordHash').validate(function(v) {
             this.invalidate('password', 'must be at least 6 characters.');
         }
         if (this._password !== this._passwordConfirm) {
-            this.invalidate('password2', 'must match confirmation.');
+            this.invalidate('passwordConfirm', 'must match confirmation.');
         }
     }
     if (this.isNew && !this._password) {
-        this.invalidate('password', 'Benötigt');
+        this.invalidate('password', 'Needed');
     }
 }, null);
+
+UserSchema.methods.validPassword = function( password ) {
+
+  var passwordHash = crypto.createHash('sha512').update(password).digest('hex');
+
+  if ( passwordHash === this.passwordHash ) {
+    return true;
+  }
+  
+  return false;
+};
 
 UserSchema.path('emailAddress').validate(function(v) {
     if (!val.check(v).isEmail()) {
@@ -95,4 +105,19 @@ UserSchema.path('emailAddress').validate(function(v) {
     }
 }, null);
 
+<<<<<<< HEAD
 module.exports = mongoose.model('User', UserSchema);
+=======
+/*
+authSchema.methods.validPassword = function( pwd ) {
+    // EXAMPLE CODE!
+    return ( this.password === pwd );
+};
+*/
+
+var validPassword = function(password) {
+  return true;
+}
+
+module.exports = mongoose.model('User', UserSchema);
+>>>>>>> tinkering with passport
