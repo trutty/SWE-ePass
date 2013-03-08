@@ -52,8 +52,6 @@ passport.deserializeUser(function(id, done) {
     console.log(user);
     done(err, user);
   });
-
-  done(null, null);
 });
 
 passport.use(new LocalStrategy(
@@ -121,10 +119,18 @@ app.get('/signup', function(req, res, signupInformation) {
 });
 
 app.post('/login',
-  passport.authenticate('local', {  successfullRedirect: '/',
-                                    failureRedirect: '/login',
-                                    failureFlash: true
-                                  })
+
+  function(req, res, next) {
+    console.log('be postin');
+    next();
+  },
+  passport.authenticate(
+        'local',
+        {  successRedirect: '/',
+           failureRedirect: '/login',
+           failureFlash: true
+        }
+  )
 );
 
 app.post('/signup', function(req, res) {
