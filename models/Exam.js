@@ -15,9 +15,30 @@ var ExamSchema = new Schema({
   	type: String,
   	required: true
   },
+
+  //user is tutor
+  course: {
+    type: [Course]
+  },
+
+  lecture: {
+    type: String,
+    required: true
+  },
+
+  date: {
+    type: Date,
+    default: new Date(),
+    required: true
+  },
+
+  //duration in minutes
+  duration: {
+    type: Integer
+  }
   
-  score: {
-    type: Number,
+  maxPoints: {
+    type: Integer,
     required: true
   },
 

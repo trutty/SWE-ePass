@@ -20,7 +20,7 @@ var CriteriaSchema = new Schema({
       type: String
   },
 
-  subcriterias: {
+  subcriteria: {
     type: [Criteria],
     required: false
   }

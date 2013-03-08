@@ -15,6 +15,21 @@ Validator.prototype.error = function(msg) {
 
 
 var UserSchema = new Schema({
+
+  firstname: {
+    type: String,
+    required: true
+  },
+
+  lastname: {
+    type: String,
+    required: true
+  },
+
+  studentNumber: {
+    type: String
+  },
+
   username: {
   	type: String,
   	required: true
@@ -46,8 +61,8 @@ var UserSchema = new Schema({
 
   role: {
   	type: String,
-  	'enum': ['tutor', 'evaluator', 'student', 'admin'],
-  	'default': 'student',
+  	'enum': ['user' 'tutor', 'evaluator', 'student', 'manager'],
+  	'default': 'user',
   	required: true
   }
 });
