@@ -9,15 +9,15 @@ Validator.prototype.error = function(msg) {
     return false;
 };
 
-var UserPointsSchema = new Schema({
+var CriteriaPointsSchema = new Schema({
 
-  userId: {
-  	type: [User],
+  user: {
+  	type: User,
   	required: true
   },
   
-  exam: {
-    type: [Exam],
+  criteria: {
+    type: Criteria,
     required: true
   },
 
@@ -28,4 +28,4 @@ var UserPointsSchema = new Schema({
 
 });
 
-module.exports = mongoose.model('UserPoints', UserPointsSchema);
+module.exports = mongoose.model('CriteriaPoints', CriteriaPointsSchema);

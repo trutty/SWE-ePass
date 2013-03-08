@@ -1,0 +1,79 @@
+TODO:
+	Accesslevels for User, e.g. Dozent -> Cirteria+Exam, Accessor -> Exam, UserPoints, Student -> UserPoints
+
+	Einpflege der Daten
+	===
+
+	Erstellung Kriterien:
+		Bezeichnung
+		Beschreibung
+		Relative Gewichtung zu Übergeordnetem Kriterium oder Examen
+		Gegebenenfalls Unterkriterien
+
+	Punktevergabe Kriterien:
+		Anzeige des Kriteriums
+		Änderung der Punkte
+
+	Erstellung Exam:
+		Bezeichnung der Klausur
+		Dozent, Fach -> Mit Vorselektion des aktuell angemeldeten Dozenten
+		Datum der Arbeit mit Uhrzeit
+		Maximale Punktzahl für diese Arbeit
+		Kriterienzuordnung
+		Bearbeitungszeit
+
+	Punktevergabe Examen:
+		Anzeige des Examens
+		Punktevergabe des Examens
+
+	Benutzerregistrierung:
+		Vornamen, Nachnamen
+		Loginnamen
+		E-Mail Adresse
+		Matrikelnummer
+		Gruppenzugehörigkeit
+
+	Benutzerverwaltung:
+		Nur E-Mail Ändern
+		Passwort ändern
+
+	Kurse erstellen:
+		Bezeichnung des Kurses
+		Jahrgang
+		Liste der Benutzer des Kurses
+
+	Kursverwaltung:
+		Bei Änderung der Benutzer/Jahrgangs/Bezeichnung des Kurses
+
+	Zuweisung von Benutzern in Gruppen:
+		Liste der Gruppen/Ändern der Gruppe
+
+	Zuweisung von Benutzern/Gruppen zu Examen:
+		Liste der Accessoren/Kurse -> In 2 Tabellen
+
+	Bewertung von Examen:
+		Detailanzeige des Examen
+		Möglichkeit der Feldänderung
+
+	Managerverwaltungsansicht:
+		Benutzerliste mit Lösch- und Editierfunktion (Erweiterte Benutzerverwaltung mit ACTIVE/USERNAME/ect. editierbarkeit)
+
+
+	Ausgabe der Daten
+	===
+
+	Anzeige der Examen/Aufgaben:
+		Anzeige der Examen-Details
+		Anzeige der Punkte/Bewertung
+
+	Anzeige der Kriterien:
+		Anzeige der Kriteriendetails
+		Anzeige der Punkte/Bewertung
+
+	Anzeige der User(Liste):
+		Ausgabe von allen Studierenden, die zu diesem Examen relevant sind
+		Nur Anzeige der Matrikelnummer(?)
+
+	Liste der geschriebenen Examen:
+		Liste der zum Studenten/Dozenten/Accessor zugehörigen Examen
+
