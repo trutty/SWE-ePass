@@ -14,3 +14,12 @@ exports.login = function(req, res) {
 exports.signup = function(req, res, signupInformation) {
 	res.render('signup', { title: 'Signup', message: req.flash('error'), information: signupInformation});
 };
+
+exports.testcase = function( req, res, next ) {
+	console.log('START');
+	console.log(!!req);
+	console.log(!!res);
+	console.log(!!next);
+	console.log(!!test);
+	console.log('END');
+}
