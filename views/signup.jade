@@ -52,5 +52,17 @@ block content
 			emailAddress: "email address",
 			password: "password",
 			passwordConfirm: "Repeat the password",
-			})
-		kendo.bind($("#signup"), signup);		
+			startOver: function() {
+			this.set("firstname", first name);
+			this.set("lastname", last name);
+			this.set("username", username);
+			this.set("emailAddress", email address);
+			this.set("password", password);
+			this.set("passwordConfirm", repeat password);
+			}
+
+
+			});
+		kendo.bind($("#signup"), signup);
+
+
