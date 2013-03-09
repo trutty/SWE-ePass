@@ -12,8 +12,6 @@ Validator.prototype.error = function(msg) {
 };
 
 
-
-
 var UserSchema = new Schema({
 
   firstname: {
@@ -61,7 +59,7 @@ var UserSchema = new Schema({
 
   role: {
   	type: String,
-  	'enum': ['user' 'tutor', 'evaluator', 'student', 'manager'],
+  	'enum': ['user', 'tutor', 'evaluator', 'student', 'manager'],
   	'default': 'user',
   	required: true
   }
@@ -91,8 +89,10 @@ UserSchema.virtual('passwordConfirm')
 
 UserSchema.path('passwordHash').validate(function(v) {
     if (this._password || this._passwordConfirm) {
-        if (!val.check(this._password).min(6)) {
-            this.invalidate('password', 'must be at least 6 characters.');
+        //if (!val.check(this._password).min(6)) {
+        if((this._password).length < 6) {
+          console.log('password length doesn`t match');
+          this.invalidate('password', 'must be at least 6 characters.');
         }
         if (this._password !== this._passwordConfirm) {
             this.invalidate('passwordConfirm', 'must match confirmation.');
