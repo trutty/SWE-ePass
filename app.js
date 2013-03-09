@@ -122,10 +122,6 @@ app.get('/exam', function(req, res, examInformation) {
 });
 
 app.post('/login',
-
-  function(req, res, next) {
-    next();
-  },
   passport.authenticate(
         'local',
         {  successRedirect: '/',
