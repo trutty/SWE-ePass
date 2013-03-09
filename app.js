@@ -117,13 +117,10 @@ app.get('/signup', function(req, res, signupInformation) {
   res.render('signup', { title: 'Signup', message: req.flash('error'), information: signupInformation});
 });
 
-app.get('/exam', function(req, res, examInformation) {
-  res.render('exam', { title: 'New Exam', message: req.flash('error'), information: { accessor: ['accessor 1', 'accessor 2'], course: ['course 1', 'course 2']} });
-});
-
 app.post('/login',
 
   function(req, res, next) {
+    console.log('be postin');
     next();
   },
   passport.authenticate(
