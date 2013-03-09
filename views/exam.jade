@@ -1,0 +1,61 @@
+extends layout
+
+block content
+	p= message
+
+	h1= title
+
+	form(action='/exam', method='post')
+		div
+			label(for='name')
+				| Name:
+				input#name(type='text', name='name')
+
+		div
+			label(for='user')
+				| Tutor:
+				input#user(type='text', name='user')
+
+		div
+			label(for='accessor')
+				| Accessor:
+				select(name='accessor')
+					//TODO add all possible accessors
+					each item in information.accessor
+						option(value='#{item}') #{item}
+
+		div
+			label(for='course')
+				| Course:
+				select(name='course')
+					//TODO add all courses
+					each item in information.course
+						option(value='#{item}') #{item}
+
+		div
+			label(for='lecture')
+				| Lecture:
+				input#lecture(type='text', name='lecture')
+
+		div
+			label(for='date')
+				| Date: 
+				input#date(type='date', name='date')
+
+		div
+			label(for='duration')
+				| Duration in minutes: 
+				input#duration(type='number', name='duration', min='0')
+
+		div
+			label(for='maxPoints')
+				| Maximum Points: 
+				input#maxPoints(type='number', name='maxPoints', min='0')
+
+		div
+			label(for='criteria')
+				| Criteria: 
+				//TODO add criteria
+
+		div
+			input(type='submit', value='Save')
