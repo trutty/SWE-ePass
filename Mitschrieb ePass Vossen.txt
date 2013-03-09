@@ -1,0 +1,12 @@
+Es gibt drei Interfaces:
+- Accessor
+- Dozent
+- Student
+
+Der Dozent ist gleichzeitig auch der Administrator welcher Rechte vergeben kann.
+Administratoren haben ein spezielles Frontend.
+
+Dozent: Bewertungskriterien einpflegen
+Accessor: Bewertet Klausur anhand Kriterien pro Student
+Student: sieht Klausurbewertung ein
+Assign Content: Offline Process
