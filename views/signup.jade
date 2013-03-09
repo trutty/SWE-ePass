@@ -43,3 +43,21 @@ block content
 
 		div
 			input(type='submit', value='Sign Up')
+script
+<form>
+    <label>First Name: <input data-bind="value: firstName" /></label>
+    <label>Last Name: <input data-bind="value: lastName" /></label>
+    <label>Gender:
+        <select data-bind="source: genders, value: gender"></select>
+    </label>
+    <label><input type="checkbox" data-bind="checked: agreed" /> I have read the licence agreement</label>
+    <button data-bind="enabled: agreed, click: register">Register</button>
+    <div data-bind="visible: confirmed">
+        <h4>Confirmation</h4>
+        <div>
+            Thank you for your registration, <span data-bind="text: firstName"></span> <span data-bind="text: lastName"></span>
+            <br /><br />
+            <button data-bind="click: startOver">Start Over</button>
+        </div>
+    </div>
+</form>
