@@ -119,11 +119,17 @@ app.get('/signup', function(req, res, signupInformation) {
   res.render('signup', { title: 'Signup', message: req.flash('error'), information: signupInformation});
 });
 
+app.get('/signup1', function(req, res, signupInformation) {
+  res.render('signup1', { title: 'Signup1', message: req.flash('error'), information: signupInformation});
+});
+
 // exam
 // exam overview
 app.get('/exam', function(req, res) {
   res.render('exam/view/exam', { title: 'Exam Overview', message: req.flash('error') });
 });
+
+
 
 // exam create
 app.get('/exam/new', function(req, res, examInformation) {
