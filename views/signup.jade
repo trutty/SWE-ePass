@@ -5,7 +5,7 @@ block content
 
 	h1= title
 
-	form(action='/signup', method='post')
+	form(action='/signup', method='post', name="signup")
 		div
 			label(for='firstname')
 				| Firstname:
@@ -43,4 +43,13 @@ block content
 
 		div
 			input(type='submit', value='Sign Up')
-			
+
+	script
+		var signup = kendo.observable({
+			firstname: "first name"
+			lastname: "last name"
+			username: "username"
+			emailAddress: "email address"
+			password: "password"
+			passwordConfirm: "Repeat the password"
+			})		
