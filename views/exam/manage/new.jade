@@ -7,16 +7,21 @@ block content
 
 	form(action='/exam', method='post')
 		div
+			// Bezeichnung der Klausur
 			label(for='name')
 				| Name:
 				input#name(type='text', name='name')
 
 		div
+			// Dozent
+			// Autocomplete für andere Dozenten
 			label(for='user')
 				| Tutor:
-				input#user(type='text', name='user')
+				input#user(type='text', name='user', value=(tutor) ? tutor.username : '')
 
 		div
+			// Accessor
+			// Autocomplete für Accessoren
 			label(for='accessor')
 				| Accessor:
 				select(name='accessor')
@@ -25,6 +30,8 @@ block content
 						option(value='#{item}') #{item}
 
 		div
+			// Kurs
+			// Autocomplete für Kurse
 			label(for='course')
 				| Course:
 				select(name='course')
@@ -33,26 +40,31 @@ block content
 						option(value='#{item}') #{item}
 
 		div
+			// Fach
 			label(for='lecture')
 				| Lecture:
-				input#lecture(type='text', name='lecture')
+				input#lecture(type='text', name='lecture', value=tutor ? tutor.lecture : '')
 
 		div
+			// Datum der Klausur (mit Uhrzeit)
 			label(for='date')
 				| Date: 
 				input#date(type='date', name='date')
 
 		div
+			// Dauer der Klausur
 			label(for='duration')
 				| Duration in minutes: 
-				input#duration(type='number', name='duration', min='0')
+				input#duration(type='number', name='duration', min='0', value=90)
 
 		div
+			// Maximale Anzahl der Punkte für diese Arbeit
 			label(for='maxPoints')
 				| Maximum Points: 
 				input#maxPoints(type='number', name='maxPoints', min='0')
 
 		div
+			// Verknüpfte Kriterien für diese Klausur
 			label(for='criteria')
 				| Criteria: 
 				//TODO add criteria
