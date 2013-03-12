@@ -1,0 +1,25 @@
+extends ../../layout
+
+block content
+	p= message
+
+	h1= title
+
+	form(action='/criteria', method='post')
+		div
+			label(for='name')
+				| Name:
+				input#name(type='text', name='name')
+
+		div
+			label(for='year')
+				| Year:
+				input#year(type='text', name='year', 
+					value= new Date().getFullYear())
+
+		div
+			label(for='students')
+				| Students:
+				select(name='students')
+					each student in users
+						option(value='#{student.id}') #{student.username}

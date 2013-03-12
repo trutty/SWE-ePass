@@ -37,7 +37,7 @@ app.configure(function(){
   app.use(passport.initialize());
   app.use(passport.session());
   app.use(app.router);
-  app.use(require('stylus').middleware(__dirname + '/public'));
+  app.use(require('less-middleware')({ src: __dirname + '/public' }));
   app.use(express.static(path.join(__dirname, 'public')));
 });
 
@@ -100,10 +100,19 @@ mongoose.connect(app.set('db-uri'), function(err){
 });
 
 
+// get all users
+findUsers = function() {
+  User.find({}, function (err, docs) {
+    return docs;
+  });
+}
+
+
 // Routes
 require('./routes')(app, passport); // user auth
 require('./routes/exam')(app);
 require('./routes/criteria')(app);
+require('./routes/course')(app, findUsers);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
