@@ -12,6 +12,9 @@ module.exports = function(app){
 
 	// exam create
 	app.get('/exam/new', function(req, res) {
+	
+	console.log('Courses: ' + Course.find({}));
+
 	  res.render('exam/manage/new',
 	    {
 	      title: 'New Exam',

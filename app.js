@@ -13,7 +13,8 @@ var express = require('express')
   , LocalStrategy = require('passport-local').Strategy
   , mongoose = require('mongoose')
   , mongoStore = require('connect-mongodb')
-  , User = require('./models/User.js');
+  , User = require('./models/User.js')
+  , Course = require('./models/Course.js');
 
 var app = express();
 

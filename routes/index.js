@@ -9,6 +9,7 @@ module.exports = function(app, passport){
 	});
 
 	app.get('/login', function(req, res) {
+		console.log('login user: ' + req.user);
 		res.render('login', { title: 'Login', message: req.flash('error'), user: req.user });
 	});
 

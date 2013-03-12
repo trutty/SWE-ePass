@@ -17,7 +17,7 @@ var CourseSchema = new Schema({
   },
 
   year: {
-    type: Integer,
+    type: Number,
     required: true
   },
 
