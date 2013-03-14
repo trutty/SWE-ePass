@@ -3,7 +3,7 @@
  * Routes for exam creation, manipulation and view
  */
 
-module.exports = function(app, Course, Criteria){
+module.exports = function(app, User, Course, Criteria){
 	// exam
 	// exam overview
 	app.get('/exam', function(req, res) {
@@ -14,19 +14,18 @@ module.exports = function(app, Course, Criteria){
 	app.get('/exam/new', function(req, res) {
 
 		Course.find({}, function (err, docs) {
-
-			res.render('exam/manage/new',
-	    	{
-	    		title: 'New Exam',
-	    		message: req.flash('error'),
-	    		tutor: req.user,
-	    		courses: docs,
-	    		information:
-	        	{
-	        		accessor: ['accessor 1', 'accessor 2']
-	        	}
-	    	});
+			User.find({role: 'assessor'}, function(err, result) {
+				res.render('exam/manage/new',
+	    		{
+	    			title: 'New Exam',
+	    			message: req.flash('error'),
+	    			tutor: req.user,
+	    			courses: docs,
+	    			assessors: result
+	    		});
+			});
 		});
+
 	});
 
 	// exam edit

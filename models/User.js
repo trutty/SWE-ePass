@@ -59,7 +59,7 @@ var UserSchema = new Schema({
 
   role: {
   	type: String,
-  	'enum': ['user', 'tutor', 'evaluator', 'student', 'manager'],
+  	'enum': ['user', 'tutor', 'assessor', 'student', 'manager'],
   	'default': 'user',
   	required: true
   }

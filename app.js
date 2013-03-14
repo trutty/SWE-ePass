@@ -107,7 +107,7 @@ mongoose.connect(app.set('db-uri'), function(err){
 
 // Routes
 require('./routes')(app, User, passport); // user auth
-require('./routes/exam')(app, Course, Criteria);
+require('./routes/exam')(app, User, Course, Criteria);
 require('./routes/criteria')(app);
 require('./routes/course')(app, User);
 require('./routes/api')(app, User, Course, null);
