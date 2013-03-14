@@ -14,7 +14,7 @@ var express = require('express')
   , mongoose = require('mongoose')
   , mongoStore = require('connect-mongodb')
   , User = require('./models/User.js')
-  , Course = require('./models/Course.js');
+  , Course = require('./models/Course.js')(User);
 
 var app = express();
 
