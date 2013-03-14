@@ -36,8 +36,8 @@ block content
 				| Course:
 				select(name='course')
 					//TODO add all courses
-					each item in information.course
-						option(value='#{item}') #{item}
+					each course in courses
+						option(value='#{course.id}') #{course.name} - #{course.term}
 
 		div
 			// Fach

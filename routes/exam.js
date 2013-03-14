@@ -12,22 +12,21 @@ module.exports = function(app, Course, Criteria){
 
 	// exam create
 	app.get('/exam/new', function(req, res) {
-	
-	console.log('Courses: ' + Course.find({}));
 
-	  res.render('exam/manage/new',
-	    {
-	      title: 'New Exam',
-	      message: req.flash('error'),
-	      tutor: req.user,
+		Course.find({}, function (err, docs) {
 
-	      information: 
-	        {
-	          accessor: ['accessor 1', 'accessor 2'], 
-	          course: ['course 1', 'course 2']
-	        }
-	    }
-	  );
+			res.render('exam/manage/new',
+	    	{
+	    		title: 'New Exam',
+	    		message: req.flash('error'),
+	    		tutor: req.user,
+	    		courses: docs,
+	    		information:
+	        	{
+	        		accessor: ['accessor 1', 'accessor 2']
+	        	}
+	    	});
+		});
 	});
 
 	// exam edit
