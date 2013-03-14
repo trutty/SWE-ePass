@@ -14,7 +14,11 @@ var express = require('express')
   , mongoose = require('mongoose')
   , mongoStore = require('connect-mongodb')
   , User = require('./models/User.js')
-  , Course = require('./models/Course.js')(User);
+  , Course = require('./models/Course.js')(User)
+  , Criteria = require('./models/Criteria.js')
+  , CriteriaPoints = require('./models/CriteriaPoints.js')
+  , Exam = require('./models/Exam.js')(User, Course, Criteria)
+  , ExamPoints = require('./models/ExamPoints.js')(User, Exam, CriteriaPoints);
 
 var app = express();
 
@@ -103,7 +107,7 @@ mongoose.connect(app.set('db-uri'), function(err){
 
 // Routes
 require('./routes')(app, passport); // user auth
-require('./routes/exam')(app);
+require('./routes/exam')(app, Course, Criteria);
 require('./routes/criteria')(app);
 require('./routes/course')(app, User);
 

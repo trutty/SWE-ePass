@@ -1,31 +1,37 @@
-var mongoose = require('mongoose')
+module.exports = function(Criteria){
+
+  var mongoose = require('mongoose')
   , Validator = require('validator').Validator;
 
-var Schema = mongoose.Schema
+  var Schema = mongoose.Schema
   , ObjectId = Schema.ObjectId
   , val = new Validator();
 
-Validator.prototype.error = function(msg) {
+  Validator.prototype.error = function(msg) {
     return false;
-};
+  };
 
-var CriteriaPointsSchema = new Schema({
+  var CriteriaPointsSchema = new Schema({
 
-  user: {
-  	type: User,
-  	required: true
-  },
-  
-  criteria: {
-    type: Criteria,
-    required: true
-  },
+    user: {
+      type: Schema.ObjectId,
+      ref: 'User',
+      required: true
+    },
 
-  points: {
-    type: Integer,
-    required: true
-  }
+    criteria: {
+      type: Schema.ObjectId,
+      ref: 'Criteria',
+      required: true
+    },
 
-});
+    points: {
+      type: Number,
+      required: true
+    }
 
-module.exports = mongoose.model('CriteriaPoints', CriteriaPointsSchema);
+  });
+
+  return mongoose.model('CriteriaPoints', CriteriaPointsSchema);
+
+}

@@ -3,7 +3,7 @@
  * Routes for exam creation, manipulation and view
  */
 
-module.exports = function(app){
+module.exports = function(app, Course, Criteria){
 	// exam
 	// exam overview
 	app.get('/exam', function(req, res) {

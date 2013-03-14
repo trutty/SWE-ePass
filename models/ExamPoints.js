@@ -1,36 +1,42 @@
-var mongoose = require('mongoose')
+module.exports = function(User, Exam, CriteriaPoints) {
+
+  var mongoose = require('mongoose')
   , Validator = require('validator').Validator;
 
-var Schema = mongoose.Schema
+  var Schema = mongoose.Schema
   , ObjectId = Schema.ObjectId
   , val = new Validator();
 
-Validator.prototype.error = function(msg) {
+  Validator.prototype.error = function(msg) {
     return false;
-};
+  };
 
-var ExamPointsSchema = new Schema({
+  var ExamPointsSchema = new Schema({
 
-  user: {
-  	type: User,
-  	required: true
-  },
-  
-  exam: {
-    type: Exam,
-    required: true
-  },
+    user: {
+      type: Schema.ObjectId,
+      ref: 'User',
+      required: true
+    },
 
-  points: {
-    type: Integer,
-    required: true
-  },
+    exam: {
+      type: Schema.ObjectId,
+      ref: 'Exam',
+      required: true
+    },
 
-  criteriaPoints: {
-    type: [CriteriaPoints],
-    required: true;
-  }
+    points: {
+      type: Number,
+      required: true
+    },
 
-});
+    criteriaPoints: {
+      type: [CriteriaPoints],
+      required: true
+    }
 
-module.exports = mongoose.model('ExamPoints', ExamPointsSchema);
+  });
+
+  return mongoose.model('ExamPoints', ExamPointsSchema);
+
+}

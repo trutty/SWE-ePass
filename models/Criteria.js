@@ -21,9 +21,9 @@ var CriteriaSchema = new Schema({
   },
 
   subcriteria: {
-    type: [Criteria],
+    type: [CriteriaSchema],
     required: false
-  }
+  },
 
   score: {
       type: Number,
