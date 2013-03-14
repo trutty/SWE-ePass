@@ -5,7 +5,7 @@ block content
 
 	h1= title
 
-	form(action='/criteria', method='post')
+	form(action='/criteria', method='post', class='k-content')
 		div
 			label(for='name')
 				| Name:
@@ -23,3 +23,42 @@ block content
 				select(name='students')
 					each student in users
 						option(value='#{student.id}') #{student.firstname} #{student.lastname}
+
+		div#allStudents
+		div#studentsInCourse
+
+		script
+			var alphabeticallyOrderedStudents = new kendo.data.HierarchicalDataSource({
+				transport: {
+					read: {
+						url: '/api/students/az/4',
+						dataType: 'json'
+					}
+				},
+				schema: {
+					model: {
+						id: '_id'
+					}
+				}
+			});
+
+			var studentsInCourse = new kendo.data.HierarchicalDataSource({
+				transport: {
+					read: {
+						url: '/api/students/course/#{course.id}',
+						dataType: 'json'
+					}
+				}
+			})
+
+			$('#allStudents').kendoTreeView({
+				dragAndDrop: true,
+				dataSource: alphabeticallyOrderedStudents,
+				dataTextField: 'lastname'
+			}).data('kendoTreeView');
+
+
+			$('#studentsInCourse').kendoTreeView({
+				dragAndDrop: true,
+				dataSource: studentsInCourse
+			}).data('kendoTreeView');

@@ -3,7 +3,8 @@
  * Routes for User auth
  */
 
-module.exports = function(app, passport){
+module.exports = function(app, User, passport){
+
 	app.get('/', function(req, res) {
 		res.render('index', { title: 'Express', user: req.user });
 	});

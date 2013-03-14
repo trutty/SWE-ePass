@@ -106,10 +106,16 @@ mongoose.connect(app.set('db-uri'), function(err){
 
 
 // Routes
+<<<<<<< HEAD
 require('./routes')(app, passport); // user auth
 require('./routes/exam')(app, Course, Criteria);
+=======
+require('./routes')(app, User, passport); // user auth
+require('./routes/exam')(app);
+>>>>>>> fixed some passings of objects
 require('./routes/criteria')(app);
 require('./routes/course')(app, User);
+require('./routes/api')(app, User, Course, null);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

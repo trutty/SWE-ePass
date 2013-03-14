@@ -22,7 +22,8 @@ module.exports = function(app, User){
 		  {
 		    title: 'New Course',
 		    message: req.flash('error'),
-		    users: docs
+		    users: docs,
+		    course: { id: 'abc'}
 		  }
 		);
 
