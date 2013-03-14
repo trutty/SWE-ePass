@@ -101,19 +101,11 @@ mongoose.connect(app.set('db-uri'), function(err){
 });
 
 
-// get all users
-findUsers = function() {
-  User.find({}, function (err, docs) {
-    return docs;
-  });
-}
-
-
 // Routes
 require('./routes')(app, passport); // user auth
 require('./routes/exam')(app);
 require('./routes/criteria')(app);
-require('./routes/course')(app, findUsers);
+require('./routes/course')(app, User);
 
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));

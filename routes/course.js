@@ -3,7 +3,7 @@
  * Routes for course creation, manipulation and view
  */
 
-module.exports = function(app, users){
+module.exports = function(app, User){
 
 	app.get('/courses', function(req, res) {
 	  res.render('course/view/course',
@@ -16,16 +16,18 @@ module.exports = function(app, users){
 
 	app.get('/course/new', function(req, res) {
 
-	  console.log('muh');
-	  console.log(users);
+	  User.find({}, function (err, docs) {
 
-	  res.render('course/manage/new',
-	    {
-	      title: 'New Course',
-	      message: req.flash('error'),
-	      users: users
-	    }
-	  );
+	  	res.render('course/manage/new',
+		  {
+		    title: 'New Course',
+		    message: req.flash('error'),
+		    users: docs
+		  }
+		);
+
+	  });
+
 	});
 
 	// exam edit

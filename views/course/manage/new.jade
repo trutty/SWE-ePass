@@ -22,4 +22,4 @@ block content
 				| Students:
 				select(name='students')
 					each student in users
-						option(value='#{student.id}') #{student.username}
+						option(value='#{student.id}') #{student.firstname} #{student.lastname}
