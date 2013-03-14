@@ -5,24 +5,24 @@ block content
 
 	h1= title
 
-	form(action='/exam', method='post')
+	form(action='/exam/new', method='post')
 		div
 			// Bezeichnung der Klausur
 			label(for='name')
 				| Name:
-				input#name(type='text', name='name')
+				input#name(type='text', name='name', required='true')
 
 		div
 			// Dozent
 			// Autocomplete für andere Dozenten
 			label(for='user')
 				| Tutor:
-				input#user(type='text', name='user', value=(tutor) ? tutor.username : '')
+				input#user(type='text', name='user', required='true', value=(tutor) ? tutor.username : '')
 
 		div
 			// Accessor
 			// Autocomplete für Accessoren
-			label(for='accessor')
+			label(for='assessor')
 				| Accessor:
 				select(name='assessor')
 					//TODO add all possible accessors
@@ -37,13 +37,13 @@ block content
 				select(name='course')
 					//TODO add all courses
 					each course in courses
-						option(value='#{course.id}') #{course.name} - #{course.term}
+						option(value='#{course.id}') #{course.name} (#{course.term})
 
 		div
 			// Fach
 			label(for='lecture')
 				| Lecture:
-				input#lecture(type='text', name='lecture', value=tutor ? tutor.lecture : '')
+				input#lecture(type='text', name='lecture', required='true', value=tutor ? tutor.lecture : '')
 
 		div
 			// Datum der Klausur (mit Uhrzeit)
@@ -55,19 +55,26 @@ block content
 			// Dauer der Klausur
 			label(for='duration')
 				| Duration in minutes: 
-				input#duration(type='number', name='duration', min='0', value=90)
+				input#duration(type='number', name='duration', min='0', value='90', required='true')
 
 		div
 			// Maximale Anzahl der Punkte für diese Arbeit
 			label(for='maxPoints')
 				| Maximum Points: 
-				input#maxPoints(type='number', name='maxPoints', min='0')
+				input#maxPoints(type='number', name='maxPoints', min='0', required='true')
 
 		div
 			// Verknüpfte Kriterien für diese Klausur
 			label(for='criteria')
-				| Criteria: 
+				| Criteria:
 				//TODO add criteria
+				input(type='text', name='criteria[0][name]', required='true')
+				input(type='text', name='criteria[0][description]')
+				input(type='number', min='0', name='criteria[0][score]', required='true')
+				br
+				input(type='text', name='criteria[1][name]', required='true')
+				input(type='text', name='criteria[1][description]')
+				input(type='number', min='0', name='criteria[1][score]', required='true')
 
 		div
 			input(type='submit', value='Save')

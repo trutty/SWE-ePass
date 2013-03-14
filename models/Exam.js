@@ -25,7 +25,7 @@ module.exports = function(User, Course, Criteria){
       required: true
     },
 
-    accessor: {
+    assessor: {
       type: Schema.ObjectId,
       ref: 'User'
     },

@@ -20,11 +20,6 @@ var CriteriaSchema = new Schema({
       type: String
   },
 
-  subcriteria: {
-    type: [CriteriaSchema],
-    required: false
-  },
-
   score: {
       type: Number,
       required: true

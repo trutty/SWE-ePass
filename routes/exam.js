@@ -3,7 +3,7 @@
  * Routes for exam creation, manipulation and view
  */
 
-module.exports = function(app, User, Course, Criteria){
+module.exports = function(app, User, Course, Criteria, Exam){
 	// exam
 	// exam overview
 	app.get('/exam', function(req, res) {
@@ -38,4 +38,16 @@ module.exports = function(app, User, Course, Criteria){
 	  console.log(req.flash);
 	  res.render('exam/view/details', { title: 'Exam Details', message: req.flash('error'), exam: req.params.selectedExam });
 	});
+
+	app.post('/exam/new', function(req, res) {
+		//console.log(req.body);
+
+		var exam = new Exam(req.body);
+		exam.save(function(err) {
+	    	if(err) {
+	      		console.log(err);
+	    	}
+		});
+	});
+
 }
