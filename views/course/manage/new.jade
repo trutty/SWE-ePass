@@ -37,7 +37,7 @@ block content
 				},
 				schema: {
 					model: {
-						id: '_id'
+						children: 'categoryItems'
 					}
 				}
 			});
@@ -48,17 +48,40 @@ block content
 						url: '/api/students/course/#{course.id}',
 						dataType: 'json'
 					}
+				},
+				schema: {
+					model: {
+						children: 'categoryItems'
+					}
 				}
 			})
 
 			$('#allStudents').kendoTreeView({
 				dragAndDrop: true,
 				dataSource: alphabeticallyOrderedStudents,
-				dataTextField: 'lastname'
+				dataTextField: ['categoryName', 'lastname' ]
 			}).data('kendoTreeView');
 
 
 			$('#studentsInCourse').kendoTreeView({
 				dragAndDrop: true,
-				dataSource: studentsInCourse
+				dataSource: studentsInCourse,
+				dataTextField: ['categoryName', 'lastname' ]
 			}).data('kendoTreeView');
+
+			$('#allStudents, #studentsInCourse').data('kendoTreeView').bind('drag', function(e) {
+				if($(e.dropTarget).hasClass('k-in')) {
+					if($(e.dropTarget).hasClass('k-state-hover')) {
+						if($(e.dropTarget).offsetParent().hasClass('k-treeview-lines')) {
+							console.log($(e.dropTarget));
+						} else {
+							e.setStatusClass('k-denied');
+						}
+					} else {
+						e.setStatusClass('k-denied');
+					}
+				} else {
+					e.setStatusClass('k-denied');
+				}
+				
+			});
