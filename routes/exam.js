@@ -13,15 +13,18 @@ module.exports = function(app, User, Course, Criteria, Exam){
 	// exam create
 	app.get('/exam/new', function(req, res) {
 
-		Course.find({}, function (err, docs) {
-			User.find({role: 'assessor'}, function(err, result) {
-				res.render('exam/manage/new',
-	    		{
-	    			title: 'New Exam',
-	    			message: req.flash('error'),
-	    			tutor: req.user,
-	    			courses: docs,
-	    			assessors: result
+		Course.find({}, function (err, docsCourse) {
+			User.find( { $or: [{role: 'assessor'}, {role: 'tutor'}] }, function(err, docsAssessor) {
+				User.find({role: 'tutor'}, function(err, docsTutor) {
+					res.render('exam/manage/new',
+	    			{
+	    				title: 'New Exam',
+	    				message: req.flash('error'),
+	    				tutors: docsTutor,
+	    				self: req.user,
+	    				courses: docsCourse,
+	    				assessors: docsAssessor
+	    			});
 	    		});
 			});
 		});

@@ -17,7 +17,10 @@ block content
 			// Autocomplete für andere Dozenten
 			label(for='user')
 				| Tutor:
-				input#user(type='text', name='user', required='true', value=(tutor) ? tutor.username : '')
+				select(name='user')
+					//TODO add all possible accessors
+					each tutor in tutors
+						option(value='#{tutor.id}' (self.id == tutor.id) ? selected : '') #{tutor.firstname} #{tutor.lastname}
 
 		div
 			// Accessor
@@ -25,7 +28,6 @@ block content
 			label(for='assessor')
 				| Accessor:
 				select(name='assessor')
-					//TODO add all possible accessors
 					each assessor in assessors
 						option(value='#{assessor.id}') #{assessor.firstname} #{assessor.lastname}
 
@@ -35,7 +37,6 @@ block content
 			label(for='course')
 				| Course:
 				select(name='course')
-					//TODO add all courses
 					each course in courses
 						option(value='#{course.id}') #{course.name} (#{course.term})
 
@@ -43,7 +44,7 @@ block content
 			// Fach
 			label(for='lecture')
 				| Lecture:
-				input#lecture(type='text', name='lecture', required='true', value=tutor ? tutor.lecture : '')
+				input#lecture(type='text', name='lecture', required='true')
 
 		div
 			// Datum der Klausur (mit Uhrzeit)
