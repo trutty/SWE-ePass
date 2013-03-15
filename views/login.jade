@@ -5,15 +5,69 @@ block content
 
 	h1= title
 	form(action='/login', method='post')
-		div
+		div(class='k-content')
 			label(for='username')
 				| Username:
-				input#username(type='text', name='username')
+				input#username(class='k-textbox', type='text', name='username')
 
 		div
 			label(for='password')
 				| Password: 
-				input#password(type='password', name='password')
+				input#password(class='k-textbox', type='password', name='password')
 
 		div
-			input(type='submit', value='Log In')
+			input(class='k-button', type='submit', value='Log In')
+
+	br
+
+	form(action='/signup', method='post', id='signup', data-style='inset')
+		div(class='k-content')
+			label(for='firstname')
+				| Firstname:
+				input#firstname(class='k-textbox', type='text', name='firstname', data-bind='value: firstname', pattern="^[A-Za-z-'\\]+$")
+
+		div(class='k-content')
+			label(for='lastname')
+				| Lastname:
+				input#lastname(class='k-textbox', type='text', name='lastname', data-bind='value: lastname', pattern="^[A-Za-z-'\\]+$")
+
+		div(class='k-content')
+			label(for='username')
+				| Username:
+				input#username(class='k-textbox', type='text', name='username', data-bind='value: username', pattern="^[a-z0-9_-]{3,16}$")
+
+		div(class='k-content')
+			label(for='studentNumber')
+				| Student Number:
+				input#studentNumber(class='k-textbox', type='text', name='studentNumber', data-bind='value: studentNumber')
+
+		div
+			label(for='emailAddress')
+				| E-Mail:
+				input#emailAddress(class='k-textbox', type='email', name='emailAddress', data-bind='value: emailAddress')
+
+		div
+			label(for='password')
+				| Password: 
+				input#password(class='k-textbox', type='password', name='password', data-bind='value: password')
+
+		div
+			label(for='passwordConfirm')
+				| Repeat Password: 
+				input#password(class='k-textbox', type='password', name='passwordConfirm', data-bind='value: passwordConfirm')
+
+		div
+			input(class='k-button', type='submit', value='Sign Up')
+
+	script
+
+		var signup = kendo.observable({
+			firstname: 'first name',
+			lastname: 'last name',
+			username: 'username',
+			emailAddress: 'email address',
+			password: '',
+			passwordConfirm: ''
+		});
+
+		kendo.bind($('#signup'), signup);

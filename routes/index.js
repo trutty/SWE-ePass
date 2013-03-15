@@ -11,21 +11,13 @@ module.exports = function(app, User, passport){
 
 	app.get('/login', function(req, res) {
 		console.log('login user: ' + req.user);
-		res.render('login', { title: 'Login', message: req.flash('error'), user: req.user });
+		res.render('login', { title: 'Login/Signup', message: req.flash('error'), user: req.user });
 	});
 
 	app.get('/logout', function(req, res) {
 		req.session.destroy();
 		res.redirect('/');
 	});
-
-	app.get('/signup', function(req, res, signupInformation) {
-		res.render('signup', { title: 'Signup', message: req.flash('error'), information: signupInformation});
-	});
-
-
-
-
 
 	// post
 	app.post('/login',
