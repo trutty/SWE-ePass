@@ -10,14 +10,14 @@ block content
 			// Bezeichnung der Klausur
 			label(for='name')
 				| Name:
-				input#name(type='text', name='name', required='true')
+				input#name(class='k-textbox', type='text', name='name', required='true')
 
 		div
 			// Dozent
 			// Autocomplete für andere Dozenten
 			label(for='user')
 				| Tutor:
-				select(name='user')
+				select(class='k-header', name='user')
 					//TODO add all possible accessors
 					each tutor in tutors
 						option(value='#{tutor.id}' (self.id == tutor.id) ? selected : '') #{tutor.firstname} #{tutor.lastname}
@@ -27,7 +27,7 @@ block content
 			// Autocomplete für Accessoren
 			label(for='assessor')
 				| Accessor:
-				select(name='assessor')
+				select(class='k-header', name='assessor')
 					each assessor in assessors
 						option(value='#{assessor.id}') #{assessor.firstname} #{assessor.lastname}
 
@@ -36,7 +36,7 @@ block content
 			// Autocomplete für Kurse
 			label(for='course')
 				| Course:
-				select(name='course')
+				select(class='k-header', name='course')
 					each course in courses
 						option(value='#{course.id}') #{course.name} (#{course.term})
 
@@ -44,25 +44,25 @@ block content
 			// Fach
 			label(for='lecture')
 				| Lecture:
-				input#lecture(type='text', name='lecture', required='true')
+				input#lecture(class='k-textbox', type='text', name='lecture', required='true')
 
 		div
 			// Datum der Klausur (mit Uhrzeit)
 			label(for='date')
 				| Date: 
-				input#date(type='date', name='date', required='true')
+				input#date(class='k-textbox', type='date', name='date', required='true')
 
 		div
 			// Dauer der Klausur
 			label(for='duration')
 				| Duration in minutes: 
-				input#duration(type='number', name='duration', min='0', value='90', required='true')
+				input#duration(class='k-textbox', type='number', name='duration', min='0', value='90', required='true')
 
 		div
 			// Maximale Anzahl der Punkte für diese Arbeit
 			label(for='maxPoints')
 				| Maximum Points: 
-				input#maxPoints(type='number', name='maxPoints', min='0', required='true')
+				input#maxPoints(class='k-textbox', type='number', name='maxPoints', min='0', required='true')
 
 		div
 			// Verknüpfte Kriterien für diese Klausur
@@ -70,15 +70,15 @@ block content
 				| Criteria:
 				//TODO add criteria
 				div.criteria
-					input(type='text', name='criteria[0][name]', required='true', placeholder='Name')
-					input(type='text', name='criteria[0][description]', placeholder='Description')
-					input(type='number', min='0', name='criteria[0][score]', required='true', placeholder='Score')
+					input(class='k-textbox', type='text', name='criteria[0][name]', required='true', placeholder='Name')
+					input(class='k-textbox', type='text', name='criteria[0][description]', placeholder='Description')
+					input(class='k-textbox', type='number', min='0', name='criteria[0][score]', required='true', placeholder='Score')
 
-				input#addCriteria(type='button', value='+', data-bind='click: addCriteriaFields')
-				input#addCriteria(type='button', value='-', data-bind='click: removeCriteria')
+				input#addCriteria(class='k-button', type='button', value='+', data-bind='click: addCriteriaFields')
+				input#addCriteria(class='k-button', type='button', value='-', data-bind='click: removeCriteria')
 
 		div
-			input(type='submit', value='Save')
+			input(class='k-button', type='submit', value='Save')
 
 
 		script
@@ -87,9 +87,9 @@ block content
 					var num = $('.criteria').length;
 					$('.criteria:last').after(""+
 						"<div class='criteria'>"+
-							"<input type='text', name='criteria["+num+"][name]', placeholder='Name', required='true'>"+
-							"<input type='text', name='criteria["+num+"][description]', placeholder='Description'>"+
-							"<input type='number', min='0', name='criteria["+num+"][score]', placeholder='Score', required='true'>"+
+							"<input class='k-textbox', type='text', name='criteria["+num+"][name]', placeholder='Name', required='true'>"+
+							"<input class='k-textbox', type='text', name='criteria["+num+"][description]', placeholder='Description'>"+
+							"<input class='k-textbox', type='number', min='0', name='criteria["+num+"][score]', placeholder='Score', required='true'>"+
 						"</div>");
 				},
 				removeCriteria : function() {
