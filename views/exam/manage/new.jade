@@ -5,7 +5,7 @@ block content
 
 	h1= title
 
-	form(action='/exam/new', method='post')
+	form(action='/exam/new', method='post', id='examNew')
 		div
 			// Bezeichnung der Klausur
 			label(for='name')
@@ -50,7 +50,7 @@ block content
 			// Datum der Klausur (mit Uhrzeit)
 			label(for='date')
 				| Date: 
-				input#date(type='date', name='date')
+				input#date(type='date', name='date', required='true')
 
 		div
 			// Dauer der Klausur
@@ -69,13 +69,33 @@ block content
 			label(for='criteria')
 				| Criteria:
 				//TODO add criteria
-				input(type='text', name='criteria[0][name]', required='true')
-				input(type='text', name='criteria[0][description]')
-				input(type='number', min='0', name='criteria[0][score]', required='true')
-				br
-				input(type='text', name='criteria[1][name]', required='true')
-				input(type='text', name='criteria[1][description]')
-				input(type='number', min='0', name='criteria[1][score]', required='true')
+				div.criteria
+					input(type='text', name='criteria[0][name]', required='true', placeholder='Name')
+					input(type='text', name='criteria[0][description]', placeholder='Description')
+					input(type='number', min='0', name='criteria[0][score]', required='true', placeholder='Score')
+
+				input#addCriteria(type='button', value='+', data-bind='click: addCriteriaFields')
+				input#addCriteria(type='button', value='-', data-bind='click: removeCriteria')
 
 		div
 			input(type='submit', value='Save')
+
+
+		script
+			var viewModel = {
+				addCriteriaFields : function() {
+					var num = $('.criteria').length;
+					$('.criteria:last').after(""+
+						"<div class='criteria'>"+
+							"<input type='text', name='criteria["+num+"][name]', placeholder='Name', required='true'>"+
+							"<input type='text', name='criteria["+num+"][description]', placeholder='Description'>"+
+							"<input type='number', min='0', name='criteria["+num+"][score]', placeholder='Score', required='true'>"+
+						"</div>");
+				},
+				removeCriteria : function() {
+					if($('.criteria').length > 1) {
+						$('.criteria:last').remove();
+					}
+				}
+			};
+			kendo.bind($("#examNew"), viewModel);

@@ -43,14 +43,18 @@ module.exports = function(app, User, Course, Criteria, Exam){
 	});
 
 	app.post('/exam/new', function(req, res) {
-		//console.log(req.body);
-
 		var exam = new Exam(req.body);
+
+		console.log(req.body);
+
+		/*
 		exam.save(function(err) {
+			console.log(err);
 	    	if(err) {
 	      		console.log(err);
 	    	}
 		});
+		*/
 	});
 
 }
