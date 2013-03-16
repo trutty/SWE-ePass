@@ -12,14 +12,15 @@ html
     script(src='http://cdn.kendostatic.com/2013.1.226/js/kendo.all.min.js')
     
   body(class='k-content')
-    block usermenu
-        a.usermenu(href='/', class='k-link') Home
-        a.usermenu(href='/login', class='k-link') Login/Signup
-        a.usermenu(href='/exam/new', class='k-link') New Exam
-        a.usermenu(href='/exam/details', class='k-link') Exam Details
-        a.usermenu(href='/course/new', class='k-link') New Course
-        a.usermenu(href='/course/edit', class='k-link') Edit Course
-        a.usermenu(href='/course/course', class='k-link') View Course
-        a.usermenu(href='/course/details', class='k-link') Course Details
-        a.usermenu(href='/logout', class='k-link') Logout
+    div.usermenu
+        a.item(href='/', class='k-link') Home
+        a.item(href='/login', class='k-link') Login/Signup
+        a.item(href='/exam/new', class='k-link') New Exam
+        a.item(href='/exam/details', class='k-link') Exam Details
+        a.item(href='/course/new', class='k-link') New Course
+        a.item(href='/course/edit', class='k-link') Edit Course
+        a.item(href='/course/course', class='k-link') View Course
+        a.item(href='/course/details', class='k-link') Course Details
+        a.item(href='/logout', class='k-link') Logout
+    
     block content

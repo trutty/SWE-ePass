@@ -5,9 +5,8 @@ body {
 a {
   color: #00B7FF;
 }
-a.usermenu {
-  margin-right: 10px;
-  margin-left: 10px;
+.usermenu a.item {
+  margin-right: 20px;
 }
 label {
   display: inline;
