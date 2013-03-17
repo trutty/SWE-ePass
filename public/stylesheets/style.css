@@ -3,7 +3,7 @@ body {
   font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
 }
 a {
-  color: #00b7ff;
+  color: #00B7FF;
 }
 .usermenu a.item {
   margin-right: 20px;
@@ -13,6 +13,24 @@ a.usermenu {
   margin-left: 10px;
 }
 label {
-  display: inline;
-  width: 200px;
+  display: block;
+  padding-right: 5px;
+}
+#loginSignup {
+  overflow: hidden;
+}
+#login,
+#signup {
+  float: left;
+}
+#login {
+  margin-right: 80px;
+}
+form table th,
+form table td {
+  text-align: left;
+}
+form table th.button,
+form table td.button {
+  text-align: right;
 }

@@ -4,70 +4,104 @@ block content
 	p= message
 
 	h1= title
-	form(action='/login', method='post')
-		div(class='k-content')
-			label(for='username')
-				| Username:
-				input#username(class='k-textbox', type='text', name='username')
 
-		div
-			label(for='password')
-				| Password: 
-				input#password(class='k-textbox', type='password', name='password')
+	div#loginSignup
 
-		div
-			input(class='k-button', type='submit', value='Log In')
+		form#login.k-content(action='/login', method='post')
+			table
+				tr
+					th
+						label(for='username-login')
+							| Username:
+					td
+						input#username-login.k-textbox(type='text', name='username')
 
-	br
+				tr
+					th
+						label(for='password-login')
+							| Password:
+					td
+						input#password-login.k-textbox(type='password', name='password')
 
-	form(action='/signup', method='post', id='signup', data-style='inset')
-		div(class='k-content')
-			label(for='firstname')
-				| Firstname:
-				input#firstname(class='k-textbox', type='text', name='firstname', data-bind='value: firstname', pattern="^[A-Za-z-'\\]+$")
+				tr
+					td
+						&nbsp;
+					td.button
+						input.k-button(type='submit', value='Log In')
 
-		div(class='k-content')
-			label(for='lastname')
-				| Lastname:
-				input#lastname(class='k-textbox', type='text', name='lastname', data-bind='value: lastname', pattern="^[A-Za-z-'\\]+$")
+		form#signup.k-content(action='/signup', method='post', id='signup', data-style='inset')
+			table
+				tr
+					th
+						label(for='firstname')
+							| Firstname:
+					td
+						input#firstname.k-textbox(type='text', name='firstname', placeholder='Martin'
+							data-bind='value: firstname', pattern="^[A-Za-z-'\\]+$")
 
-		div(class='k-content')
-			label(for='username')
-				| Username:
-				input#username(class='k-textbox', type='text', name='username', data-bind='value: username', pattern="^[a-z0-9_-]{3,16}$")
+				tr
+					th
+						label(for='lastname')
+							| Lastname:
+					td
+						input#lastname.k-textbox(type='text', name='lastname', placeholder='Mustermann'
+							data-bind='value: lastname', pattern="^[A-Za-z-'\\]+$")
 
-		div(class='k-content')
-			label(for='studentNumber')
-				| Student Number:
-				input#studentNumber(class='k-textbox', type='text', name='studentNumber', data-bind='value: studentNumber')
+				tr
+					th
+						label(for='username')
+							| Username:
+					td
+						input#username.k-textbox(type='text', name='username',
+							data-bind='value: username', pattern="^[a-z0-9_-]{3,16}$")
 
-		div
-			label(for='emailAddress')
-				| E-Mail:
-				input#emailAddress(class='k-textbox', type='email', name='emailAddress', data-bind='value: emailAddress')
+				tr
+					th
+						label(for='studentNumber')
+							| Student Number:
+					td
+						input#studentNumber.k-textbox(type='text', name='studentNumber', placeholder='1230004'
+							data-bind='value: studentNumber')
 
-		div
-			label(for='password')
-				| Password: 
-				input#password(class='k-textbox', type='password', name='password', data-bind='value: password')
+				tr
+					th
+						label(for='emailAddress')
+							| Email:
+					td
+						input#emailAddress.k-textbox(type='email', name='emailAddress', placeholder='martin@mustermann.de'
+							data-bind='value: emailAddress')
 
-		div
-			label(for='passwordConfirm')
-				| Repeat Password: 
-				input#password(class='k-textbox', type='password', name='passwordConfirm', data-bind='value: passwordConfirm')
+				tr
+					th
+						label(for='password')
+							| Password:
+					td
+						input#password.k-textbox(type='password', name='password',
+							data-bind='value: password')
 
-		div
-			input(class='k-button', type='submit', value='Sign Up')
+				tr
+					th
+						label(for='passwordConfirm')
+							| Repeat Password:
+					td
+						input#passwordConfirm.k-textbox(type='password', name='passwordConfirm',
+							data-bind='value: passwordConfirm')
 
-	script
+				tr
+					td
+						&nbsp;
+					td.button
+						input.k-button(type='submit', value='Sign Up')
 
-		var signup = kendo.observable({
-			firstname: 'first name',
-			lastname: 'last name',
-			username: 'username',
-			emailAddress: 'email address',
-			password: '',
-			passwordConfirm: ''
-		});
+		script
 
-		kendo.bind($('#signup'), signup);
+			var signup = kendo.observable({
+				firstname: '',
+				lastname: '',
+				username: '',
+				emailAddress: '',
+				password: '',
+				passwordConfirm: ''
+			});
+
+			kendo.bind($('#signup'), signup);
