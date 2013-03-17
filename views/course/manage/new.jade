@@ -6,16 +6,22 @@ block content
 	h1= title
 
 	form(action='/course', method='post', class='k-content')
-		div
-			label(for='name')
-				| Name:
-				input#name(type='text', name='name')
 
-		div
-			label(for='year')
-				| Year:
-				input#year(type='text', name='year', 
-					value= new Date().getFullYear())
+		table
+			tr
+				th
+					label(for='name')
+						| Name:
+				td
+					input#name.k-textbox(type='text', name='name')
+
+			tr
+				th
+					label(for='year')
+						| Year:
+				td
+					input#year.k-textbox(type='text', name='year',
+						value= new Date().getFullYear())
 
 		div
 			label(for='students')
