@@ -13,14 +13,14 @@ html
     
   body(class='k-content')
     div.usermenu
-        a.item(href='/', class='k-link') Home
-        a.item(href='/login', class='k-link') Login/Signup
-        a.item(href='/exam/new', class='k-link') New Exam
-        a.item(href='/exam/details', class='k-link') Exam Details
-        a.item(href='/course/new', class='k-link') New Course
-        a.item(href='/course/edit', class='k-link') Edit Course
-        a.item(href='/course/course', class='k-link') View Course
-        a.item(href='/course/details', class='k-link') Course Details
-        a.item(href='/logout', class='k-link') Logout
+        a.k-link(href='/') Home
+        a.k-link(href='/login') Login/Signup
+        a.k-link(href='/exam/new') New Exam
+        a.k-link(href='/exam/details') Exam Details
+        a.k-link(href='/course/new') New Course
+        a.k-link(href='/course/edit') Edit Course
+        a.k-link(href='/course/course') View Course
+        a.k-link(href='/course/details') Course Details
+        a.k-link(href='/logout') Logout
     
     block content
