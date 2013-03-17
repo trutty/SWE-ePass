@@ -3,7 +3,7 @@
  * Routes for course creation, manipulation and view
  */
 
-module.exports = function(app, User){
+module.exports = function(app, async, User, Course){
 
 	app.get('/courses', function(req, res) {
 	  res.render('course/view/course',

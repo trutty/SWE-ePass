@@ -13,7 +13,8 @@ block content
 					label(for='name')
 						| Name:
 				td
-					input#name.k-textbox(type='text', name='name')
+					input#name.k-textbox(type='text', name='name',
+						placeholder='TINF#{(new Date().getFullYear() + '').substring(2, 4)}A')
 
 			tr
 				th
@@ -21,20 +22,22 @@ block content
 						| Year:
 				td
 					input#year.k-textbox(type='text', name='year',
-						value= new Date().getFullYear())
+						placeholder= new Date().getFullYear())
 
-		div
-			label(for='students')
-				| Students:
-				select(name='students')
-					each student in users
-						option(value='#{student.id}') #{student.firstname} #{student.lastname}
+			tr
+				th
+					label
+						| Students:
+				td
+					div#allStudents
+					div#studentsInCourse
 
-		div#allStudents
-		div#studentsInCourse
-
-		div
-				input(class="k-button", type='submit', value='Create Course')
+			tr
+				td
+					&nbsp;
+				td
+					br
+					input.k-button(type='submit', value='Create Course')
 
 		script
 			var alphabeticallyOrderedStudents = new kendo.data.HierarchicalDataSource({
@@ -51,6 +54,7 @@ block content
 				}
 			});
 
+			/*
 			var studentsInCourse = new kendo.data.HierarchicalDataSource({
 				transport: {
 					read: {
@@ -63,7 +67,8 @@ block content
 						children: 'categoryItems'
 					}
 				}
-			})
+			});
+			*/
 
 			$('#allStudents').kendoTreeView({
 				dragAndDrop: true,
@@ -74,8 +79,13 @@ block content
 
 			$('#studentsInCourse').kendoTreeView({
 				dragAndDrop: true,
-				dataSource: studentsInCourse,
-				dataTextField: ['categoryName', 'lastname' ]
+				dataSource: [
+					{
+						text: 'New Course',
+						items: []
+					}
+				],
+				dataTextField: ['text', 'lastname' ]
 			}).data('kendoTreeView');
 
 			$('#allStudents, #studentsInCourse').data('kendoTreeView').bind('drag', function(e) {

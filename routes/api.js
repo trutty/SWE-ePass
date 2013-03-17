@@ -68,7 +68,20 @@ module.exports = function(app, User, Course, Exam){
 				});
 
 			}, function (err) {
+
+				// order splitted user groups alphabetically (by categoryName)
+				splittedUsers.sort(function(a, b) {
+					if ( a.categoryName < b.categoryName )
+						return -1;
+					if ( a.categoryName > b.categoryName )
+						return 1;
+					return 0;
+				});
+
+
+				// return as json
 				res.json(splittedUsers);
+				
 			});
 		}
 
