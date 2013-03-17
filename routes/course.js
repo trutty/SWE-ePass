@@ -3,7 +3,13 @@
  * Routes for course creation, manipulation and view
  */
 
+<<<<<<< HEAD
 module.exports = function(app, async, User, Course){
+=======
+//var User = require(./models/User);	
+ 
+module.exports = function(app, User){
+>>>>>>> argh
 
 	app.get('/courses', function(req, res) {
 	  res.render('course/view/course',
@@ -14,8 +20,18 @@ module.exports = function(app, async, User, Course){
 	  );
 	});
 
-	app.get('/course/new', function(req, res) {
+	app.post('/course/new', function(req, res) {
+		var course = new Course(req.body);
+			course.save(function(err) {
+				if (err) {
+					res.redirect('/course');
+				}
+				res.redirect('/course');
+			}
+		});
 
+	app.get('/course/new', function(req, res) {
+	  console.log(User)
 	  User.find({}, function (err, docs) {
 
 	  	res.render('course/manage/new',
