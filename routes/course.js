@@ -43,17 +43,17 @@ module.exports = function(app, async, User, Course){
 	});
 
 	app.get('/course/edit', function(req, res) {
-		res.render('/course/manage/edit')
-	})
+		res.render('/course/manage/edit');
+	});
 
 	// exam edit
 	app.get('/course/edit/:selectedCourse', function(req, res, examInformation) {
-	  res.render('course/manage/edit', { title: 'New Exam', message: req.flash('error'), information: { accessor: ['accessor 1', 'accessor 2'], course: ['course 1', 'course 2']} });
+	  res.render('course/manage/edit', { title: 'New Course', message: req.flash('error'), information: { accessor: ['accessor 1', 'accessor 2'], course: ['course 1', 'course 2']} });
 	});
 
-	// exam detail view
-	app.get('/exam/view/:selectedCourse', function(req, res) {
+	// Course detail view
+	app.get('/course/view/:selectedCourse', function(req, res) {
 	  console.log(req.flash);
-	  res.render('course/view/details', { title: 'Exam Details', message: req.flash('error'), exam: req.params.selectedExam });
+	  res.render('course/view/details', { title: 'Course Details', message: req.flash('error'), course: req.params.selectedCourse });
 	});
 }
