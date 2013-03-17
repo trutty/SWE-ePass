@@ -6,7 +6,7 @@
 module.exports = function(app, User, passport){
 
 	app.get('/', function(req, res) {
-		res.render('index', { title: 'SWE ePass', user: req.user });
+		res.render('index', { title: 'Express', user: req.user });
 	});
 
 	app.get('/login', function(req, res) {
@@ -30,12 +30,12 @@ module.exports = function(app, User, passport){
 	  )
 	);
 
-	app.post('/signup', function(req, res) {
+	app.post('/login', function(req, res) {
 	  var user = new User(req.body);
 
 	  user.save(function(err) {
 	    if(err) {
-	      res.redirect('/signup', routes.signup, user);
+	      res.redirect('/login', routes.login, user);
 	    }
 
 	    //req.session.user_id = user._id;

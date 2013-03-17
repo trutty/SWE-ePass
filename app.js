@@ -7,6 +7,7 @@
 var express = require('express')
   , http = require('http')
   , path = require('path')
+  , async = require('async')
   , flash = require('connect-flash')
   , passport = require('passport')
   , util = require('util')
@@ -109,7 +110,7 @@ mongoose.connect(app.set('db-uri'), function(err){
 require('./routes')(app, User, passport); // user auth
 require('./routes/exam')(app, User, Course, Criteria, Exam);
 require('./routes/criteria')(app);
-require('./routes/course')(app, User);
+require('./routes/course')(app, async, User, Course);
 require('./routes/api')(app, User, Course, null);
 
 http.createServer(app).listen(app.get('port'), function(){
