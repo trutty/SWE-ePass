@@ -43,7 +43,16 @@ module.exports = function(app, async, User, Course){
 	});
 
 	app.get('/course/edit', function(req, res) {
-		res.render('/course/manage/edit');
+		Course.find({}, function (err, docs) {
+			res.render('/course/manage/edit',
+			{
+				title: 'List of Courses',
+				message: req.flash('error'),
+				courses: docs
+			}
+			);
+		});
+		
 	});
 
 	// exam edit
