@@ -19,9 +19,9 @@ module.exports = function(app, async, User, Course){
 		var course = new Course(req.body);
 			course.save(function(err) {
 				if (err) {
-					res.redirect('/course');
+					res.redirect('/courses');
 				}
-				res.redirect('/course');
+				res.redirect('/courses');
 			});
 		});
 
@@ -41,6 +41,10 @@ module.exports = function(app, async, User, Course){
 	  });
 
 	});
+
+	app.get('/course/edit', function(req, res) {
+		res.render('/course/manage/edit')
+	})
 
 	// exam edit
 	app.get('/course/edit/:selectedCourse', function(req, res, examInformation) {
