@@ -22,7 +22,7 @@ module.exports = function(app, async, User, Course){
 					res.redirect('/course');
 				}
 				res.redirect('/course');
-			}
+			});
 		});
 
 	app.get('/course/new', function(req, res) {
