@@ -6,80 +6,90 @@ block content
 	h1= title
 
 	form(action='/exam/new', method='post', id='examNew')
-		div
-			// Bezeichnung der Klausur
-			label(for='name')
-				| Name:
-				input#name(class='k-textbox', type='text', name='name', required='true')
+		table
+			tr
+				th
+					label(for='name')
+						| Name:
+				td
+					input#name(class='k-textbox', type='text', name='name', required='true')
 
-		div
-			// Dozent
-			// Autocomplete für andere Dozenten
-			label(for='user')
-				| Tutor:
-				select(class='k-header', name='user')
-					//TODO add all possible accessors
-					each tutor in tutors
-						option(value='#{tutor.id}' (self.id == tutor.id) ? selected : '') #{tutor.firstname} #{tutor.lastname}
+			tr
+				th
+					label(for='user')
+						| Tutor:
+				td
+					select(class='k-header', name='user')
+						each tutor in tutors
+							option(value='#{tutor.id}' (self.id == tutor.id) ? selected : '') #{tutor.firstname} #{tutor.lastname}
+			tr
+				th
+					label(for='assessor')
+						| Accessor:
+				td
+					select(class='k-header', name='assessor')
+						each assessor in assessors
+							option(value='#{assessor.id}') #{assessor.firstname} #{assessor.lastname}
 
-		div
-			// Accessor
-			// Autocomplete für Accessoren
-			label(for='assessor')
-				| Accessor:
-				select(class='k-header', name='assessor')
-					each assessor in assessors
-						option(value='#{assessor.id}') #{assessor.firstname} #{assessor.lastname}
+			tr
+				th
+					label(for='course')
+						| Course:
+				td
+					select(class='k-header', name='course')
+						each course in courses
+							option(value='#{course.id}') #{course.name} (#{course.term})
 
-		div
-			// Kurs
-			// Autocomplete für Kurse
-			label(for='course')
-				| Course:
-				select(class='k-header', name='course')
-					each course in courses
-						option(value='#{course.id}') #{course.name} (#{course.term})
+			tr
+				th
+					label(for='lecture')
+						| Lecture:
+				td
+					input#lecture(class='k-textbox', type='text', name='lecture', required='true')
 
-		div
-			// Fach
-			label(for='lecture')
-				| Lecture:
-				input#lecture(class='k-textbox', type='text', name='lecture', required='true')
+			tr
+				th
+					label(for='date')
+						| Date: 
+				td
+					input#date(class='k-textbox', type='date', name='date', required='true')
 
-		div
-			// Datum der Klausur (mit Uhrzeit)
-			label(for='date')
-				| Date: 
-				input#date(class='k-textbox', type='date', name='date', required='true')
+			tr
+				th
+					label(for='duration')
+						| Duration in minutes: 
+				td
+					input#duration(class='k-textbox', type='number', name='duration', min='0', value='90', required='true')
 
-		div
-			// Dauer der Klausur
-			label(for='duration')
-				| Duration in minutes: 
-				input#duration(class='k-textbox', type='number', name='duration', min='0', value='90', required='true')
+			tr
+				th
+					label(for='maxPoints')
+						| Maximum Points: 
+				td
+					input#maxPoints(class='k-textbox', type='number', name='maxPoints', min='0', required='true')
 
-		div
-			// Maximale Anzahl der Punkte für diese Arbeit
-			label(for='maxPoints')
-				| Maximum Points: 
-				input#maxPoints(class='k-textbox', type='number', name='maxPoints', min='0', required='true')
+			tr
+				th
+					label(for='criteria')
+						| Criteria:
+				td	
+					div.criteria
+						input(class='k-textbox', type='text', name='criteria[0][name]', required='true', placeholder='Name')
+						input(class='k-textbox', type='text', name='criteria[0][description]', placeholder='Description')
+						input(class='k-textbox', type='number', min='0', name='criteria[0][score]', required='true', placeholder='Score')
 
-		div
-			// Verknüpfte Kriterien für diese Klausur
-			label(for='criteria')
-				| Criteria:
-				//TODO add criteria
-				div.criteria
-					input(class='k-textbox', type='text', name='criteria[0][name]', required='true', placeholder='Name')
-					input(class='k-textbox', type='text', name='criteria[0][description]', placeholder='Description')
-					input(class='k-textbox', type='number', min='0', name='criteria[0][score]', required='true', placeholder='Score')
+			tr
+				th
 
-				input#addCriteria(class='k-button', type='button', value='+', data-bind='click: addCriteriaFields')
-				input#addCriteria(class='k-button', type='button', value='-', data-bind='click: removeCriteria')
+				td
+					input#addCriteria(class='k-button', type='button', value='+', data-bind='click: addCriteriaFields')
+					input#addCriteria(class='k-button', type='button', value='-', data-bind='click: removeCriteria')
 
-		div
-			input(class='k-button', type='submit', value='Save')
-
+			tr
+				td
+					input(class='k-button', type='submit', value='Save')
+				td
+					
 
 		script
 			var viewModel = {
