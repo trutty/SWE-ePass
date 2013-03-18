@@ -3,7 +3,7 @@
  * Routes for exam creation, manipulation and view
  */
 
-module.exports = function(app, User, Course, Criteria, Exam){
+module.exports = function (app, User, Course, Criteria, Exam, async){
 	// exam
 	// exam overview
 	app.get('/exam', function(req, res) {
@@ -13,20 +13,42 @@ module.exports = function(app, User, Course, Criteria, Exam){
 	// exam create
 	app.get('/exam/new', function(req, res) {
 
-		Course.find({}, function (err, docsCourse) {
-			User.find( { $or: [{role: 'assessor'}, {role: 'tutor'}] }, function(err, docsAssessor) {
-				User.find({role: 'tutor'}, function(err, docsTutor) {
-					res.render('exam/manage/new',
-	    			{
-	    				title: 'New Exam',
-	    				message: req.flash('error'),
-	    				tutors: docsTutor,
-	    				self: req.user,
-	    				courses: docsCourse,
-	    				assessors: docsAssessor
-	    			});
-	    		});
+		var courses = []
+		  , assessors = []
+		  , tutors = [];
+
+		async.series([
+			
+			function (callback) {
+				Course.find({}, function (err, docsCourse) {
+					callback(err);
+					courses = docsCourse;
+				});
+			},
+			function (callback) {
+				User.find( {role: 'assessor'}, function (err, docsAssessor) {
+					callback(err);
+					assessor = docsAssessor;
+				});
+			},
+			function (callback) {
+				User.find({role: 'tutor'}, function (err, docsTutor) {
+					callback(err);
+					tutors = docsTutor;
+				});
+			}
+
+		], function(error) {
+
+			res.render('exam/manage/new', {
+				title: 'New Exam',
+	    		message: req.flash('error'),
+	    		tutors: tutors,
+	    		self: req.user,
+				courses: courses,
+				assessors: assessors.concat(tutors)
 			});
+
 		});
 
 	});
@@ -43,18 +65,34 @@ module.exports = function(app, User, Course, Criteria, Exam){
 	});
 
 	app.post('/exam/new', function(req, res) {
-		var exam = new Exam(req.body);
+		//var exam = new Exam(req.body);
 
-		console.log(req.body);
+		var crits = [];
+		async.forEach(req.body.criteria, function (item, callback) {
 
-		/*
-		exam.save(function(err) {
-			console.log(err);
-	    	if(err) {
-	      		console.log(err);
-	    	}
+			var criteria = new Criteria(item);
+			criteria.save(function (err) {
+				if(err){
+					callback(err);
+				}
+			});
+
+			crits.push(criteria);
+			callback();
+
+		}, function (errFromCriteria) {
+
+			var examBody = req.body;
+			examBody.criteria = crits;
+
+			var exam = new Exam(examBody);
+			exam.save(function (err) {
+				console.log(errFromCriteria);
+				console.log(err);
+			});
+
 		});
-		*/
+
 	});
 
 }

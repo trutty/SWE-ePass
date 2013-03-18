@@ -14,12 +14,13 @@ var express = require('express')
   , LocalStrategy = require('passport-local').Strategy
   , mongoose = require('mongoose')
   , mongoStore = require('connect-mongodb')
-  , User = require('./models/User.js')
-  , Course = require('./models/Course.js')(User)
-  , Criteria = require('./models/Criteria.js')
-  , CriteriaPoints = require('./models/CriteriaPoints.js')
-  , Exam = require('./models/Exam.js')(User, Course, Criteria)
-  , ExamPoints = require('./models/ExamPoints.js')(User, Exam, CriteriaPoints);
+  , DatabaseObject = require('./models/DataSchemes.js')()
+  , User = DatabaseObject.user
+  , Exam = DatabaseObject.exam
+  , Criteria = DatabaseObject.criteria
+  , CriteriaPoints = DatabaseObject.criteriaPoints
+  , ExamPoints = DatabaseObject.examPoints
+  , Course = DatabaseObject.course;
 
 var app = express();
 
@@ -108,7 +109,7 @@ mongoose.connect(app.set('db-uri'), function(err){
 
 // Routes
 require('./routes')(app, User, passport); // user auth
-require('./routes/exam')(app, User, Course, Criteria, Exam);
+require('./routes/exam')(app, User, Course, Criteria, Exam, async);
 require('./routes/criteria')(app);
 require('./routes/course')(app, async, User, Course);
 require('./routes/api')(app, User, Course, null);
