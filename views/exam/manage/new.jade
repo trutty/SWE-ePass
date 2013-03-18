@@ -21,7 +21,7 @@ block content
 				td
 					select(class='k-header', name='user')
 						each tutor in tutors
-							option(value='#{tutor.id}' (self.id == tutor.id) ? selected : '') #{tutor.firstname} #{tutor.lastname}
+							option(value='#{tutor.id}', selected=( registered.id == tutor.id ? "selected" : undefined) ) #{tutor.firstname} #{tutor.lastname}
 			tr
 				th
 					label(for='assessor')
@@ -77,6 +77,10 @@ block content
 						input(class='k-textbox', type='text', name='criteria[0][name]', required='true', placeholder='Name')
 						input(class='k-textbox', type='text', name='criteria[0][description]', placeholder='Description')
 						input(class='k-textbox', type='number', min='0', name='criteria[0][score]', required='true', placeholder='Score')
+						br
+						input(class='k-textbox', type='text', name='criteria[0][subcriteria][0][name]', required='true', placeholder='Name')
+						input(class='k-textbox', type='text', name='criteria[0][subcriteria][0][description]', placeholder='Description')
+						input(class='k-textbox', type='number', min='0', name='criteria[0][subcriteria][0][score]', required='true', placeholder='Score')
 
 			tr
 				th
@@ -89,7 +93,7 @@ block content
 				td
 					input(class='k-button', type='submit', value='Save')
 				td
-					
+
 
 		script
 			var viewModel = {

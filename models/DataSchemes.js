@@ -33,7 +33,8 @@ module.exports = function(){
 
     username: {
       type: String,
-      required: true
+      required: true,
+      unique: true
     },
 
     emailAddress: {
@@ -141,7 +142,8 @@ module.exports = function(){
 
     name: {
       type: String,
-      required: true
+      required: true,
+      unique: true
     },
 
     year: {
@@ -235,8 +237,7 @@ module.exports = function(){
     },
 
     criteria: {
-      type: [CriteriaSchema],
-      required: true
+      type: [CriteriaSchema]
     }
 
   });

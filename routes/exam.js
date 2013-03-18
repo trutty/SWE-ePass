@@ -21,30 +21,32 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 			
 			function (callback) {
 				Course.find({}, function (err, docsCourse) {
-					callback(err);
 					courses = docsCourse;
+					callback(err);
 				});
 			},
 			function (callback) {
 				User.find( {role: 'assessor'}, function (err, docsAssessor) {
+					assessors = docsAssessor;
 					callback(err);
-					assessor = docsAssessor;
 				});
 			},
 			function (callback) {
-				User.find({role: 'tutor'}, function (err, docsTutor) {
-					callback(err);
+				User.find({role: 'tutor'}, function (err, docsTutor) {					
 					tutors = docsTutor;
+					callback(err);
 				});
 			}
 
 		], function(error) {
 
+			console.log(req.user);
+
 			res.render('exam/manage/new', {
 				title: 'New Exam',
 	    		message: req.flash('error'),
 	    		tutors: tutors,
-	    		self: req.user,
+	    		registered: req.user,
 				courses: courses,
 				assessors: assessors.concat(tutors)
 			});
@@ -69,17 +71,53 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 
 		var crits = [];
 		async.forEach(req.body.criteria, function (item, callback) {
+			
+			var subcrits = [];
+			if(item.subcriteria) {
 
-			var criteria = new Criteria(item);
-			criteria.save(function (err) {
-				if(err){
-					callback(err);
-				}
-			});
+				async.forEach(item.subcriteria, function (subitem, subCallback){
 
-			crits.push(criteria);
-			callback();
+					var subcriteria = new Criteria(subitem);
+					subcriteria.save(function (err) {
+						if(err) {
+							subCallback(err);
+						}
+					});
 
+					subcrits.push(subcriteria);
+					subCallback();
+
+				}, function (err) {
+
+
+					console.log(subcrits);
+					item.criteria = subcrits;
+
+					var criteria = new Criteria(item);
+					criteria.save(function (err) {
+						if(err){
+							callback(err);
+						}
+					});
+
+					crits.push(criteria);
+					callback();
+
+				});
+
+			} else {
+
+				var criteria = new Criteria(item);
+				criteria.save(function (err) {
+					if(err){
+						callback(err);
+					}
+				});
+
+				crits.push(criteria);
+				callback();				
+			}
+			
 		}, function (errFromCriteria) {
 
 			var examBody = req.body;
