@@ -19,14 +19,16 @@ block content
 					label(for='user')
 						| Tutor:
 				td
+					ul.selections
 					select(class='k-header', name='user')
 						each tutor in tutors
-							option(value='#{tutor.id}', selected=( registered.id == tutor.id ? "selected" : undefined) ) #{tutor.firstname} #{tutor.lastname}
+							//option(value='#{tutor.id}', selected=( registered.id == tutor.id ? "selected" : undefined) ) #{tutor.firstname} #{tutor.lastname}
 			tr
 				th
 					label(for='assessor')
 						| Accessor:
 				td
+					ul.selections
 					select(class='k-header', name='assessor')
 						each assessor in assessors
 							option(value='#{assessor.id}') #{assessor.firstname} #{assessor.lastname}
@@ -36,9 +38,11 @@ block content
 					label(for='course')
 						| Course:
 				td
-					select(class='k-header', name='course')
-						each course in courses
-							option(value='#{course.id}') #{course.name} (#{course.term})
+					ul.selections
+					input#course.k-textbox(type='text', name='course')
+					//select(class='k-header', name='course')
+					//	each course in courses
+					//		option(value='#{course.id}') #{course.name} (#{course.term})
 
 			tr
 				th
@@ -113,3 +117,21 @@ block content
 				}
 			};
 			kendo.bind($("#examNew"), viewModel);
+
+			var data = !{JSON.stringify(courses)};
+			$('#course').kendoAutoComplete({
+				dataSource: data,
+				dataTextField: 'name',
+				placeholder: 'Please select at least one course',
+				change: function(e) {
+					var selections = $(this.element).parent().prev();
+					var curData = this.dataItem(this.current().index());
+
+					console.log(curData);
+
+					selections.append("<li>" + curData.name + "<input type='hidden' class='k-textbox' name='course[]' value='" + curData._id + "' /></li>");
+
+
+					this.value('');
+				}
+			});

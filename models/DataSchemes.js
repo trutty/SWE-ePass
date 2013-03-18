@@ -206,13 +206,11 @@ module.exports = function(){
     },
 
     assessor: {
-      type: Schema.ObjectId,
-      ref: 'User'
+      type: [UserSchema]
     },
 
     course: {
-      type: Schema.ObjectId,
-      ref: 'Course'
+      type: [CourseSchema]
     },
 
     lecture: {

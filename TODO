@@ -5,22 +5,19 @@ TODO:
 	===
 
 	Erstellung Kriterien:
-	[x]	Bezeichnung
-	[x]	Beschreibung
-	[x]	Relative Gewichtung zu Übergeordnetem Kriterium oder Examen
-	[x]	Gegebenenfalls Unterkriterien
-
-	Punktevergabe Kriterien:
-	[x]	Anzeige des Kriteriums
-	[x]	Änderung der Punkte
+	[√]	Bezeichnung
+	[√]	Beschreibung
+	[x]	Script für Punktebegrenzung der maximalen Punkte
+	[√]	Gegebenenfalls Unterkriterien (bis lvl 2)
+	[x] Subkriterien +/-
 
 	Erstellung Exam: 
-	[x]	Bezeichnung der Klausur
-	[x]	Dozent, Fach -> Mit Vorselektion des aktuell angemeldeten Dozenten
-	[x]	Datum der Arbeit mit Uhrzeit
-	[x]	Maximale Punktzahl für diese Arbeit
-	[x]	Kriterienzuordnung
-	[x]	Bearbeitungszeit
+	[√]	Bezeichnung der Klausur
+	[√]	Dozent, Fach -> Mit Vorselektion des aktuell angemeldeten Dozenten
+	[x]	Datum der Arbeit mit Uhrzeit (kendo Datums- und Uhrzeits-Selektor)
+	[√]	Maximale Punktzahl für diese Arbeit (Javascript überprüfung der max Punkte)
+	[√]	Kriterienzuordnung
+	[√]	Bearbeitungszeit
 
 	Punktevergabe Examen:
 	[x]	Anzeige des Examens
@@ -31,29 +28,26 @@ TODO:
 	[√]	Loginnamen
 	[√]	E-Mail Adresse
 	[√]	Matrikelnummer
-	[x]	Gruppenzugehörigkeit
+	[x]	Gruppenzugehörigkeit (Regelung über die Manageransicht)
 
 	Benutzerverwaltung:
 	[x]	Nur E-Mail Ändern
 	[x]	Passwort ändern
 
 	Kurse erstellen:
-	[x]	Bezeichnung des Kurses
-	[x]	Jahrgang
-	[x]	Liste der Benutzer des Kurses
+	[√]	Bezeichnung des Kurses
+	[√]	Jahrgang
+	[x]	Liste der Benutzer des Kurses (Hidden fields für Form)
+	[x] Dropdown für Semester (winter/summer)
 
 	Kursverwaltung:
 	[x]	Bei Änderung der Benutzer/Jahrgangs/Bezeichnung des Kurses
 
-	Zuweisung von Benutzern in Gruppen:
-	[x]	Liste der Gruppen/Ändern der Gruppe
-
 	Zuweisung von Benutzern/Gruppen zu Examen:
 	[x]	Liste der Accessoren/Kurse -> In 2 Tabellen
-
-	Bewertung von Examen:
-	[x]	Detailanzeige des Examen
-	[x]	Möglichkeit der Feldänderung
+		-Martin Mustermann [x]
+		-Martina Musterfrau [x]
+		[autocomplete: Martin must]
 
 	Managerverwaltungsansicht:
 	[x]	Benutzerliste mit Lösch- und Editierfunktion (Erweiterte Benutzerverwaltung mit ACTIVE/USERNAME/ect. editierbarkeit)
@@ -65,14 +59,8 @@ TODO:
 	Anzeige der Examen/Aufgaben:
 	[x]	Anzeige der Examen-Details
 	[x]	Anzeige der Punkte/Bewertung
-
-	Anzeige der Kriterien:
 	[x]	Anzeige der Kriteriendetails
 	[x]	Anzeige der Punkte/Bewertung
-
-	Anzeige der User(Liste):
-	[x]	Ausgabe von allen Studierenden, die zu diesem Examen relevant sind
-	[x]	Nur Anzeige der Matrikelnummer(?)
 
 	Liste der geschriebenen Examen:
 	[x]	Liste der zum Studenten/Dozenten/Accessor zugehörigen Examen

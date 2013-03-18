@@ -41,6 +41,7 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 		], function(error) {
 
 			console.log(req.user);
+			console.log(courses);
 
 			res.render('exam/manage/new', {
 				title: 'New Exam',
@@ -67,7 +68,6 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 	});
 
 	app.post('/exam/new', function(req, res) {
-		//var exam = new Exam(req.body);
 
 		var crits = [];
 		async.forEach(req.body.criteria, function (item, callback) {
