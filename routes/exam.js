@@ -27,21 +27,38 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 			},
 			function (callback) {
 				User.find( {role: 'assessor'}, function (err, docsAssessor) {
-					assessors = docsAssessor;
+					
+					docsAssessor.forEach(function(item){
+						var assessor = {};
+						assessor.name = item.name;
+						assessor.firstname = item.firstname;
+						assessor.lastname = item.lastname;
+
+						assessors.push(assessor);
+					});
+
 					callback(err);
 				});
 			},
 			function (callback) {
-				User.find({role: 'tutor'}, function (err, docsTutor) {					
-					tutors = docsTutor;
+				User.find({role: 'tutor'}, function (err, docsTutor) {	
+
+					docsTutor.forEach(function(item){
+						var tutor = {};
+						tutor.name = item.name;
+						tutor.firstname = item.firstname;
+						tutor.lastname = item.lastname;
+
+						tutors.push(tutor);
+					});
+
 					callback(err);
+
 				});
+
 			}
 
 		], function(error) {
-
-			console.log(req.user);
-			console.log(courses);
 
 			res.render('exam/manage/new', {
 				title: 'New Exam',

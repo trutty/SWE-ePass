@@ -20,18 +20,15 @@ block content
 						| Tutor:
 				td
 					ul.selections
-					select(class='k-header', name='user')
-						each tutor in tutors
-							//option(value='#{tutor.id}', selected=( registered.id == tutor.id ? "selected" : undefined) ) #{tutor.firstname} #{tutor.lastname}
+					input#tutor.k-textbox(type='text', name='tutor')
+					
 			tr
 				th
 					label(for='assessor')
 						| Accessor:
 				td
 					ul.selections
-					select(class='k-header', name='assessor')
-						each assessor in assessors
-							option(value='#{assessor.id}') #{assessor.firstname} #{assessor.lastname}
+					input#assessor.k-textbox(type='text', name='assessor')
 
 			tr
 				th
@@ -78,13 +75,13 @@ block content
 						| Criteria:
 				td	
 					div.criteria
-						input(class='k-textbox', type='text', name='criteria[0][name]', required='true', placeholder='Name')
-						input(class='k-textbox', type='text', name='criteria[0][description]', placeholder='Description')
-						input(class='k-textbox', type='number', min='0', name='criteria[0][score]', required='true', placeholder='Score')
+						input(class='k-textbox', type='text', name='criteria[][name]', required='true', placeholder='Name')
+						input(class='k-textbox', type='text', name='criteria[][description]', placeholder='Description')
+						input(class='k-textbox', type='number', min='0', name='criteria[][score]', required='true', placeholder='Score')
 						br
-						input(class='k-textbox', type='text', name='criteria[0][subcriteria][0][name]', required='true', placeholder='Name')
-						input(class='k-textbox', type='text', name='criteria[0][subcriteria][0][description]', placeholder='Description')
-						input(class='k-textbox', type='number', min='0', name='criteria[0][subcriteria][0][score]', required='true', placeholder='Score')
+						input(class='k-textbox', type='text', name='criteria[][subcriteria][0][name]', required='true', placeholder='Name')
+						input(class='k-textbox', type='text', name='criteria[][subcriteria][0][description]', placeholder='Description')
+						input(class='k-textbox', type='number', min='0', name='criteria[][subcriteria][0][score]', required='true', placeholder='Score')
 
 			tr
 				th
@@ -98,16 +95,15 @@ block content
 					input(class='k-button', type='submit', value='Save')
 				td
 
-
 		script
 			var viewModel = {
 				addCriteriaFields : function() {
 					var num = $('.criteria').length;
 					$('.criteria:last').after(""+
 						"<div class='criteria'>"+
-							"<input class='k-textbox', type='text', name='criteria["+num+"][name]', placeholder='Name', required='true'>"+
-							"<input class='k-textbox', type='text', name='criteria["+num+"][description]', placeholder='Description'>"+
-							"<input class='k-textbox', type='number', min='0', name='criteria["+num+"][score]', placeholder='Score', required='true'>"+
+							"<input class='k-textbox' type='text' name='criteria["+num+"][name]' placeholder='Name' required='true'>"+
+							"<input class='k-textbox' type='text' name='criteria["+num+"][description]' placeholder='Description'>"+
+							"<input class='k-textbox' type='number' min='0', name='criteria["+num+"][score]' placeholder='Score' required='true'>"+
 						"</div>");
 				},
 				removeCriteria : function() {
@@ -118,20 +114,32 @@ block content
 			};
 			kendo.bind($("#examNew"), viewModel);
 
-			var data = !{JSON.stringify(courses)};
-			$('#course').kendoAutoComplete({
-				dataSource: data,
-				dataTextField: 'name',
-				placeholder: 'Please select at least one course',
-				change: function(e) {
-					var selections = $(this.element).parent().prev();
-					var curData = this.dataItem(this.current().index());
+			function autoComplete(ele, data) {
+				$('#' + ele).kendoAutoComplete({
+					dataSource: data,
+					filter: 'contains',
+					ignoreCase: true,
+					dataTextField: 'name',
+					placeholder: 'search string...',
+					change: function(e) {
+						var selections = $(this.element).parent().prev();
+						var curData = this.dataItem(this.current().index());
 
-					console.log(curData);
+						selections.append("<li class='removeSelection'>" + curData.name + "<input type='hidden' class='k-textbox' name='course[]' value='" + curData._id + "' /></li>");
 
-					selections.append("<li>" + curData.name + "<input type='hidden' class='k-textbox' name='course[]' value='" + curData._id + "' /></li>");
+						this.value('');
+					}
+				});
+			}
 
 
-					this.value('');
-				}
+			autoComplete('course', !{JSON.stringify(courses)});
+			autoComplete('assessor', !{JSON.stringify(assessors)});
+			autoComplete('tutor', !{JSON.stringify(tutors)});
+
+			$('.removeSelection').live('click', function(e){
+				$(this).remove();
 			});
+
+			$('#date').kendoDateTimePicker();
+

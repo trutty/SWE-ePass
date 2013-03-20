@@ -69,6 +69,10 @@ module.exports = function(){
     }
   });
 
+  UserSchema.virtual('name').get(function() {
+    return this.firstname + " " + this.lastname;
+  });
+
   UserSchema.virtual('password')
     .get(function() {
       return this._password;
