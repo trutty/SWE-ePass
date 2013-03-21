@@ -39,3 +39,47 @@ form table td.button {
   margin-right: 40px;
   overflow: hidden;
 }
+ul.selections {
+  padding: 0;
+}
+.removeSelection {
+  display: inline-block;
+  cursor: pointer;
+  border: 1px solid #999;
+  border-radius: 4px;
+  line-height: 25px;
+  padding: 4px;
+  padding-right: 20px;
+  margin-right: 5px;
+  list-style-type: none;
+  position: relative;
+}
+.removeSelection span {
+  color: #999;
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  line-height: 5px;
+}
+.removeSelection:hover {
+  border-color: #CA1A0E;
+}
+ul.criteria {
+  margin: 0;
+  padding: 0;
+}
+ul.criteria li {
+  list-style-type: none;
+}
+ul.criteria ul {
+  margin: 5px 0;
+}
+ul.criteria input {
+  margin-right: 2px;
+}
+#to-do {
+  height: 52px;
+  width: 221px;
+  margin: 30px auto;
+  padding: 91px 0 0 188px;
+}

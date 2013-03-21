@@ -5,7 +5,7 @@ block content
 
 	h1= title
 
-	form(action='/exam/new', method='post', id='examNew')
+	form.k-content(action='/exam/new', method='post', id='examNew')
 		table
 			tr
 				th
@@ -19,27 +19,24 @@ block content
 					label(for='user')
 						| Tutor:
 				td
-					ul.selections
 					input#tutor.k-textbox(type='text', name='tutor')
+					ul.selections
 					
 			tr
 				th
 					label(for='assessor')
 						| Accessor:
 				td
-					ul.selections
 					input#assessor.k-textbox(type='text', name='assessor')
+					ul.selections
 
 			tr
 				th
 					label(for='course')
 						| Course:
 				td
-					ul.selections
 					input#course.k-textbox(type='text', name='course')
-					//select(class='k-header', name='course')
-					//	each course in courses
-					//		option(value='#{course.id}') #{course.name} (#{course.term})
+					ul.selections
 
 			tr
 				th
@@ -53,7 +50,7 @@ block content
 					label(for='date')
 						| Date: 
 				td
-					input#date(class='k-textbox', type='date', name='date', required='true')
+					input#date(name='date', required='true', style='width:15.4em;')
 
 			tr
 				th
@@ -74,21 +71,16 @@ block content
 					label(for='criteria')
 						| Criteria:
 				td	
-					div.criteria
-						input(class='k-textbox', type='text', name='criteria[][name]', required='true', placeholder='Name')
-						input(class='k-textbox', type='text', name='criteria[][description]', placeholder='Description')
-						input(class='k-textbox', type='number', min='0', name='criteria[][score]', required='true', placeholder='Score')
-						br
-						input(class='k-textbox', type='text', name='criteria[][subcriteria][0][name]', required='true', placeholder='Name')
-						input(class='k-textbox', type='text', name='criteria[][subcriteria][0][description]', placeholder='Description')
-						input(class='k-textbox', type='number', min='0', name='criteria[][subcriteria][0][score]', required='true', placeholder='Score')
+					ul.criteria
+						li
+							input.criteriaName.k-textbox(type='text', name='criteria[0][name]', required='true', placeholder='Name')
+							input.criteriaDesc.k-textbox(type='text', name='criteria[0][description]', placeholder='Description')
+							input.criteriaScore.k-textbox(type='number', min='0', name='criteria[0][score]', required='true', placeholder='Score')
+							input.addCriteria.k-button(type='button', value='+')
+							input.removeCriteria.k-button(type='button', value='-')
+							input.addChild.k-button(type='button', value='Add Child')
 
-			tr
-				th
-
-				td
-					input#addCriteria(class='k-button', type='button', value='+', data-bind='click: addCriteriaFields')
-					input#addCriteria(class='k-button', type='button', value='-', data-bind='click: removeCriteria')
+							ul.subcriteria
 
 			tr
 				td
@@ -96,23 +88,74 @@ block content
 				td
 
 		script
-			var viewModel = {
-				addCriteriaFields : function() {
-					var num = $('.criteria').length;
-					$('.criteria:last').after(""+
-						"<div class='criteria'>"+
-							"<input class='k-textbox' type='text' name='criteria["+num+"][name]' placeholder='Name' required='true'>"+
-							"<input class='k-textbox' type='text' name='criteria["+num+"][description]' placeholder='Description'>"+
-							"<input class='k-textbox' type='number' min='0', name='criteria["+num+"][score]' placeholder='Score' required='true'>"+
-						"</div>");
-				},
-				removeCriteria : function() {
-					if($('.criteria').length > 1) {
-						$('.criteria:last').remove();
-					}
+
+			var firstCriteria = $('ul.criteria li:first');
+			firstCriteria.data('index', 0);
+			firstCriteria.data('subcriterias', 0);
+			var criteriaIndex = 0;
+
+			$('.addCriteria').click(function(e) {
+				var criteriaTemplate = $('ul.criteria li:first').clone(true, true);
+				criteriaIndex++;
+
+				criteriaTemplate.data('index', criteriaIndex);
+				criteriaTemplate.data('subcriterias', 0);
+				criteriaTemplate.children('input.criteriaName').attr('name', 'criteria[' + criteriaIndex + '][name]').attr('value', '');
+				criteriaTemplate.children('input.criteriaDesc').attr('name', 'criteria[' + criteriaIndex + '][description]').attr('value', '');
+				criteriaTemplate.children('input.criteriaScore').attr('name', 'criteria[' + criteriaIndex + '][score]').attr('value', '');
+				criteriaTemplate.children('ul.subcriteria').children().remove();
+
+				$(this).parent().after(criteriaTemplate);
+			});
+
+			$('.addChild').live('click' ,function(e) {
+				var subcriteria = $("<li class='subcriteria'>"+
+					"<input class='k-textbox subcriteriaName' type='text' required='true' placeholder='Name'>"+
+					"<input class='k-textbox subcriteriaDesc' type='text' required='true' placeholder='Description'>"+
+					"<input class='k-textbox subcriteriaScore' type='number' min='0' required='true' placeholder='Score'>"+
+					"<input class='k-button addChild' type='button' value='+'>"+
+					"<input class='k-button removeCriteria' type='button' value='-'></li>");
+
+				var areWeInSubcriteria = $(this).parent().hasClass('subcriteria');
+
+				var subcriterias;
+				var indexCriteria;
+				if(areWeInSubcriteria) {
+					subcriterias = $(this).parent().parent().parent().data('subcriterias');
+					indexCriteria = $(this).parent().parent().parent().data('index')
+
+					subcriterias++;
+					$(this).parent().parent().parent().data('subcriterias', subcriterias);
+				} else {
+					subcriterias = $(this).parent().data('subcriterias');
+					indexCriteria = $(this).parent().data('index');
+
+					subcriterias++;
+					$(this).parent().data('subcriterias', subcriterias);
 				}
-			};
-			kendo.bind($("#examNew"), viewModel);
+
+				$(this).parent().data('subcriterias', subcriterias);
+				subcriteria.children('input.subcriteriaName').attr('name', 'criteria['+indexCriteria+']subcriteria['+subcriterias+'][name]').attr('value', '');
+				subcriteria.children('input.subcriteriaDesc').attr('name', 'criteria['+indexCriteria+']subcriteria['+subcriterias+'][description]').attr('value', '');
+				subcriteria.children('input.subcriteriaScore').attr('name', 'criteria['+indexCriteria+']subcriteria['+subcriterias+'][score]').attr('value', '');
+
+				if(areWeInSubcriteria) {
+					$(this).parent().after(subcriteria);
+				} else {
+					$(this).siblings('ul.subcriteria').append(subcriteria);
+				}
+
+			});
+
+			$('.removeCriteria').live('click', function(e) {
+				if($(this).parent().hasClass('subcriteria')) {
+					$(this).parent().remove();
+				} else {
+					if($('ul.criteria > li').length > 1) {
+						$(this).parent().remove();
+					}
+				}				
+			});
 
 			function autoComplete(ele, data) {
 				$('#' + ele).kendoAutoComplete({
@@ -122,10 +165,10 @@ block content
 					dataTextField: 'name',
 					placeholder: 'search string...',
 					change: function(e) {
-						var selections = $(this.element).parent().prev();
+						var selections = $(this.element).parent().next();
 						var curData = this.dataItem(this.current().index());
 
-						selections.append("<li class='removeSelection'>" + curData.name + "<input type='hidden' class='k-textbox' name='course[]' value='" + curData._id + "' /></li>");
+						selections.append("<li class='removeSelection'>" + curData.name + "<span>x</span><input type='hidden' class='k-textbox' name='course[]' value='" + curData._id + "' /></li>");
 
 						this.value('');
 					}

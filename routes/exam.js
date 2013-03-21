@@ -106,8 +106,6 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 
 				}, function (err) {
 
-
-					console.log(subcrits);
 					item.criteria = subcrits;
 
 					var criteria = new Criteria(item);
