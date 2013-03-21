@@ -39,7 +39,7 @@ TODO:
 	[√]	Bezeichnung des Kurses
 	[√]	Jahrgang
 	[x]	Liste der Benutzer des Kurses (Hidden fields für Form)
-	[x] Dropdown für Semester (winter/summer)
+	[√] Dropdown für Semester (winter/summer)
 
 	Kursverwaltung:
 	[x]	Bei Änderung der Benutzer/Jahrgangs/Bezeichnung des Kurses
