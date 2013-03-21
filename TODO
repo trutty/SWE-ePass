@@ -4,10 +4,10 @@ TODO:
 	Einpflege der Daten
 	===
 
-	Erstellung Kriterien:
+	Erstellung Kriterien: [√]
 	[√]	Bezeichnung
 	[√]	Beschreibung
-	[x]	Script für Punktebegrenzung der maximalen Punkte
+	[√]	Script für Punktebegrenzung der maximalen Punkte
 	[√]	Gegebenenfalls Unterkriterien (bis lvl 2)
 	[√] Subkriterien +/-
 
@@ -18,6 +18,7 @@ TODO:
 	[√]	Maximale Punktzahl für diese Arbeit (Javascript überprüfung der max Punkte)
 	[√]	Kriterienzuordnung
 	[√]	Bearbeitungszeit
+	[x] Kurse aus Datenbank per id raussuchen und als Objekt übergeben
 
 	Punktevergabe Examen:
 	[x]	Anzeige des Examens
@@ -31,7 +32,7 @@ TODO:
 	[x]	Gruppenzugehörigkeit (Regelung über die Manageransicht)
 
 	Benutzerverwaltung:
-	[x]	Nur E-Mail Ändern
+	[x]	Nur E-Mail ändern
 	[x]	Passwort ändern
 
 	Kurse erstellen:
@@ -44,7 +45,7 @@ TODO:
 	[x]	Bei Änderung der Benutzer/Jahrgangs/Bezeichnung des Kurses
 
 	Zuweisung von Benutzern/Gruppen zu Examen:
-	[x]	Liste der Accessoren/Kurse -> In 2 Tabellen
+	[√]	Liste der Accessoren/Kurse -> In 2 Tabellen
 		-Martin Mustermann [x]
 		-Martina Musterfrau [x]
 		[autocomplete: Martin must]
