@@ -9,12 +9,12 @@ TODO:
 	[√]	Beschreibung
 	[x]	Script für Punktebegrenzung der maximalen Punkte
 	[√]	Gegebenenfalls Unterkriterien (bis lvl 2)
-	[x] Subkriterien +/-
+	[√] Subkriterien +/-
 
 	Erstellung Exam: 
 	[√]	Bezeichnung der Klausur
 	[√]	Dozent, Fach -> Mit Vorselektion des aktuell angemeldeten Dozenten
-	[x]	Datum der Arbeit mit Uhrzeit (kendo Datums- und Uhrzeits-Selektor)
+	[√]	Datum der Arbeit mit Uhrzeit (kendo Datums- und Uhrzeits-Selektor)
 	[√]	Maximale Punktzahl für diese Arbeit (Javascript überprüfung der max Punkte)
 	[√]	Kriterienzuordnung
 	[√]	Bearbeitungszeit

@@ -111,7 +111,7 @@ block content
 			$('.addChild').live('click' ,function(e) {
 				var subcriteria = $("<li class='subcriteria'>"+
 					"<input class='k-textbox subcriteriaName' type='text' required='true' placeholder='Name'>"+
-					"<input class='k-textbox subcriteriaDesc' type='text' required='true' placeholder='Description'>"+
+					"<input class='k-textbox subcriteriaDesc' type='text' placeholder='Description'>"+
 					"<input class='k-textbox subcriteriaScore' type='number' min='0' required='true' placeholder='Score'>"+
 					"<input class='k-button addChild' type='button' value='+'>"+
 					"<input class='k-button removeCriteria' type='button' value='-'></li>");
@@ -184,5 +184,37 @@ block content
 				$(this).remove();
 			});
 
-			$('#date').kendoDateTimePicker();
+			$('#date').kendoDateTimePicker({
+				value: new Date()
+			});
 
+			//check if specified points match max points - if not correct then return false (do not submit form)
+			$('#examNew').submit(function(e) {
+				//check if criteria points are correctly calculated
+				var maxPoints = $('#maxPoints').val();
+				var overallCriteriaPoints = Number(0);
+				var criteriaPoints = Number(0);
+				//iterate over each criteria
+				$('ul.criteria > li').each(function(index) {
+					criteriaPoints = Number($(this).children('input.criteriaScore').val());
+					var subcriteriaPoints = Number(0);
+					var subcriterias = false;
+					//iterate over each subcriteria of current criteria
+					$(this).children('ul.subcriteria').children('li').each(function(index) {
+						subcriterias = true;
+						subcriteriaPoints += Number($(this).children('input.subcriteriaScore').val());
+					});
+					//check if summed subcriteria points match current criteria points
+					if(subcriterias && subcriteriaPoints != criteriaPoints) {
+						console.log('Subcriteria points do not match criteria points at: ' + $(this).children('input.criteriaName').val());
+						return false;
+					}
+					//sum up criteria points
+					overallCriteriaPoints += criteriaPoints;
+				});
+				//check if summed up criteria points match max given points
+				if(maxPoints != overallCriteriaPoints) {
+					console.log('The number of maxixum points is not matching the number of possible points of the criterias');
+					return false;
+				}
+			});
