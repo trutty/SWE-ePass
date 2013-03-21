@@ -87,6 +87,12 @@ block content
 					input(class='k-button', type='submit', value='Save')
 				td
 
+			tr
+				td
+
+				td
+					p#pointsError
+
 		script
 
 			var firstCriteria = $('ul.criteria li:first');
@@ -190,8 +196,9 @@ block content
 
 			//check if specified points match max points - if not correct then return false (do not submit form)
 			$('#examNew').submit(function(e) {
+				$('#pointsError').html('');
 				//check if criteria points are correctly calculated
-				var maxPoints = $('#maxPoints').val();
+				var maxPoints =  Number($('#maxPoints').val());
 				var overallCriteriaPoints = Number(0);
 				var criteriaPoints = Number(0);
 				//iterate over each criteria
@@ -206,7 +213,7 @@ block content
 					});
 					//check if summed subcriteria points match current criteria points
 					if(subcriterias && subcriteriaPoints != criteriaPoints) {
-						console.log('Subcriteria points do not match criteria points at: ' + $(this).children('input.criteriaName').val());
+						$('#pointsError').append('Summed up points do not match at: <strong>'+$(this).children('input.criteriaName').val()+'</strong>.<br />');
 						return false;
 					}
 					//sum up criteria points
@@ -214,7 +221,7 @@ block content
 				});
 				//check if summed up criteria points match max given points
 				if(maxPoints != overallCriteriaPoints) {
-					console.log('The number of maxixum points is not matching the number of possible points of the criterias');
+					$('#pointsError').append('Maximum points do not match summed up criteria points.');
 					return false;
 				}
 			});
