@@ -86,7 +86,27 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 
 	app.post('/exam/new', function(req, res) {
 
+		var ObjectId = require('mongoose').Types.ObjectId;
+
 		var crits = [];
+		var courses = [];
+
+		async.forEach(req.body.course, function (itemCourse, courseCallback) {
+			
+			console.log('id: %s', itemCourse);
+			var id = new ObjectId(itemCourse);
+
+			User.findById(id, function (err, docsCourse) {
+
+				console.log('docsCourse: ' + docsCourse);
+
+				courseCallback(err);
+			});
+			
+		});
+
+		console.log('Course Objects: ' + courses);
+
 		async.forEach(req.body.criteria, function (item, callback) {
 			
 			var subcrits = [];
@@ -137,12 +157,16 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 
 			var examBody = req.body;
 			examBody.criteria = crits;
+			examBody.course = courses;
 
 			var exam = new Exam(examBody);
+
+			/*
 			exam.save(function (err) {
 				console.log(errFromCriteria);
 				console.log(err);
 			});
+			*/
 
 		});
 
