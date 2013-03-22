@@ -202,11 +202,8 @@ module.exports = function(){
       required: true
     },
 
-    //user is tutor
     user: {
-      type: Schema.ObjectId,
-      ref: 'User',
-      required: false
+      type: [UserSchema]
     },
 
     assessor: {

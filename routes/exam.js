@@ -33,6 +33,7 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 						assessor.name = item.name;
 						assessor.firstname = item.firstname;
 						assessor.lastname = item.lastname;
+						assessor._id = item.id;
 
 						assessors.push(assessor);
 					});
@@ -48,6 +49,7 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 						tutor.name = item.name;
 						tutor.firstname = item.firstname;
 						tutor.lastname = item.lastname;
+						tutor._id = item.id;
 
 						tutors.push(tutor);
 					});
@@ -86,90 +88,107 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 
 	app.post('/exam/new', function(req, res) {
 
-		var ObjectId = require('mongoose').Types.ObjectId;
+		var ObjectId 	= require('mongoose').Types.ObjectId;
+		var courses 	= [];
+		var assessors 	= [];
+		var tutors		= [];
+		var crits 		= [];
+		async.series([
 
-		var crits = [];
-		var courses = [];
-
-		async.forEach(req.body.course, function (itemCourse, courseCallback) {
-			
-			console.log('id: %s', itemCourse);
-			var id = new ObjectId(itemCourse);
-
-			User.findById(id, function (err, docsCourse) {
-
-				console.log('docsCourse: ' + docsCourse);
-
-				courseCallback(err);
-			});
-			
-		});
-
-		console.log('Course Objects: ' + courses);
-
-		async.forEach(req.body.criteria, function (item, callback) {
-			
-			var subcrits = [];
-			if(item.subcriteria) {
-
-				async.forEach(item.subcriteria, function (subitem, subCallback){
-
-					var subcriteria = new Criteria(subitem);
-					subcriteria.save(function (err) {
-						if(err) {
-							subCallback(err);
-						}
-					});
-
-					subcrits.push(subcriteria);
-					subCallback();
-
-				}, function (err) {
-
-					item.criteria = subcrits;
-
-					var criteria = new Criteria(item);
-					criteria.save(function (err) {
-						if(err){
-							callback(err);
-						}
-					});
-
-					crits.push(criteria);
-					callback();
-
-				});
-
-			} else {
-
-				var criteria = new Criteria(item);
-				criteria.save(function (err) {
-					if(err){
+			function (callback) {
+				async.forEach(req.body.course, function (itemCourse, courseCallback) {
+					var id = new ObjectId(itemCourse);
+					Course.findById(id, function (err, docsCourse) {
+						courses.push(docsCourse);
 						callback(err);
+					});
+				});
+			},
+			function (callback) {
+				async.forEach(req.body.assessor, function (itemAssessor, assessorCallback) {
+					var id = new ObjectId(itemAssessor);
+					User.findById(id, function (err, docsAssessor) {
+						assessors.push(docsAssessor);
+						callback(err);
+					});
+				});
+			},
+			function (callback) {
+				async.forEach(req.body.tutor, function (itemTutor, tutorCallback) {
+					var id = new ObjectId(itemTutor);
+					User.findById(id, function (err, docsTutor) {
+						tutors.push(docsTutor);
+						callback(err);
+					});
+				});
+			},
+			function (callback) {
+				async.forEach(req.body.criteria, function (item, callback) {
+				
+					var subcrits = [];
+					if(item.subcriteria) {
+
+						async.forEach(item.subcriteria, function (subitem, subCallback){
+
+							var subcriteria = new Criteria(subitem);
+							subcriteria.save(function (err) {
+								if(err) {
+									subCallback(err);
+								}
+							});
+
+							subcrits.push(subcriteria);
+							subCallback();
+
+						}, function (err) {
+
+							item.criteria = subcrits;
+
+							var criteria = new Criteria(item);
+							criteria.save(function (err) {
+								if(err){
+									callback(err);
+								}
+							});
+
+							crits.push(criteria);
+							callback();
+
+						});
+
+					} else {
+
+						var criteria = new Criteria(item);
+						criteria.save(function (err) {
+							if(err){
+								callback(err);
+							}
+						});
+
+						crits.push(criteria);
+						callback();				
 					}
 				});
-
-				crits.push(criteria);
-				callback();				
 			}
-			
-		}, function (errFromCriteria) {
+
+		], function (error) {
 
 			var examBody = req.body;
 			examBody.criteria = crits;
+			examBody.assessor = assessors;
+			examBody.user = tutors;
 			examBody.course = courses;
 
 			var exam = new Exam(examBody);
 
-			/*
 			exam.save(function (err) {
-				console.log(errFromCriteria);
+				console.log(exam);
+				console.log(error);
 				console.log(err);
 			});
-			*/
 
 		});
-
+		
 	});
 
 }

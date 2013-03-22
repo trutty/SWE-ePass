@@ -163,7 +163,7 @@ block content
 				}				
 			});
 
-			function autoComplete(ele, data, idString) {
+			function autoComplete(ele, data) {
 				$('#' + ele).kendoAutoComplete({
 					dataSource: data,
 					filter: 'contains',
@@ -174,13 +174,7 @@ block content
 						var selections = $(this.element).parent().next();
 						var curData = this.dataItem(this.current().index());
 
-						if(idString == 'uid') {
-							var eleId = curData.uid;
-						} else {
-							var eleId = curData._id;
-						}
-
-						selections.append("<li class='removeSelection'>" + curData.name + "<span>x</span><input type='hidden' class='k-textbox' name='" + ele + "[]' value='" + eleId + "' /></li>");
+						selections.append("<li class='removeSelection'>" + curData.name + "<span>x</span><input type='hidden' class='k-textbox' name='" + ele + "[]' value='" + curData._id + "' /></li>");
 
 						this.value('');
 					}
@@ -188,9 +182,9 @@ block content
 			}
 
 
-			autoComplete('course', !{JSON.stringify(courses)}, '_id');
-			autoComplete('assessor', !{JSON.stringify(assessors)}, 'uid');
-			autoComplete('tutor', !{JSON.stringify(tutors)}, 'uid');
+			autoComplete('course', !{JSON.stringify(courses)});
+			autoComplete('assessor', !{JSON.stringify(assessors)});
+			autoComplete('tutor', !{JSON.stringify(tutors)});
 
 			$('.removeSelection').live('click', function(e){
 				$(this).remove();
