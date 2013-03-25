@@ -184,7 +184,6 @@ block content
 				});
 			}
 
-
 			autoComplete('course', !{JSON.stringify(courses)});
 			autoComplete('assessor', !{JSON.stringify(assessors)});
 			autoComplete('tutor', !{JSON.stringify(tutors)});
@@ -208,6 +207,7 @@ block content
 				var maxPoints =  Number($('#maxPoints').val());
 				var overallCriteriaPoints = Number(0);
 				var criteriaPoints = Number(0);
+				var error = false;
 				//iterate over each criteria
 				$('ul.criteria > li').each(function(index) {
 					criteriaPoints = Number($(this).children('input.criteriaScore').val());
@@ -221,13 +221,14 @@ block content
 					//check if summed subcriteria points match current criteria points
 					if(subcriterias && subcriteriaPoints != criteriaPoints) {
 						$('#pointsError').append('Summed up points do not match at: <strong>'+$(this).children('input.criteriaName').val()+'</strong>.<br />');
+						error = true;
 						return false;
 					}
 					//sum up criteria points
 					overallCriteriaPoints += criteriaPoints;
 				});
 				//check if summed up criteria points match max given points
-				if(maxPoints != overallCriteriaPoints) {
+				if(!error && maxPoints != overallCriteriaPoints) {
 					$('#pointsError').append('Maximum points do not match summed up criteria points.');
 					return false;
 				}

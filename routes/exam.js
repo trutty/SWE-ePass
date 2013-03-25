@@ -7,7 +7,20 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 	// exam
 	// exam overview
 	app.get('/exam', function(req, res) {
-	  res.render('exam/view/exam', { title: 'Exam Overview', message: req.flash('error') });
+
+		var exams = [];
+		Exam.find({}).populate('course', 'userlist').or([{'assessor': req.user}, {'user': req.user}, {'course.userlist': req.user}]).exec(function (error, docs) {
+			// console.log("###");
+			// console.log(error);
+			// console.log(docs);
+			// console.log('###');
+			res.render('exam/view/exam', {
+				title: 'Exam Overview',
+				message: req.flash('error'),
+				exam: docs
+			});
+		});
+
 	});
 
 	// exam create
@@ -88,8 +101,6 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 
 	app.post('/exam/new', function(req, res) {
 
-		var crits 			= [];
-
 		var examBody 		= req.body;
 		examBody.criteria 	= req.body.criteria;
 		examBody.assessor 	= req.body.assessor;
@@ -98,10 +109,12 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 
 		var exam 			= new Exam(examBody);
 
-		console.log(req.body.criteria[0].subcriteria);
-
 		exam.save(function (err) {
-			console.log('error: ' + err);
+			if(!err) {
+				res.redirect('/');
+			} else {
+				console.log('examErr: ' + err);
+			}
 		});
 
 		// Exam
@@ -114,8 +127,6 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 		// 	console.log(error);
 		// 	console.log(docs);
 		// });
-
-	// });
 		
 	});
 

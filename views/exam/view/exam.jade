@@ -1,0 +1,11 @@
+extends ../../layout
+
+block content
+	p= message
+
+	h1= title
+
+	ul#exams
+	each item in exam
+		li= item.name
+			input(type='hidden', value=item.id)

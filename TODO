@@ -11,14 +11,14 @@ TODO:
 	[√]	Gegebenenfalls Unterkriterien (bis lvl 2)
 	[√] Subkriterien +/-
 
-	Erstellung Exam: 
+	Erstellung Exam: [√]
 	[√]	Bezeichnung der Klausur
 	[√]	Dozent, Fach -> Mit Vorselektion des aktuell angemeldeten Dozenten
 	[√]	Datum der Arbeit mit Uhrzeit (kendo Datums- und Uhrzeits-Selektor)
 	[√]	Maximale Punktzahl für diese Arbeit (Javascript überprüfung der max Punkte)
 	[√]	Kriterienzuordnung
 	[√]	Bearbeitungszeit
-	[x] Kurse aus Datenbank per id raussuchen und als Objekt übergeben
+	[√] Kurse aus Datenbank per id raussuchen und als Objekt übergeben
 
 	Punktevergabe Examen:
 	[x]	Anzeige des Examens

@@ -177,9 +177,12 @@ module.exports = function(){
       required: true
     },
 
-    userlist: {
-      type: [UserSchema]
-    }
+    userlist: [
+      {
+        type: Schema.ObjectId,
+        ref: 'User'
+      }
+    ]
 
   });
   var Course = mongoose.model('Course', CourseSchema);
