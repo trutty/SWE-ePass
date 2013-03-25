@@ -5,7 +5,20 @@ block content
 
 	h1= title
 
-	ul#exams
+	table
+		th
+			| Name
+		th
+			| Lecture
+		th
+			| Year
+
 		each item in exam
-			li= item.name
-				input(type='hidden', value=item.id)
+			tr
+				td
+					| #{item.name}
+				td
+					| #{item.lecture}
+				td
+					| #{item.date.getFullYear()}
+					input(type='hidden', value=item.id, name='id')
