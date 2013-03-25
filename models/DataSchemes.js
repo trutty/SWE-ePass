@@ -73,6 +73,17 @@ module.exports = function(){
     return this.firstname + " " + this.lastname;
   });
 
+  UserSchema.virtual('newUser')
+    .get(function() {
+      console.log('am i getting');
+      return this._newUser;
+    })
+
+    .set(function(value) {
+      console.log('i am setting ' + value);
+      this._newUser = value;
+    });
+
   UserSchema.virtual('password')
     .get(function() {
       return this._password;
@@ -106,7 +117,10 @@ module.exports = function(){
               this.invalidate('passwordConfirm', 'must match confirmation.');
           }
       }
-      if (this.isNew && !this._password) {
+
+      console.log('newUser: ' + this.newUser);
+      console.log('_newUser: ' + this._newUser);
+      if (this._newUser && !this._password) {
           this.invalidate('password', 'Needed');
       }
   }, null);
@@ -187,7 +201,7 @@ module.exports = function(){
         required: true
     },
 
-    criteria: {
+    subcriteria: {
       type: [CriteriaSchema]
     }
 
@@ -203,16 +217,13 @@ module.exports = function(){
     },
 
     user: {
-      type: [UserSchema]
+      type: Schema.ObjectId,
+      ref: 'User'
     },
 
-    assessor: {
-      type: [UserSchema]
-    },
+    assessor: [{ type: Schema.ObjectId, ref: 'User' }],
 
-    course: {
-      type: [CourseSchema]
-    },
+    course: [{ type: Schema.ObjectId, ref: 'Course' }],
 
     lecture: {
       type: String,

@@ -30,6 +30,7 @@ block content
 						input.k-button(type='submit', value='Log In')
 
 		form#signup.k-content(action='/signup', method='post', data-style='inset')
+			input(type='hidden', name='newUser', value='true')
 			table
 				tr
 					th

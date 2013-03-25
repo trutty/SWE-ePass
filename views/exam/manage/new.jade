@@ -20,7 +20,7 @@ block content
 						| Tutor:
 				td
 					input#tutor.k-textbox(type='text', name='tutor')
-					ul.selections
+					ul.selections.tutorSelection
 					
 			tr
 				th
@@ -128,22 +128,23 @@ block content
 				var indexCriteria;
 				if(areWeInSubcriteria) {
 					subcriterias = $(this).parent().parent().parent().data('subcriterias');
-					indexCriteria = $(this).parent().parent().parent().data('index')
+					indexCriteria = $(this).parent().parent().parent().data('index');
 
-					subcriterias++;
 					$(this).parent().parent().parent().data('subcriterias', subcriterias);
+					subcriterias++;
 				} else {
 					subcriterias = $(this).parent().data('subcriterias');
 					indexCriteria = $(this).parent().data('index');
 
-					subcriterias++;
 					$(this).parent().data('subcriterias', subcriterias);
+					subcriterias++;
 				}
 
 				$(this).parent().data('subcriterias', subcriterias);
-				subcriteria.children('input.subcriteriaName').attr('name', 'criteria['+indexCriteria+']subcriteria['+subcriterias+'][name]').attr('value', '');
-				subcriteria.children('input.subcriteriaDesc').attr('name', 'criteria['+indexCriteria+']subcriteria['+subcriterias+'][description]').attr('value', '');
-				subcriteria.children('input.subcriteriaScore').attr('name', 'criteria['+indexCriteria+']subcriteria['+subcriterias+'][score]').attr('value', '');
+
+				subcriteria.children('input.subcriteriaName').attr('name', 'criteria['+indexCriteria+'][subcriteria]['+subcriterias+'][name]').attr('value', '');
+				subcriteria.children('input.subcriteriaDesc').attr('name', 'criteria['+indexCriteria+'][subcriteria]['+subcriterias+'][description]').attr('value', '');
+				subcriteria.children('input.subcriteriaScore').attr('name', 'criteria['+indexCriteria+'][subcriteria]['+subcriterias+'][score]').attr('value', '');
 
 				if(areWeInSubcriteria) {
 					$(this).parent().after(subcriteria);
@@ -175,7 +176,9 @@ block content
 						var curData = this.dataItem(this.current().index());
 
 						selections.append("<li class='removeSelection'>" + curData.name + "<span>x</span><input type='hidden' class='k-textbox' name='" + ele + "[]' value='" + curData._id + "' /></li>");
-
+						if(ele == 'tutor') {
+							tutorAutocomplete.enable(false);
+						}
 						this.value('');
 					}
 				});
@@ -185,8 +188,12 @@ block content
 			autoComplete('course', !{JSON.stringify(courses)});
 			autoComplete('assessor', !{JSON.stringify(assessors)});
 			autoComplete('tutor', !{JSON.stringify(tutors)});
+			var tutorAutocomplete = $('#tutor').data("kendoAutoComplete");
 
 			$('.removeSelection').live('click', function(e){
+				if($(this).parent().hasClass('tutorSelection')) {
+					tutorAutocomplete.enable(true);
+				}
 				$(this).remove();
 			});
 

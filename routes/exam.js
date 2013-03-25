@@ -88,106 +88,34 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 
 	app.post('/exam/new', function(req, res) {
 
-		var ObjectId 	= require('mongoose').Types.ObjectId;
-		var courses 	= [];
-		var assessors 	= [];
-		var tutors		= [];
-		var crits 		= [];
-		async.series([
+		var crits 			= [];
 
-			function (callback) {
-				async.forEach(req.body.course, function (itemCourse, courseCallback) {
-					var id = new ObjectId(itemCourse);
-					Course.findById(id, function (err, docsCourse) {
-						courses.push(docsCourse);
-						callback(err);
-					});
-				});
-			},
-			function (callback) {
-				async.forEach(req.body.assessor, function (itemAssessor, assessorCallback) {
-					var id = new ObjectId(itemAssessor);
-					User.findById(id, function (err, docsAssessor) {
-						assessors.push(docsAssessor);
-						callback(err);
-					});
-				});
-			},
-			function (callback) {
-				async.forEach(req.body.tutor, function (itemTutor, tutorCallback) {
-					var id = new ObjectId(itemTutor);
-					User.findById(id, function (err, docsTutor) {
-						tutors.push(docsTutor);
-						callback(err);
-					});
-				});
-			},
-			function (callback) {
-				async.forEach(req.body.criteria, function (item, callback) {
-				
-					var subcrits = [];
-					if(item.subcriteria) {
+		var examBody 		= req.body;
+		examBody.criteria 	= req.body.criteria;
+		examBody.assessor 	= req.body.assessor;
+		examBody.user 		= req.body.tutor[0];
+		examBody.course 	= req.body.course;
 
-						async.forEach(item.subcriteria, function (subitem, subCallback){
+		var exam 			= new Exam(examBody);
 
-							var subcriteria = new Criteria(subitem);
-							subcriteria.save(function (err) {
-								if(err) {
-									subCallback(err);
-								}
-							});
+		console.log(req.body.criteria[0].subcriteria);
 
-							subcrits.push(subcriteria);
-							subCallback();
-
-						}, function (err) {
-
-							item.criteria = subcrits;
-
-							var criteria = new Criteria(item);
-							criteria.save(function (err) {
-								if(err){
-									callback(err);
-								}
-							});
-
-							crits.push(criteria);
-							callback();
-
-						});
-
-					} else {
-
-						var criteria = new Criteria(item);
-						criteria.save(function (err) {
-							if(err){
-								callback(err);
-							}
-						});
-
-						crits.push(criteria);
-						callback();				
-					}
-				});
-			}
-
-		], function (error) {
-
-			var examBody = req.body;
-			examBody.criteria = crits;
-			examBody.assessor = assessors;
-			examBody.user = tutors;
-			examBody.course = courses;
-
-			var exam = new Exam(examBody);
-
-			exam.save(function (err) {
-				console.log(exam);
-				console.log(error);
-				console.log(err);
-			});
-
+		exam.save(function (err) {
+			console.log('error: ' + err);
 		});
+
+		// Exam
+		// 	.find({})
+		// 	.populate('user')
+		// 	.populate('assessor')
+		// 	.populate('course')
+
+		// 	.exec(function (error, docs) {
+		// 	console.log(error);
+		// 	console.log(docs);
+		// });
+
+	// });
 		
 	});
 
