@@ -10,10 +10,6 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 
 		var exams = [];
 		Exam.find({}).populate('course', 'userlist').or([{'assessor': req.user}, {'user': req.user}, {'course.userlist': req.user}]).exec(function (error, docs) {
-			// console.log("###");
-			// console.log(error);
-			// console.log(docs);
-			// console.log('###');
 			res.render('exam/view/exam', {
 				title: 'Exam Overview',
 				message: req.flash('error'),
