@@ -4,3 +4,33 @@ block content
 	p=message
 
 	h1=title
+
+	form.k-content(action='/course/update/', method='post')
+		table
+			tr
+				th
+					label(for='name')
+						| Name:
+				td
+					input#name.k-textbox(type='text', name='name', value='#{course.name}', required='true')
+
+			tr
+				th
+					label(for='year')
+						| Year:
+				td
+					input#year.k-textbox(type='text', name='year', value='#{course.year}', required='true')
+
+			tr
+				th
+					label(for='Term')
+						| Term
+				td
+					select.k-header(name='term')
+						option(selected= course.term == 'winter') winter
+						option(selected= course.term == 'summer') summer
+			tr
+				td
+					input(type='hidden', value='#{course.id}', name='courseId', required='true')
+				td
+					input.k-button(type='submit', value='Update Course')

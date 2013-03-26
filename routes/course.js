@@ -5,14 +5,18 @@
 
 module.exports = function(app, async, User, Course){
 
-
 	app.get('/courses', function(req, res) {
-	  res.render('course/view/course',
-	  	{
-	  		title: 'Courses', 
-	  		message: req.flash('error') 
-	  	}
-	  );
+
+		Course.find({}, function (err, docs) {
+
+			res.render('course/view/course', {
+		  		title: 'Courses', 
+		  		message: req.flash('error'),
+		  		course: docs
+		  	});
+
+		});
+
 	});
 
 	app.post('/course/new', function(req, res) {
@@ -23,46 +27,71 @@ module.exports = function(app, async, User, Course){
 				}
 				res.redirect('/courses');
 			});
+	});
+
+	app.post('/course/update/', function (req, res) {
+
+		var updateData = {
+			name: req.body.name,
+			year: req.body.year,
+			term: req.body.term
+		};
+
+		Course.update({_id: req.body.courseId}, updateData, function(err, affected) {
+			console.log('affected rows %d', affected);
 		});
 
+	});
+
 	app.get('/course/new', function(req, res) {
-	  console.log(User)
+
 	  User.find({}, function (err, docs) {
 
-	  	res.render('course/manage/new',
-		  {
+	  	res.render('course/manage/new', {
 		    title: 'New Course',
 		    message: req.flash('error'),
 		    users: docs,
 		    course: { id: 'abc'}
-		  }
-		);
+		});
 
 	  });
 
 	});
 
-	app.get('/course/edit', function(req, res) {
-		Course.find({}, function (err, docs) {
-			res.render('/course/manage/edit',
-			{
-				title: 'List of Courses',
-				message: req.flash('error'),
-				courses: docs
-			}
-			);
-		});
-		
-	});
-
 	// exam edit
-	app.get('/course/edit/:selectedCourse', function(req, res, examInformation) {
-	  res.render('course/manage/edit', { title: 'New Course', message: req.flash('error'), information: { accessor: ['accessor 1', 'accessor 2'], course: ['course 1', 'course 2']} });
+	app.get('/course/edit/:selectedCourse', function (req, res) {
+
+		Course
+			.findById(req.params.selectedCourse)
+			.populate('userlist')
+			.exec(function (err, docs) {
+
+				res.render('course/manage/edit', {
+			  		title: 'Edit Course',
+			  		message: req.flash('error'),
+			  		course: docs
+			  	});
+
+			})
+
 	});
 
 	// Course detail view
-	app.get('/course/view/:selectedCourse', function(req, res) {
-	  console.log(req.flash);
-	  res.render('course/view/details', { title: 'Course Details', message: req.flash('error'), course: req.params.selectedCourse });
+	app.get('/course/view/:selectedCourse', function (req, res) {
+
+		Course
+			.findById(req.params.selectedCourse)
+			.populate('userlist')
+			.exec(function (err, docs) {
+
+				res.render('course/view/details', {
+			  		title: 'View Course',
+			  		message: req.flash('error'),
+			  		course: docs
+			  	});
+
+			})
+
 	});
+
 }

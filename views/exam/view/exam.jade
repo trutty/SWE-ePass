@@ -5,13 +5,18 @@ block content
 
 	h1= title
 
+	a(href='/exam/new') Create New Exam
+
 	table
-		th
-			| Name
-		th
-			| Lecture
-		th
-			| Year
+		tr
+			th
+				| Name
+			th
+				| Lecture
+			th
+				| Year
+			th
+				| Options
 
 		each item in exam
 			tr
@@ -21,6 +26,6 @@ block content
 					| #{item.lecture}
 				td
 					| #{item.date.getFullYear()}
-					input(type='hidden', value=item.id, name='id')
 				td
-					a(href='#') link
+					a(href='/exam/view/#{item.id}') view
+					a(href='/exam/edit/#{item.id}') edit
