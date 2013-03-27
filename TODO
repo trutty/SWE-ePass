@@ -44,7 +44,7 @@ TODO:
 	Kursverwaltung:
 	[x]	Bei Änderung der Benutzer/Jahrgangs/Bezeichnung des Kurses
 
-	Zuweisung von Benutzern/Gruppen zu Examen:
+	Zuweisung von Benutzern/Gruppen zu Examen: [√]
 	[√]	Liste der Accessoren/Kurse -> In 2 Tabellen
 		-Martin Mustermann [x]
 		-Martina Musterfrau [x]
@@ -61,8 +61,7 @@ TODO:
 	[x]	Anzeige der Examen-Details
 	[x]	Anzeige der Punkte/Bewertung
 	[x]	Anzeige der Kriteriendetails
-	[x]	Anzeige der Punkte/Bewertung
 
-	Liste der geschriebenen Examen:
-	[x]	Liste der zum Studenten/Dozenten/Accessor zugehörigen Examen
+	Liste der geschriebenen Examen: [√]
+	[√]	Liste der zum Studenten/Dozenten/Assessor zugehörigen Examen
 

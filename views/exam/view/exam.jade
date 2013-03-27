@@ -5,7 +5,7 @@ block content
 
 	h1= title
 
-	a(href='/exam/new') Create New Exam
+	a.k-link(href='/exam/new') Create New Exam
 
 	table
 		tr
@@ -27,5 +27,6 @@ block content
 				td
 					| #{item.date.getFullYear()}
 				td
-					a(href='/exam/view/#{item.id}') view
-					a(href='/exam/edit/#{item.id}') edit
+					a.k-link(href='/exam/view/#{item.id}') view 
+					a.k-link(href='/exam/edit/#{item.id}') edit 
+					a.k-link(href='/exam/assess/#{item.id}') assess 

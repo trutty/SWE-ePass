@@ -143,7 +143,7 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 			if(!err) {
 				res.redirect('/exam');
 			} else {
-				console.log('examErr: ' + err);
+				console.log(err);
 			}
 		});
 		

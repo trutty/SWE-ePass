@@ -5,7 +5,7 @@ block content
 
 	h1=title
 
-	a(href='/course/new') Create New Course
+	a.k-link(href='/course/new') Create New Course
 
 	table
 		tr
@@ -27,5 +27,6 @@ block content
 				td
 					| #{item.term}
 				td
-					a(href='/course/view/#{item.id}') view
-					a(href='/course/edit/#{item.id}') edit
+					a.k-link(href='/course/view/#{item.id}') view 
+					a.k-link(href='/course/edit/#{item.id}') edit 
+					//a.k-link(href='/course/delete/#{item.id}') delete 
