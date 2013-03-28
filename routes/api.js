@@ -88,7 +88,9 @@ module.exports = function(app, User, Course, Exam){
 		if(req.params.type == 'course') {
 			var courseId = req.params.attr;
 
-			/*Course.findOne({ _id: courseId }, function (err, doc) {
+			Course.findOne({ _id: courseId })
+				.populate('userlist')
+				.exec(function (err, doc) {
 				
 				console.log(err);
 
@@ -100,14 +102,9 @@ module.exports = function(app, User, Course, Exam){
 
 				courseUsers.push(course);
 				res.json(courseUsers);
+
 			});
-			*/
 
-			var cat = {};
-			cat.categoryName = "Kurs TINF11A";
-			cat.categoryItems = [];
-
-			res.json([cat]);
 		}
 	});
 

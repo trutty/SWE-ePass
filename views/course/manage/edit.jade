@@ -5,7 +5,8 @@ block content
 
 	h1=title
 
-	form.k-content(action='/course/update/', method='post')
+	form#courseForm.k-content(action='/course/update/', method='post')
+		
 		table
 			tr
 				th
@@ -29,8 +30,89 @@ block content
 					select.k-header(name='term')
 						option(selected= course.term == 'winter') winter
 						option(selected= course.term == 'summer') summer
+
+			tr
+				th
+					label
+						| Students:
+				td
+					div#allStudents
+					div#studentsInCourse
+
 			tr
 				td
-					input(type='hidden', value='#{course.id}', name='courseId', required='true')
+					&nbsp;
 				td
-					input.k-button(type='submit', value='Update Course')
+					br
+					input.k-button(type='submit', value='Create Course')
+
+
+		script
+			var alphabeticallyOrderedStudents = new kendo.data.HierarchicalDataSource({
+				transport: {
+					read: {
+						url: '/api/students/az/4',
+						dataType: 'json'
+					}
+				},
+				schema: {
+					model: {
+						children: 'categoryItems'
+					}
+				}
+			});
+
+			var studentDataInCourse = new kendo.data.HierarchicalDataSource({
+				transport: {
+					read: {
+						url: '/api/students/course/#{course.id}',
+						dataType: 'json'
+					}
+				},
+				schema: {
+					model: {
+						children: 'categoryItems'
+					}
+				}
+			});
+
+			$('#allStudents').kendoTreeView({
+				dragAndDrop: true,
+				dataSource: alphabeticallyOrderedStudents,
+				dataTextField: ['categoryName', 'lastname' ]
+			}).data('kendoTreeView');
+
+
+			var studentsInCourse = $('#studentsInCourse').kendoTreeView({
+				dragAndDrop: true,
+				dataSource: studentDataInCourse,
+				dataTextField: ['categoryName', 'lastname' ]
+			}).data('kendoTreeView');
+
+			$('#allStudents, #studentsInCourse').data('kendoTreeView').bind('drag', function(e) {
+				if($(e.dropTarget).hasClass('k-in')) {
+					if($(e.dropTarget).hasClass('k-state-hover')) {
+						if($(e.dropTarget).offsetParent().hasClass('k-treeview-lines')) {
+							console.log($(e.dropTarget));
+						} else {
+							e.setStatusClass('k-denied');
+						}
+					} else {
+						e.setStatusClass('k-denied');
+					}
+				} else {
+					e.setStatusClass('k-denied');
+				}
+				
+			});
+
+			$('#courseForm').submit(function(evt) {
+
+				var formular = $(this);
+				var studentData = studentsInCourse.dataSource.data()[0].items;
+
+				studentData.forEach(function(item, index) {
+					formular.append('<input type="hidden" name="userlist[]" value="' + item._id + '" />');
+				});
+
+			});
