@@ -24,9 +24,8 @@ module.exports = function(app, async, User, Course){
 		course.save(function(err) {
 			if (err) {
 				res.redirect('/courses');
-			}
-			res.redirect('/courses');
-		});
+<<<<<<< HEAD
+			});
 	});
 
 	app.post('/course/update/', function (req, res) {
@@ -60,13 +59,20 @@ module.exports = function(app, async, User, Course){
 				});
 			}
 			console.log('Users still being in that course');
+=======
+			}
+>>>>>>> added users to course
 			res.redirect('/courses');
 		});
+	});
 
 	});
 
 	app.get('/course/new', function(req, res) {
+<<<<<<< HEAD
 
+=======
+>>>>>>> added users to course
 	  User.find({}, function (err, docs) {
 
 	  	res.render('course/manage/new', {
@@ -99,6 +105,7 @@ module.exports = function(app, async, User, Course){
 	});
 
 	// Course detail view
+<<<<<<< HEAD
 	app.get('/course/view/:selectedCourse', function (req, res) {
 
 		Course
@@ -114,6 +121,10 @@ module.exports = function(app, async, User, Course){
 
 			})
 
+=======
+	app.get('/course/view/:selectedCourse', function(req, res) {
+	  res.render('course/view/details', { title: 'Course Details', message: req.flash('error'), course: req.params.selectedCourse });
+>>>>>>> added users to course
 	});
 
 }

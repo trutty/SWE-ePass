@@ -5,7 +5,11 @@ block content
 
 	h1= title
 
-	form#courseForm.k-content(action='/course/new', method='post')
+<<<<<<< HEAD
+	form.k-content(action='/course/new', method='post')
+=======
+	form#courseForm(action='/course/new', method='post', class='k-content')
+>>>>>>> added users to course
 
 		table
 			tr
