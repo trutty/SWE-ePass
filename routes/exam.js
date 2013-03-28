@@ -6,7 +6,7 @@
 module.exports = function (app, User, Course, Criteria, Exam, async){
 	// exam
 	// exam overview
-	app.get('/exam', function(req, res) {
+	app.get('/exam', function (req, res) {
 
 		var exams = [];
 
@@ -25,14 +25,22 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 	});
 
 	// exam create
-	app.get('/exam/new', function(req, res) {
+	app.get('/exam/new/:selectedExam', function(req, res) {
 
 		var courses 	= []
 		  , assessors 	= []
-		  , tutors 		= [];
+		  , tutors 		= []
+		  , exam 		= [];
 
 		async.series([
-			
+			function (callback) {
+				if(req.params.selectedExam) {
+					Exam.findById(req.params.selectedExam, function (err, docsExam) {
+						exam = docsExam;
+						callback(err);
+					});
+				}
+			},
 			function (callback) {
 				Course.find({}, function (err, docsCourse) {
 					courses = docsCourse;
@@ -76,13 +84,16 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 
 		], function(error) {
 
+			console.log(exam);
+
 			res.render('exam/manage/new', {
 				title: 'New Exam',
 	    		message: req.flash('error'),
 	    		tutors: tutors,
 	    		registered: req.user,
 				courses: courses,
-				assessors: assessors.concat(tutors)
+				assessors: assessors.concat(tutors),
+				exam: exam
 			});
 
 		});

@@ -5,21 +5,34 @@ block content
 
 	h1= title
 
-	form.k-content(action='/exam/new', method='post', id='examNew')
+	if exam != undefined
+		action = '/exam/update/' + exam.id
+		examName = exam.name
+		examTutor = exam.user
+		examLecture = exam.lecture
+		examDate = exam.date
+	else
+		action = '/exam/new/'
+		examName = ''
+		examTutor = ''
+		examLecture = ''
+		examDate = ''
+
+	form.k-content(action= action, method='post', id='examNew')
 		table
 			tr
 				th
 					label(for='name')
 						| Name:
 				td
-					input#name(class='k-textbox', type='text', name='name', required='true')
+					input#name(class='k-textbox', type='text', name='name', required='true', value= examName)
 
 			tr
 				th
 					label(for='user')
 						| Tutor:
 				td
-					input#tutor.k-textbox(type='text', name='tutor')
+					input#tutor.k-textbox(type='text', name='tutor', value= examTutor)
 					ul.selections.tutorSelection
 					
 			tr
@@ -43,21 +56,21 @@ block content
 					label(for='lecture')
 						| Lecture:
 				td
-					input#lecture(class='k-textbox', type='text', name='lecture', required='true')
+					input#lecture(class='k-textbox', type='text', name='lecture', required='true', value= examLecture)
 
 			tr
 				th
 					label(for='date')
 						| Date: 
 				td
-					input#date(name='date', required='true', style='width:15.4em;')
+					input#date(name='date', required='true', style='width:15.4em;', value= examDate)
 
 			tr
 				th
 					label(for='duration')
 						| Duration in minutes: 
 				td
-					input#duration(class='k-textbox', type='number', name='duration', min='0', value='90', required='true')
+					input#duration(class='k-textbox', type='number', name='duration', min='0', required='true')
 
 			tr
 				th

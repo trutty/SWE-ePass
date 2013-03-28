@@ -51,17 +51,13 @@ module.exports = function(app, async, User, Course){
 	app.get('/course/delete/:selectedCourse', function (req, res) {
 
 		// check if a user in in the course, if true than do not delete
-		User.findOne( {course: req.params.selectedCourse}, function (error, docs) {
-			if (!docs && !err) {
-				Course.remove( { _id: req.params.selectedCourse }, function (err, affected) {
-					if(err) {
-						console.log(err);
-					}
-				});
+		Course.remove( { _id: req.params.selectedCourse }, function (err, affected) {
+			if(err) {
+				console.log(err);
 			}
-			console.log('Users still being in that course');
-			res.redirect('/courses');
 		});
+
+		res.redirect('/courses');
 
 	});
 
