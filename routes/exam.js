@@ -8,8 +8,6 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 	// exam overview
 	app.get('/exam', function (req, res) {
 
-		console.log(req.user.id);
-
 		var exams = [];
 
 		Exam
@@ -57,7 +55,9 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 						assessor.name 		= item.name;
 						assessor.firstname	= item.firstname;
 						assessor.lastname 	= item.lastname;
-						assessor._id 		= item.id;
+						assessor.id 		= item.id;
+
+						console.log("name: %s, id: %s", assessor.name, assessor.id);
 
 						assessors.push(assessor);
 					});
@@ -85,8 +85,6 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 			}
 
 		], function(error) {
-
-			console.log(exam);
 
 			res.render('exam/manage/new', {
 				title: 'New Exam',

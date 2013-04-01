@@ -38,22 +38,24 @@ block content
 					input#tutor.k-textbox(type='text', name='tutor', value= examTutor)
 					ul.selections.tutorSelection
 						if exam != undefined
-							li.removeSelection
-									| #{exam.user.name}
-									input.k-textbox(type='hidden', name='tutor[]', value= exam.user.id)
+							each item in tutors
+								li.removeSelection
+									| #{item.name}
+									input.k-textbox(type='hidden', name='tutor[]', value= item.id)
 									span x
 					
 			tr
 				th
 					label(for='assessor')
-						| Accessor:
+						| Assessor:
 				td
 					input#assessor.k-textbox(type='text', name='assessor')
 					ul.selections
 						if exam != undefined
-							li.removeSelection
-									| #{exam.assesor.name}
-									input.k-textbox(type='hidden', name='assessor[]', value= exam.assessor.id)
+							each item in assessors
+								li.removeSelection
+									| #{item.name}
+									input.k-textbox(type='hidden', name='assessor[]', value= item.id)
 									span x
 
 			tr
@@ -63,6 +65,12 @@ block content
 				td
 					input#course.k-textbox(type='text', name='course')
 					ul.selections
+						if exam != undefined
+							each item in courses
+								li.removeSelection
+									| #{item.name}
+									input.k-textbox(type='hidden', name='course[]', value= item.id)
+									span x
 
 			tr
 				th
