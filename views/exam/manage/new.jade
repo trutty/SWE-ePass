@@ -8,15 +8,18 @@ block content
 	if exam != undefined
 		action = '/exam/update/' + exam.id
 		examName = exam.name
-		examTutor = exam.user
 		examLecture = exam.lecture
 		examDate = exam.date
+		examDuration = exam.duration
+		examMaxPoints = exam.maxPoints
 	else
 		action = '/exam/new/'
 		examName = ''
 		examTutor = ''
 		examLecture = ''
 		examDate = ''
+		examDuration = ''
+		examMaxPoints = ''
 
 	form.k-content(action= action, method='post', id='examNew')
 		table
@@ -34,6 +37,11 @@ block content
 				td
 					input#tutor.k-textbox(type='text', name='tutor', value= examTutor)
 					ul.selections.tutorSelection
+						if exam != undefined
+							li.removeSelection
+									| #{exam.user.name}
+									input.k-textbox(type='hidden', name='tutor[]', value= exam.user.id)
+									span x
 					
 			tr
 				th
@@ -42,6 +50,11 @@ block content
 				td
 					input#assessor.k-textbox(type='text', name='assessor')
 					ul.selections
+						if exam != undefined
+							li.removeSelection
+									| #{exam.assesor.name}
+									input.k-textbox(type='hidden', name='assessor[]', value= exam.assessor.id)
+									span x
 
 			tr
 				th
@@ -70,14 +83,14 @@ block content
 					label(for='duration')
 						| Duration in minutes: 
 				td
-					input#duration(class='k-textbox', type='number', name='duration', min='0', required='true')
+					input#duration(class='k-textbox', type='number', name='duration', min='0', required='true', value= examDuration)
 
 			tr
 				th
 					label(for='maxPoints')
 						| Maximum Points: 
 				td
-					input#maxPoints(class='k-textbox', type='number', name='maxPoints', min='0', required='true')
+					input#maxPoints(class='k-textbox', type='number', name='maxPoints', min='0', required='true', value= examMaxPoints)
 
 			tr
 				th

@@ -8,12 +8,14 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 	// exam overview
 	app.get('/exam', function (req, res) {
 
+		console.log(req.user.id);
+
 		var exams = [];
 
 		Exam
 			.find({})
 			.populate('course', 'userlist')
-			.or([{'assessor': req.user}, {'user': req.user}, {'course.userlist': req.user}])
+			.or([{'assessor': req.user.id}, {'user': req.user.id}, {'course.userlist': req.user.id}])
 			.exec(function (error, docs) {
 				res.render('exam/view/exam', {
 					title: 'Exams',
