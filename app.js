@@ -14,15 +14,30 @@ var express = require('express')
   , LocalStrategy = require('passport-local').Strategy
   , mongoose = require('mongoose')
   , mongoStore = require('connect-mongodb')
-  , DatabaseObject = require('./models/DataSchemes.js')()
-  , User = DatabaseObject.user
-  , Exam = DatabaseObject.exam
-  , Criteria = DatabaseObject.criteria
-  , CriteriaPoints = DatabaseObject.criteriaPoints
-  , ExamPoints = DatabaseObject.examPoints
-  , Course = DatabaseObject.course;
+  , Schema = mongoose.Schema
+
+  , Validator = require('validator').Validator
+  , crypto = require('crypto')
+
+  , User = require('./models/User.js')(mongoose, Validator, crypto, Schema) // returns User Schema
+  , Course = require('./models/Course.js')(mongoose, Schema) // returns Course Schema
+  , Criteria = require('./models/Criteria.js')(mongoose, Schema) // returns Criteria Schema
+  , Exam = require('./models/Exam.js')(mongoose, Schema, Criteria) // returns Exman Schema
+
+  , CriteriaPoints = require('./models/CriteriaPoints.js')(mongoose, Schema) // returns Criteria Points Schema
+  , ExamPoints = require('./models/ExamPoints.js')(mongoose, Schema, CriteriaPoints) // returns Exam Points Schema
+
+  ;
 
 var app = express();
+
+// turn Schemata into Models
+User = mongoose.model('User', User);
+Course = mongoose.model('Course', Course);
+Criteria = mongoose.model('Criteria', Criteria);
+Exam = mongoose.model('Exam', Exam);
+CriteriaPoints = mongoose.model('CriteriaPoints', CriteriaPoints);
+ExamPoints = mongoose.model('ExamPoints', ExamPoints);
 
 app.set('db-uri', 'mongodb://localhost/epass');
 
