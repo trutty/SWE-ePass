@@ -205,12 +205,12 @@ module.exports = function(){
     },
 
     subcriteria: {
-      type: [CriteriaSchema]
+      type: [{type: Schema.ObjectId, ref: 'Criteria'}]
     }
 
   });
 
-  var Criteria = mongoose.model('Critiera', CriteriaSchema);
+  var Criteria = mongoose.model('Criteria', CriteriaSchema);
 
   var ExamSchema = new Schema({
 
@@ -250,7 +250,7 @@ module.exports = function(){
     },
 
     criteria: {
-      type: [CriteriaSchema]
+      type: [{type: Schema.ObjectId, ref: 'Criteria'}]
     }
 
   });

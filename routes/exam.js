@@ -25,21 +25,31 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 	});
 
 	// exam create
-	app.get('/exam/new/:selectedExam', function(req, res) {
+	var createEditExam = function( req, res, selectedExam ) {
 
 		var courses 	= []
 		  , assessors 	= []
 		  , tutors 		= []
-		  , exam 		= [];
+		  , exam 		= null;
 
 		async.series([
 			function (callback) {
-				if(req.params.selectedExam) {
-					Exam.findById(req.params.selectedExam, function (err, docsExam) {
+				if(selectedExam) {
+					Exam
+						.findById(selectedExam)
+						.populate('criteria course assessor')
+						.exec(function (err, docsExam) {
 						exam = docsExam;
 						callback(err);
+
+						console.log(exam);
+						console.log('-------');
+						console.log('-------');
+						console.log('-------');
 					});
 				}
+
+				callback();
 			},
 			function (callback) {
 				Course.find({}, function (err, docsCourse) {
@@ -56,8 +66,6 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 						assessor.firstname	= item.firstname;
 						assessor.lastname 	= item.lastname;
 						assessor.id 		= item.id;
-
-						console.log("name: %s, id: %s", assessor.name, assessor.id);
 
 						assessors.push(assessor);
 					});
@@ -86,8 +94,10 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 
 		], function(error) {
 
+			console.log("Exam: %s", exam);
+
 			res.render('exam/manage/new', {
-				title: 'New Exam',
+				title: exam == null ? 'New Exam' : 'Update Exam',
 	    		message: req.flash('error'),
 	    		tutors: tutors,
 	    		registered: req.user,
@@ -98,9 +108,17 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 
 		});
 
+	};
+
+	app.get('/exam/new', function(req, res) {
+		createEditExam(req, res, null);
 	});
 
-	// exam edit
+	app.get('/exam/edit/:selectedExam', function(req, res) {
+		createEditExam(req, res, req.params.selectedExam);
+	});
+
+/*	// exam edit
 	app.get('/exam/edit/:selectedExam', function(req, res) {
 
 		Exam
@@ -118,7 +136,7 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 
 			});
 
-	});
+	});*/
 
 	// exam detail view
 	app.get('/exam/view/:selectedExam', function(req, res) {
@@ -154,6 +172,7 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 			if(!err) {
 				res.redirect('/exam');
 			} else {
+				console.log(examBody);
 				console.log(err);
 			}
 		});
