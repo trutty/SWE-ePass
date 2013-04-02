@@ -35,21 +35,18 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 		async.series([
 			function (callback) {
 				if(selectedExam) {
-					Exam
-						.findById(selectedExam)
-						.populate('criteria course assessor')
-						.exec(function (err, docsExam) {
-						exam = docsExam;
-						callback(err);
 
-						console.log(exam);
-						console.log('-------');
-						console.log('-------');
-						console.log('-------');
-					});
+					Exam.findOne({ _id : selectedExam })
+						.populate('user')
+						.populate('course')
+						.populate('assessor')
+						.exec( function( err, docsExam ) {
+							exam = docsExam;
+							callback(err);
+						});
+				} else {
+					callback();
 				}
-
-				callback();
 			},
 			function (callback) {
 				Course.find({}, function (err, docsCourse) {
@@ -94,6 +91,7 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 
 		], function(error) {
 
+			console.log("selected exam: %s", selectedExam);
 			console.log("Exam: %s", exam);
 
 			res.render('exam/manage/new', {

@@ -5,6 +5,10 @@ block content
 
 	h1= title
 
+	:markdown
+		#nigger#
+		*nigger* **nigger** ***nigger***
+
 	if exam != null
 		action = '/exam/update/' + exam.id
 		examName = exam.name
@@ -39,7 +43,7 @@ block content
 					ul.selections.tutorSelection
 						if exam != null
 							li.removeSelection
-								| #{exam.user.name}
+								| #{exam.user.firstname} #{exam.user.lastname}
 								input.k-textbox(type='hidden', name='tutor[]', value= exam.user.id)
 								span x
 					
