@@ -156,7 +156,52 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 		
 	});
 
-	app.post('/exam/new', function(req, res) {
+	var saveOrUpdateExam = function (req, res, selectedExam) {
+
+		var examBody 		= req.body;
+		examBody.criteria 	= req.body.criteria;
+		examBody.assessor 	= req.body.assessor;
+		examBody.user 		= req.body.tutor[0];
+		examBody.course 	= req.body.course;
+
+		if(selectedExam) {
+
+			Exam.update( { _id: selectedExam }, examBody, function(err, affected) {
+				if(err) {
+					console.log('Update Exam Error: %s', err);
+					res.redirect('/exam/edit/' + selectedExam);
+				} else {
+					res.redirect('/exam');
+				}
+			});
+
+		} else {
+
+			var exam 			= new Exam(examBody);
+
+			exam.save(function (err) {
+				if(!err) {
+					res.redirect('/exam');
+				} else {
+					console.log(examBody);
+					console.log(err);
+				}
+			});
+
+		}
+
+	};
+
+	app.post('/exam/new', function (req, res) {
+		saveOrUpdateExam(req, res, null);
+	});
+
+	app.post('/exam/update/:selectedExam', function (req, res) {
+		saveOrUpdateExam(req, res, req.params.selectedExam);
+	});	
+
+/*
+	app.post('/exam/new', function (req, res) {
 
 		var examBody 		= req.body;
 		examBody.criteria 	= req.body.criteria;
@@ -176,5 +221,6 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 		});
 		
 	});
+*/
 
 }

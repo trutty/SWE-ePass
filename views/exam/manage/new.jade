@@ -120,7 +120,7 @@ block content
 												if subcrit != null
 													li.subcriteria
 														input.k-textbox.subcriteriaName(type='text', required='true', placeholder='Name', name='criteria[#{i}][subcriteria][#{n}][name]', value= subcrit.name)
-														input.k-textbox.subcriteriaDesc(type='text', required='true', placeholder='Description', name='criteria[#{i}][subcriteria][#{n}][description]', value= subcrit.description)
+														input.k-textbox.subcriteriaDesc(type='text', placeholder='Description', name='criteria[#{i}][subcriteria][#{n}][description]', value= subcrit.description)
 														input.k-textbox.subcriteriaScore(type='number', min='0', required='true', placeholder='Score', name='criteria[#{i}][subcriteria][#{n}][score]', value= subcrit.score)
 														input.addChild.k-button(type='button', value='+')
 														input.removeCriteria.k-button(type='button', value='-')
