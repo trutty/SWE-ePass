@@ -5,10 +5,6 @@ block content
 
 	h1= title
 
-	:markdown
-		#nigger#
-		*nigger* **nigger** ***nigger***
-
 	if exam != null
 		action = '/exam/update/' + exam.id
 		examName = exam.name
@@ -109,15 +105,35 @@ block content
 						| Criteria:
 				td	
 					ul.criteria
-						li
-							input.criteriaName.k-textbox(type='text', name='criteria[0][name]', required='true', placeholder='Name')
-							input.criteriaDesc.k-textbox(type='text', name='criteria[0][description]', placeholder='Description')
-							input.criteriaScore.k-textbox(type='number', min='0', name='criteria[0][score]', required='true', placeholder='Score')
-							input.addCriteria.k-button(type='button', value='+')
-							input.removeCriteria.k-button(type='button', value='-')
-							input.addChild.k-button(type='button', value='Add Child')
+						if exam != undefined
+							each crit, i in exam.criteria
+								if crit != null
+									li
+										input.criteriaName.k-textbox(type='text', name='criteria[#{i}][name]', required='true', placeholder='Name', value= crit.name)
+										input.criteriaDesc.k-textbox(type='text', name='criteria[#{i}][description]', placeholder='Description', value= crit.description)
+										input.criteriaScore.k-textbox(type='number', min='0', name='criteria[#{i}][score]', required='true', placeholder='Score', value= crit.score)
+										input.addCriteria.k-button(type='button', value='+')
+										input.removeCriteria.k-button(type='button', value='-')
+										input.addChild.k-button(type='button', value='Add Child')
+										ul.subcriteria
+											each subcrit, n in crit.subcriteria
+												if subcrit != null
+													li.subcriteria
+														input.k-textbox.subcriteriaName(type='text', required='true', placeholder='Name', name='criteria[#{i}][subcriteria][#{n}][name]', value= subcrit.name)
+														input.k-textbox.subcriteriaDesc(type='text', required='true', placeholder='Description', name='criteria[#{i}][subcriteria][#{n}][description]', value= subcrit.description)
+														input.k-textbox.subcriteriaScore(type='number', min='0', required='true', placeholder='Score', name='criteria[#{i}][subcriteria][#{n}][score]', value= subcrit.score)
+														input.addChild.k-button(type='button', value='+')
+														input.removeCriteria.k-button(type='button', value='-')
 
-							ul.subcriteria
+						else
+							li
+								input.criteriaName.k-textbox(type='text', name='criteria[0][name]', required='true', placeholder='Name')
+								input.criteriaDesc.k-textbox(type='text', name='criteria[0][description]', placeholder='Description')
+								input.criteriaScore.k-textbox(type='number', min='0', name='criteria[0][score]', required='true', placeholder='Score')
+								input.addCriteria.k-button(type='button', value='+')
+								input.removeCriteria.k-button(type='button', value='-')
+								input.addChild.k-button(type='button', value='Add Child')
+								ul.subcriteria
 
 			tr
 				td
