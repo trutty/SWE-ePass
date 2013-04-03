@@ -35,10 +35,10 @@ TODO:
 	[x]	Nur E-Mail ändern
 	[x]	Passwort ändern
 
-	Kurse erstellen:
+	Kurse erstellen: [√]
 	[√]	Bezeichnung des Kurses
 	[√]	Jahrgang
-	[x]	Liste der Benutzer des Kurses (Hidden fields für Form)
+	[√]	Liste der Benutzer des Kurses (Hidden fields für Form)
 	[√] Dropdown für Semester (winter/summer)
 
 	Kursverwaltung:
