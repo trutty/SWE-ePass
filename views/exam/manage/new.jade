@@ -21,7 +21,7 @@ block content
 		examDuration = undefined
 		examMaxPoints = undefined
 
-	form.k-content(action= action, method='post', id='examNew')
+	form#examNew.k-content(action= action, method='post')
 		table
 			tr
 				th
@@ -269,7 +269,7 @@ block content
 				var criteriaPoints = Number(0);
 				var error = false;
 				//iterate over each criteria
-				$('ul.criteria > li').each(function(index) {
+				$('ul.criteria > li').each(function (index) {
 					criteriaPoints = Number($(this).children('input.criteriaScore').val());
 					var subcriteriaPoints = Number(0);
 					var subcriterias = false;

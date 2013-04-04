@@ -206,7 +206,10 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 	});
 
 	app.post('/exam/update/:selectedExam', function (req, res) {
-		saveOrUpdateExam(req, res, req.params.selectedExam);
+
+		console.log(req.body.criteria[0].subcriteria[2]);
+
+		//saveOrUpdateExam(req, res, req.params.selectedExam);
 	});	
 
 }

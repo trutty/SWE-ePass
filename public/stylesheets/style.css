@@ -80,6 +80,11 @@ ul.criteria input {
 ul.criteria .criteriaName {
   width: 214px;
 }
+ul.criteria .criteriaScore,
+ul.criteria .subcriteriaScore,
+ul.criteria .assessCriteria {
+  width: 70px;
+}
 #pointsError {
   border-left: 2px solid #CF291A;
   padding-left: 10px;
