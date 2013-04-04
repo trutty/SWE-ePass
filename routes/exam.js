@@ -206,6 +206,13 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 	});
 
 	app.post('/exam/update/:selectedExam', function (req, res) {
+	
+		/*
+			In order to save assessed exam, on has to process several steps:
+				1. Save criteria in Criteria
+				2. Save scores in CriteriaPoints
+				3. Save assessed exam in ExamPoints
+		*/		
 
 		var criteriaBody = req.body;
 		criteriaBody.criteria = req.body.criteria;
