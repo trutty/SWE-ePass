@@ -76,9 +76,9 @@ block content
 						each crit, i in exam.criteria
 							if crit != null
 								li
-									input.criteriaName.k-textbox(type='text', name='criteria[#{i}][name]', required='true', placeholder='Name', disabled, value= crit.name)
-									input.criteriaDesc.k-textbox(type='text', name='criteria[#{i}][description]', placeholder='Description', disabled, value= crit.description)
-									input.criteriaScore.k-textbox(type='number', min='0', name='criteria[#{i}][score]', required='true', placeholder='Score', disabled, value= crit.score)
+									input.criteriaName.k-textbox(type='text', name='criteria[#{i}][name]', required='true', placeholder='Name', readonly, value= crit.name)
+									input.criteriaDesc.k-textbox(type='text', name='criteria[#{i}][description]', placeholder='Description', readonly, value= crit.description)
+									input.criteriaScore.k-textbox(type='number', min='0', name='criteria[#{i}][score]', required='true', placeholder='Score', readonly, value= crit.score)
 
 									if crit.subcriteria.length == 0
 										input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][assessScore]', required='true')
@@ -87,9 +87,9 @@ block content
 										each subcrit, n in crit.subcriteria
 											if subcrit != null
 												li.subcriteria
-													input.k-textbox.subcriteriaName(type='text', required='true', placeholder='Name', name='criteria[#{i}][subcriteria][#{n}][name]', disabled, value= subcrit.name)
-													input.k-textbox.subcriteriaDesc(type='text', placeholder='Description', name='criteria[#{i}][subcriteria][#{n}][description]', disabled, value= subcrit.description)
-													input.k-textbox.subcriteriaScore(type='number', min='0', required='true', placeholder='Score', name='criteria[#{i}][subcriteria][#{n}][score]', disabled, value= subcrit.score)
+													input.k-textbox.subcriteriaName(type='text', required='true', placeholder='Name', name='criteria[#{i}][subcriteria][#{n}][name]', readonly, value= subcrit.name)
+													input.k-textbox.subcriteriaDesc(type='text', placeholder='Description', name='criteria[#{i}][subcriteria][#{n}][description]', readonly, value= subcrit.description)
+													input.k-textbox.subcriteriaScore(type='number', min='0', required='true', placeholder='Score', name='criteria[#{i}][subcriteria][#{n}][score]', readonly, value= subcrit.score)
 													input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][subcriteria][#{n}][assessScore]', required='true')
 
 			tr

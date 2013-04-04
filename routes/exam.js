@@ -207,7 +207,21 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 
 	app.post('/exam/update/:selectedExam', function (req, res) {
 
-		console.log(req.body.criteria[0].subcriteria[2]);
+		var criteriaBody = req.body;
+		criteriaBody.criteria = req.body.criteria;
+
+		console.log(criteriaBody.criteria[0].subcriteria[1]);
+
+		var criteria = new Criteria(criteriaBody.criteria);
+		criteria.save(function (err) {
+			if (err) {
+				console.log(err);
+				res.redirect('/exam/assess/' + req.params.selectedExam);
+			}
+		});
+
+		//console.log(criteria);
+
 
 		//saveOrUpdateExam(req, res, req.params.selectedExam);
 	});	
