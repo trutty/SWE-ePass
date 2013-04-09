@@ -1,4 +1,4 @@
-module.exports = function( mongoose, Schema, Criteria ){
+module.exports = function( mongoose, Schema ){
 
 	var Exam = new Schema({
 
@@ -10,7 +10,7 @@ module.exports = function( mongoose, Schema, Criteria ){
 		date:		{ type: Date, required: true, default: new Date() },
 		duration:	{ type: Number },
 		maxPoints:	{ type: Number, required: true },
-		criteria:	[Criteria]
+		criteria:	[{ type: Schema.ObjectId, ref: 'Criteria'}]
 
 	});
 

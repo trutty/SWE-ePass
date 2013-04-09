@@ -168,10 +168,22 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 	var saveOrUpdateExam = function (req, res, selectedExam) {
 
 		var examBody 		= req.body;
-		examBody.criteria 	= req.body.criteria;
+		examBody.course 	= req.body.course;
 		examBody.assessor 	= req.body.assessor;
 		examBody.user 		= req.body.tutor[0];
-		examBody.course 	= req.body.course;
+
+		var criterias = [];
+		if(selectedExam) {
+			// update criterias here, chris
+		} else {
+			req.body.criteria.forEach(function(item, index) {
+				var newCriteria = new Criteria(item);
+				criterias.push(newCriteria);
+			});
+		}
+
+		examBody.criteria = criterias;
+
 
 		if(selectedExam) {
 
@@ -205,15 +217,23 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 		saveOrUpdateExam(req, res, null);
 	});
 
-	app.post('/exam/update/:selectedExam', function (req, res) {
-	
-		/*
-			In order to save assessed exam, on has to process several steps:
-				1. Save criteria in Criteria
-				2. Save scores in CriteriaPoints
-				3. Save assessed exam in ExamPoints
-		*/		
+	app.post('/exam/assess/:selectedExam', function (req, res) {
 
+		Criteria.findById('515bee674b2dd9d2c5000004', function(error, criteria) {
+			console.log("muh");
+			console.log(error);
+			console.log(criteria);
+			console.log('mäh');
+		})
+
+		Exam.findById(req.params.selectedExam, function(error, exam) {
+			exam.criteria.forEach(function(item, index) {
+				console.log(item._id);
+			});
+		});
+
+
+		/*
 		var criteriaBody = req.body;
 		criteriaBody.criteria = req.body.criteria;
 
@@ -226,11 +246,8 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 				res.redirect('/exam/assess/' + req.params.selectedExam);
 			}
 		});
+		*/
 
-		//console.log(criteria);
-
-
-		//saveOrUpdateExam(req, res, req.params.selectedExam);
 	});	
 
 }

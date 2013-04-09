@@ -22,10 +22,10 @@ var express = require('express')
   , User = require('./models/User.js')(mongoose, Validator, crypto, Schema) // returns User Schema
   , Course = require('./models/Course.js')(mongoose, Schema) // returns Course Schema
   , Criteria = require('./models/Criteria.js')(mongoose, Schema) // returns Criteria Schema
-  , Exam = require('./models/Exam.js')(mongoose, Schema, Criteria) // returns Exman Schema
+  , Exam = require('./models/Exam.js')(mongoose, Schema) // returns Exman Schema
 
   , CriteriaPoints = require('./models/CriteriaPoints.js')(mongoose, Schema) // returns Criteria Points Schema
-  , ExamPoints = require('./models/ExamPoints.js')(mongoose, Schema, CriteriaPoints) // returns Exam Points Schema
+  , ExamPoints = require('./models/ExamPoints.js')(mongoose, Schema) // returns Exam Points Schema
 
   ;
 
