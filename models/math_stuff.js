@@ -2,29 +2,30 @@ var lower_profile = new Array();
 var upper_profile = new Array();
 var tolerance = double;
 
-public double score(lower_profile, upper_profile, tolerance){
+score = function(lower_profile, upper_profile, tolerance){
 	if (array_sum(upper_profile)=0) {
 		return score = 0;
 	};
-	var min_score = math.min(rank(upper_profile), (1 - rank(lower_profile)));
-	var max_score = math.max(rank(upper_profile), (1 - rank(lower_profile)));
+	var min_score = Math.min(rank(upper_profile), (1 - rank(lower_profile)));
+	var max_score = Math.max(rank(upper_profile), (1 - rank(lower_profile)));
 
 	score = ((1 - tolerance) * min_score + tolerance * max_score);
 	return score;
 }
 
-public double array_sum(myArray()){
+array_sum = function(myArray){
 	var sum = 0;
 	for (var i = 0; i < myArray.length; i++) {
 		sum = sum + myArray[i];
 	}
+	return sum;
 };
 
-public double rank(myArray()){
+rank = function(myArray){
 	myRank = 0;
 	for (var i = 0; myArray.length(); i++) {
 		if (myArray[i] > 0) {
-			myRank = myRank + math.exp(math.log(factorial(myArray[i] + i)) - math.log(factorial(i+1)) math.log(factorial(myArray[i]))); 
+			myRank = myRank + Math.exp(Math.log(factorial(myArray[i] + i)) - Math.log(factorial(i+1)) Math.log(factorial(myArray[i]))); 
 		};
 		rank = (rank / (myArray.length)) 
 	};
@@ -49,4 +50,12 @@ function factorial(op) {
  d = d1 * d2 * d3 * d4;
 
  return d;
+}
+
+your_grade_new = function(myScore, model){
+	var rounded_score = ((Math.floor(myScore *100000000))/100000000);
+	switch model {
+		case "DHBW" : 
+			your_grade_new = Math.min(5, 7 - 6 * rounded_score)
+	}
 }
