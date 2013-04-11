@@ -56,6 +56,12 @@ your_grade_new = function(myScore, model){
 	var rounded_score = ((Math.floor(myScore *100000000))/100000000);
 	switch model {
 		case "DHBW" : 
-			your_grade_new = Math.min(5, 7 - 6 * rounded_score)
+				your_grade_new = Math.min(5, 7 - 6 * rounded_score);
+		case "PASS_1" :
+			your_grade_new = 1 + 4 * Math.pow((1 - rounded_score ^ 1.508),(1 / 1.508));
+		case "PASS_2" :
+			your_grade_new = Math.max(Math.pow((1 - rounded_score ^ 1.678),(1 / 1.678)));
+		case "PASS_3" :
+			your_grade_new = Math.max(1, 5 * Math.pow((1 - rounded_score ^ 1.508),(1 / 1.508)));
 	}
 }
