@@ -76,6 +76,7 @@ block content
 						each crit, i in exam.criteria
 							if crit != null
 								li
+									input.k-textbox(type='hidden', name='criteria[#{i}][id]', required='true', readonly, value= crit._id)
 									input.criteriaName.k-textbox(type='text', name='criteria[#{i}][name]', required='true', placeholder='Name', readonly, value= crit.name)
 									input.criteriaDesc.k-textbox(type='text', name='criteria[#{i}][description]', placeholder='Description', readonly, value= crit.description)
 									input.criteriaScore.k-textbox(type='number', min='0', name='criteria[#{i}][score]', required='true', placeholder='Score', readonly, value= crit.score)
@@ -87,6 +88,7 @@ block content
 										each subcrit, n in crit.subcriteria
 											if subcrit != null
 												li.subcriteria
+													input.k-textbox(type='hidden', required='true', name='criteria[#{i}][subcriteria][#{n}][id]', readonly, value= subcrit._id)
 													input.k-textbox.subcriteriaName(type='text', required='true', placeholder='Name', name='criteria[#{i}][subcriteria][#{n}][name]', readonly, value= subcrit.name)
 													input.k-textbox.subcriteriaDesc(type='text', placeholder='Description', name='criteria[#{i}][subcriteria][#{n}][description]', readonly, value= subcrit.description)
 													input.k-textbox.subcriteriaScore(type='number', min='0', required='true', placeholder='Score', name='criteria[#{i}][subcriteria][#{n}][score]', readonly, value= subcrit.score)

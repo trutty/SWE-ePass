@@ -1,4 +1,3 @@
-
 /*
  * Routes for exam creation, manipulation and view
  */
@@ -40,6 +39,7 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 						.populate('user')
 						.populate('course')
 						.populate('assessor')
+						.populate('criteria')
 						.exec( function( err, docsExam ) {
 							exam = docsExam;
 							callback(err);
@@ -124,6 +124,7 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 			.populate('user')
 			.populate('assessor')
 			.populate('course')
+			.populate('criteria')
 			.exec(function (error, docs) {
 
 				res.render('exam/view/details', {
@@ -153,6 +154,7 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 			.populate('user')
 			.populate('course')
 			.populate('assessor')
+			.populate('criteria')
 			.exec( function( err, docsExam ) {
 				if(!err) {
 					res.render('exam/manage/assess', {
@@ -172,28 +174,83 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 		examBody.assessor 	= req.body.assessor;
 		examBody.user 		= req.body.tutor[0];
 
+		console.log(examBody.criteria);
+		console.log('muuuuuh');
+
 		var criterias = [];
-		if(selectedExam) {
-			// update criterias here, chris
-		} else {
-			req.body.criteria.forEach(function(item, index) {
+		if(!selectedExam) {
+			req.body.criteria.forEach(function (item, index) {
 				var newCriteria = new Criteria(item);
-				criterias.push(newCriteria);
+				newCriteria.save(function(err) {
+					console.log(err);
+				});
+				criterias.push(newCriteria.id);
 			});
+		} else {
+			criterias = examBody.criteria;
 		}
 
 		examBody.criteria = criterias;
 
 
+		console.log(examBody.criteria);
+		console.log("ääääääää");
+
+
 		if(selectedExam) {
 
-			Exam.update( { _id: selectedExam }, examBody, function(err, affected) {
-				if(err) {
-					console.log('Update Exam Error: %s', err);
-					res.redirect('/exam/edit/' + selectedExam);
-				} else {
-					res.redirect('/exam');
-				}
+			var criterias = [];
+			var oldCriteria = [];
+			Exam.findById(selectedExam, function (error, docs) {
+
+				docs.criteria.forEach(function (item, index) {
+					oldCriteria.push(item.id);
+				});
+
+				examBody.criteria.forEach(function(crit) {
+					if (oldCriteria.contains(crit.id)) {
+						oldCriteria.remove(crit.id);
+						criterias.push(crit.id);
+						Criteria.update( {_id: crit.id}, crit, function (err) {
+							if(err) {
+								console.log(err);
+							}
+						});
+					} else {
+						var newCriteria = new Criteria(crit);
+						newCriteria.save(function(err) {
+							console.log(err);
+						});
+						criterias.push(newCriteria.id);
+					}
+				});
+
+
+				console.log('old');
+				console.log(oldCriteria);
+				console.log(criterias);
+				console.log('old');
+
+				oldCriteria.forEach(function (oc) {
+					Criteria.remove({ _id: oc }, function (err) {
+						if(err) {
+							console.log(err);
+						}
+					});
+				});
+
+				examBody.criteria = criterias;
+
+				Exam.update( { _id: selectedExam }, examBody, function(err, affected) {
+
+					if(err) {
+						console.log('Update Exam Error: %s', err);
+						res.redirect('/exam/edit/' + selectedExam);
+					} else {
+						res.redirect('/exam');
+					}
+				});
+
 			});
 
 		} else {
@@ -215,6 +272,10 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 
 	app.post('/exam/new', function (req, res) {
 		saveOrUpdateExam(req, res, null);
+	});
+
+	app.post('/exam/update/:selectedExam', function (req, res) {
+		saveOrUpdateExam(req, res, req.params.selectedExam);
 	});
 
 	app.post('/exam/assess/:selectedExam', function (req, res) {
