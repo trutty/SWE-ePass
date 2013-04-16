@@ -10,6 +10,7 @@ var express = require('express')
   , async = require('async')
   , flash = require('connect-flash')
   , passport = require('passport')
+  , ensureLoggedIn = require('connect-ensure-login').ensureLoggedIn
   , util = require('util')
   , LocalStrategy = require('passport-local').Strategy
   , mongoose = require('mongoose')
@@ -69,7 +70,6 @@ passport.serializeUser(function(user, done) {
 
 passport.deserializeUser(function(id, done) {
   User.findOne({ _id: id }, function(err, user) {
-    //console.log(user);
     done(err, user);
   });
 });
@@ -124,9 +124,9 @@ mongoose.connect(app.set('db-uri'), function(err){
 
 // Routes
 require('./routes')(app, User, passport); // user auth
-require('./routes/exam')(app, User, Course, Criteria, Exam, ExamPoints, async);
-require('./routes/criteria')(app);
-require('./routes/course')(app, async, User, Course);
+require('./routes/exam')(app, ensureLoggedIn, User, Course, Criteria, Exam, ExamPoints, async);
+require('./routes/criteria')(app, ensureLoggedIn);
+require('./routes/course')(app, ensureLoggedIn, async, User, Course);
 require('./routes/api')(app, User, Course, null);
 
 http.createServer(app).listen(app.get('port'), function(){

@@ -2,10 +2,13 @@
  * Routes for exam creation, manipulation and view
  */
 
-module.exports = function (app, User, Course, Criteria, Exam, ExamPoints, async){
+module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, ExamPoints, async){
 
 	// exam overview
-	app.get('/exam', function (req, res) {
+	app.get('/exam',
+		ensureLoggedIn('/login'),
+		function (req, res) {
+
 
 		var exams = [];
 
@@ -108,16 +111,25 @@ module.exports = function (app, User, Course, Criteria, Exam, ExamPoints, async)
 
 	};
 
-	app.get('/exam/new', function (req, res) {
+	app.get('/exam/new',
+		ensureLoggedIn('/login'),
+		function (req, res) {
+
 		createEditExam(req, res, null);
 	});
 
-	app.get('/exam/edit/:selectedExam', function (req, res) {
+	app.get('/exam/edit/:selectedExam',
+		ensureLoggedIn('/login'),
+		function (req, res) {
+
 		createEditExam(req, res, req.params.selectedExam);
 	});
 
 	// exam detail view
-	app.get('/exam/view/:selectedExam', function (req, res) {
+	app.get('/exam/view/:selectedExam',
+		ensureLoggedIn('/login'),
+		function (req, res) {
+
 
 		Exam
 			.findById(req.params.selectedExam)
@@ -147,7 +159,10 @@ module.exports = function (app, User, Course, Criteria, Exam, ExamPoints, async)
 		
 	});
 
-	app.get('/exam/assess/:selectedExam', function (req, res) {
+	app.get('/exam/assess/:selectedExam',
+		ensureLoggedIn('/login'),
+		function (req, res) {
+
 
 		Exam
 			.findOne({ _id : req.params.selectedExam })
@@ -167,7 +182,7 @@ module.exports = function (app, User, Course, Criteria, Exam, ExamPoints, async)
 
 	});
 
-	app.get('/exam/delete/:selectedExam', function (req, res) {
+	app.get('/exam/delete/:selectedExam', ensureLoggedIn('/login'), function (req, res) {
 
 		// TODO do a cascaded deletion
 		Exam.remove( { _id: req.params.selectedExam }, function (err, aff) {
@@ -289,15 +304,24 @@ module.exports = function (app, User, Course, Criteria, Exam, ExamPoints, async)
 
 	};
 
-	app.post('/exam/new', function (req, res) {
+	app.post('/exam/new',
+		ensureLoggedIn('/login'),
+		function (req, res) {
+
 		saveOrUpdateExam(req, res, null);
 	});
 
-	app.post('/exam/update/:selectedExam', function (req, res) {
+	app.post('/exam/update/:selectedExam',
+		ensureLoggedIn('/login'),
+		function (req, res) {
+
 		saveOrUpdateExam(req, res, req.params.selectedExam);
 	});
 
-	app.post('/exam/assess/:selectedExam', function (req, res) {
+	app.post('/exam/assess/:selectedExam',
+		ensureLoggedIn('/login'),
+		function (req, res) {
+
 
 		Criteria.findById('515bee674b2dd9d2c5000004', function(error, criteria) {
 			console.log("muh");
