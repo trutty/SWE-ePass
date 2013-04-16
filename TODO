@@ -24,6 +24,10 @@ TODO:
 	[x]	Anzeige des Examens
 	[x]	Punktevergabe des Examens
 
+	Examensverwaltung:
+	[√] Editieren des Examens
+	[x] Löschen des Examens
+
 	Benutzerregistrierung:
 	[√]	Vornamen, Nachnamen
 	[√]	Loginnamen
