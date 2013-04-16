@@ -2,7 +2,7 @@
  * Routes for exam creation, manipulation and view
  */
 
-module.exports = function (app, User, Course, Criteria, Exam, async){
+module.exports = function (app, User, Course, Criteria, Exam, ExamPoints, async){
 
 	// exam overview
 	app.get('/exam', function (req, res) {
@@ -166,6 +166,25 @@ module.exports = function (app, User, Course, Criteria, Exam, async){
 			});
 
 	});
+
+	app.get('/exam/delete/:selectedExam', function (req, res) {
+
+		// TODO do a cascaded deletion
+		Exam.remove( { _id: req.params.selectedExam }, function (err, aff) {
+			if (err) {
+				console.log(err);
+			}
+		});
+		ExamPoints.remove( { exam: req.params.selectedExam }, function (err, aff) {
+			if (err) {
+				console.log(err);
+			}
+		});
+
+		res.redirect('/exam');
+
+	});
+
 
 	var saveOrUpdateExam = function (req, res, selectedExam) {
 
