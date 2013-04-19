@@ -21,23 +21,23 @@ TODO:
 	[√] Kurse aus Datenbank per id raussuchen und als Objekt übergeben
 
 	Punktevergabe Examen:
-	[x]	Anzeige des Examens
-	[x]	Punktevergabe des Examens
+	[x]	Anzeige des Examens (Chris: Update maxpoints, bewerten von usern)
+	[x]	Punktevergabe des Examens (Marc)
 
 	Examensverwaltung:
-	[√] Editieren des Examens
-	[x] Löschen des Examens
+	[x] Editieren des Examens (Marc: Datenbank aktualisieren)
+	[x] Löschen des Examens (Chris: Testen mit bewertetem Examen)
 
 	Benutzerregistrierung:
 	[√]	Vornamen, Nachnamen
 	[√]	Loginnamen
 	[√]	E-Mail Adresse
 	[√]	Matrikelnummer
-	[x]	Gruppenzugehörigkeit (Regelung über die Manageransicht)
 
-	Benutzerverwaltung:
+	Benutzerverwaltung: (Joscha)
 	[x]	Nur E-Mail ändern
 	[x]	Passwort ändern
+	[x]	Gruppenzugehörigkeit (Regelung über die Manageransicht)
 
 	Kurse erstellen: [√]
 	[√]	Bezeichnung des Kurses
@@ -46,7 +46,7 @@ TODO:
 	[√] Dropdown für Semester (winter/summer)
 
 	Kursverwaltung:
-	[x]	Bei Änderung der Benutzer/Jahrgangs/Bezeichnung des Kurses
+	[x]	Bei Änderung der Benutzer/Jahrgangs/Bezeichnung des Kurses (Marc)
 
 	Zuweisung von Benutzern/Gruppen zu Examen: [√]
 	[√]	Liste der Accessoren/Kurse -> In 2 Tabellen

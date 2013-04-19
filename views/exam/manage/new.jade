@@ -153,10 +153,25 @@ block content
 			var firstCriteria = $('ul.criteria li:first');
 			firstCriteria.data('index', 0);
 			firstCriteria.data('subcriterias', 0);
-			var criteriaIndex = 0;
+			var exam = "#{examName}";
+
+			var criteriaIndex;
+
+			if (exam == "") {	
+				criteriaIndex = 0;
+			} else {
+				criteriaIndex = $('ul.criteria > li').length - 1;
+				$('ul.criteria > li').each( function (index, item) {
+					$(this).data('index', index);
+					console.log(index);
+					$(this).data('subcriterias', $(this).find('li.subcriteria').length - 1);
+				});
+
+			}
 
 			$('.addCriteria').click(function(e) {
 				var criteriaTemplate = $('ul.criteria li:first').clone(true, true);
+				criteriaTemplate.find('input[type="hidden"]').remove();
 				criteriaIndex++;
 
 				criteriaTemplate.data('index', criteriaIndex);
@@ -183,16 +198,16 @@ block content
 				var indexCriteria;
 				if(areWeInSubcriteria) {
 					subcriterias = $(this).parent().parent().parent().data('subcriterias');
+					//subcriterias = ($(this).parent().parent().children('li.subcriteria').length - 1);
 					indexCriteria = $(this).parent().parent().parent().data('index');
-
-					$(this).parent().parent().parent().data('subcriterias', subcriterias);
 					subcriterias++;
+					$(this).parent().parent().parent().data('subcriterias', subcriterias);
 				} else {
 					subcriterias = $(this).parent().data('subcriterias');
+					//subcriterias = ($(this).parent().children('ul.subcriteria').children('li.subcriteria').length - 1);
 					indexCriteria = $(this).parent().data('index');
-
-					$(this).parent().data('subcriterias', subcriterias);
 					subcriterias++;
+					$(this).parent().data('subcriterias', subcriterias);
 				}
 
 				$(this).parent().data('subcriterias', subcriterias);
