@@ -227,30 +227,19 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 			criterias = examBody.criteria;
 		}
 
-		examBody.criteria = criterias;
-        console.log("examBody.criteria:\n-------");
-		console.log(examBody.criteria);
-        console.log("--------");
-
 		if(selectedExam) {
 
 			var criterias = [];
 			var oldCriteria = [];
 			Exam.findById(selectedExam, function (error, docs) {
 
-				docs.criteria.forEach(function (item, index) {
-					oldCriteria.push(item);
+				docs.criteria.forEach(function (id, index) {
+					oldCriteria.push(id);
 				});
 
 				examBody.criteria.forEach(function(crit) {
 
-				    console.log(oldCriteria);
-                    console.log(crit.id);
-
-                    if (crit.id in oldCriteria) {
-                    //if (oldCriteria.contains(crit.id)) {
-
-                        console.log("oldCriteria if");
+                    if (oldCriteria.indexOf(crit.id) != -1) {
 
 						oldCriteria.remove(crit.id);
 						criterias.push(crit.id);
@@ -261,8 +250,6 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 						});
 					} else {
                     
-                        console.log("oldCriteria if else");
-
 						var newCriteria = new Criteria(crit);
 						newCriteria.save(function(err) {
 							console.log("err: " + err);
@@ -271,11 +258,6 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 					}
 				});
 
-
-				console.log('old');
-				console.log(oldCriteria);
-				console.log(criterias);
-				console.log('old');
 
 				oldCriteria.forEach(function (oc) {
 					Criteria.remove({ _id: oc }, function (err) {
@@ -287,12 +269,8 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 
 				examBody.criteria = criterias;
 
-                Exam.findOne( { _id: selectedExam }, function (err, doc) {
-                    doc = examBody;
-                    console.log("doc: " + doc);
-                });
-
 				Exam.update( { _id: selectedExam }, examBody, function(err, affected) {
+                    console.log(examBody);
 
 					if(err) {
 						console.log('Update Exam Error: %s', err);
