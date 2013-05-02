@@ -43,7 +43,7 @@ module.exports = function(app, ensureLoggedIn, async, User, Course){
 			name: req.body.name,
 			year: req.body.year,
 			term: req.body.term,
-            userlist: req.body.userlist
+            //userlist: req.body.userlist
 		};
 
         console.log('update data');
