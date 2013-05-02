@@ -48,7 +48,9 @@ module.exports = function(app, ensureLoggedIn, async, User, Course){
 
         console.log('update data');
         console.log(updateData);
-        console.log('...');
+        console.log('---');
+
+        console.log(req.body);
 
 		Course.update( { _id: req.body.courseId }, updateData, function(err, affected) {
 			if(err) {
