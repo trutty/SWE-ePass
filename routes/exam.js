@@ -20,7 +20,8 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 				res.render('exam/view/exam', {
 					title: 'Exams',
 					message: req.flash('error'),
-					exam: docs
+					exam: docs,
+					user: req.user
 				});
 			});
 
@@ -93,9 +94,10 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 			}
 
 		], function(error) {
-
-			console.log("selected exam: %s", selectedExam);
-			console.log("Exam: %s", exam);
+            
+            console.log("Exam:\n-------");
+			console.log(exam);
+            console.log("--------");
 
 			res.render('exam/manage/new', {
 				title: exam == null ? 'New Exam' : 'Update Exam',
@@ -104,7 +106,8 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 	    		registered: req.user,
 				courses: courses,
 				assessors: assessors.concat(tutors),
-				exam: exam
+				exam: exam,
+				user: req.user
 			});
 
 		});
@@ -142,7 +145,8 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 				res.render('exam/view/details', {
 					title: 'Exam Details',
 					message: req.flash('error'),
-					exam: docs
+					exam: docs,
+					user: req.user
 				});
 
 			});
@@ -154,7 +158,8 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 	    		registered: req.user,
 				courses: courses,
 				assessors: assessors.concat(tutors),
-				exam: exam
+				exam: exam,
+				user: req.user
 			});
 		
 	});
@@ -175,7 +180,8 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 					res.render('exam/manage/assess', {
 						title: 'Assess Exam',
 			    		message: req.flash('error'),
-						exam: docsExam
+						exam: docsExam,
+						user: req.user
 					});
 				}
 			});
@@ -208,15 +214,12 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 		examBody.assessor 	= req.body.assessor;
 		examBody.user 		= req.body.tutor[0];
 
-		console.log(examBody.criteria);
-		console.log('muuuuuh');
-
 		var criterias = [];
 		if(!selectedExam) {
 			req.body.criteria.forEach(function (item, index) {
 				var newCriteria = new Criteria(item);
 				newCriteria.save(function(err) {
-					console.log(err);
+					console.log("err" + err);
 				});
 				criterias.push(newCriteria.id);
 			});
@@ -225,11 +228,9 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 		}
 
 		examBody.criteria = criterias;
-
-
+        console.log("examBody.criteria:\n-------");
 		console.log(examBody.criteria);
-		console.log("ääääääää");
-
+        console.log("--------");
 
 		if(selectedExam) {
 
@@ -238,22 +239,33 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 			Exam.findById(selectedExam, function (error, docs) {
 
 				docs.criteria.forEach(function (item, index) {
-					oldCriteria.push(item.id);
+					oldCriteria.push(item);
 				});
 
 				examBody.criteria.forEach(function(crit) {
-					if (oldCriteria.contains(crit.id)) {
+
+				    console.log(oldCriteria);
+                    console.log(crit.id);
+
+                    if (crit.id in oldCriteria) {
+                    //if (oldCriteria.contains(crit.id)) {
+
+                        console.log("oldCriteria if");
+
 						oldCriteria.remove(crit.id);
 						criterias.push(crit.id);
 						Criteria.update( {_id: crit.id}, crit, function (err) {
 							if(err) {
-								console.log(err);
+								console.log("err: " + err);
 							}
 						});
 					} else {
+                    
+                        console.log("oldCriteria if else");
+
 						var newCriteria = new Criteria(crit);
 						newCriteria.save(function(err) {
-							console.log(err);
+							console.log("err: " + err);
 						});
 						criterias.push(newCriteria.id);
 					}
@@ -268,12 +280,17 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 				oldCriteria.forEach(function (oc) {
 					Criteria.remove({ _id: oc }, function (err) {
 						if(err) {
-							console.log(err);
+							console.log("oldCriteria err: " + err);
 						}
 					});
 				});
 
 				examBody.criteria = criterias;
+
+                Exam.findOne( { _id: selectedExam }, function (err, doc) {
+                    doc = examBody;
+                    console.log("doc: " + doc);
+                });
 
 				Exam.update( { _id: selectedExam }, examBody, function(err, affected) {
 

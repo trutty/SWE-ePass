@@ -14,7 +14,8 @@ module.exports = function(app, ensureLoggedIn, async, User, Course){
 			res.render('course/view/course', {
 		  		title: 'Courses', 
 		  		message: req.flash('error'),
-		  		course: docs
+		  		course: docs,
+				user: req.user
 		  	});
 
 		});
@@ -41,11 +42,17 @@ module.exports = function(app, ensureLoggedIn, async, User, Course){
 		var updateData = {
 			name: req.body.name,
 			year: req.body.year,
-			term: req.body.term
+			term: req.body.term,
+            userlist: req.body.userlist
 		};
+
+        console.log('update data');
+        console.log(updateData);
+        console.log('...');
 
 		Course.update( { _id: req.body.courseId }, updateData, function(err, affected) {
 			if(err) {
+                console.log(err);
 				res.redirect('/course/view/' + req.body.courseId);
 			} else {
 				res.redirect('/courses');
@@ -80,7 +87,8 @@ module.exports = function(app, ensureLoggedIn, async, User, Course){
 			    title: 'New Course',
 			    message: req.flash('error'),
 			    users: docs,
-			    course: { id: 'abc'}
+			    course: { id: 'abc'},
+                user: req.user
 			});
 
 		});
@@ -100,7 +108,8 @@ module.exports = function(app, ensureLoggedIn, async, User, Course){
 				res.render('course/manage/edit', {
 			  		title: 'Edit Course',
 			  		message: req.flash('error'),
-			  		course: docs
+			  		course: docs,
+                    user: req.user
 			  	});
 
 			})
@@ -120,7 +129,8 @@ module.exports = function(app, ensureLoggedIn, async, User, Course){
 				res.render('course/view/details', {
 			  		title: 'View Course',
 			  		message: req.flash('error'),
-			  		course: docs
+			  		course: docs,
+                    user: req.user
 			  	});
 
 			})

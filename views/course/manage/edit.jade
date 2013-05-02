@@ -109,7 +109,7 @@ block content
 			$('#courseForm').submit(function(evt) {
 
 				var formular = $(this);
-				var studentData = studentsInCourse.dataSource.data()[0].items;
+				var studentData = studentsInCourse.dataSource.data()[0].children.transport.data.categoryItems;
 
 				studentData.forEach(function(item, index) {
 					formular.append('<input type="hidden" name="userlist[]" value="' + item._id + '" />');

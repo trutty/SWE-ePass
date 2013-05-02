@@ -40,10 +40,10 @@ Exam = mongoose.model('Exam', Exam);
 CriteriaPoints = mongoose.model('CriteriaPoints', CriteriaPoints);
 ExamPoints = mongoose.model('ExamPoints', ExamPoints);
 
-app.set('db-uri', 'mongodb://localhost/epass');
+//app.set('db-uri', 'mongodb://moep_mongoadmin:idHemRog@127.0.0.1:20869/epass');
 
 app.configure(function(){
-  app.set('port', process.env.PORT || 3000);
+  app.set('port', process.env.PORT || 9999);
   app.set('views', __dirname + '/views');
   app.set('view engine', 'jade');
   app.use(express.favicon());
@@ -117,7 +117,7 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
-mongoose.connect(app.set('db-uri'), function(err){
+mongoose.connect("mongodb://moep_mongoadmin:idHemRog@localhost:20869/admin", function(err){
     if(err) console.log(err);
 });
 
@@ -129,6 +129,7 @@ require('./routes/criteria')(app, ensureLoggedIn);
 require('./routes/course')(app, ensureLoggedIn, async, User, Course);
 require('./routes/api')(app, User, Course, null);
 
+app.enable('trust proxy');
 http.createServer(app).listen(app.get('port'), function(){
   console.log("Express server listening on port " + app.get('port'));
 });

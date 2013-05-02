@@ -1,5 +1,7 @@
 module.exports = function( mongoose, Validator, crypto, Schema ){
 
+	var val = new Validator();
+
 	Validator.prototype.error = function( msg ) {
 		return false;
 	}

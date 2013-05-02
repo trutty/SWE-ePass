@@ -12,11 +12,5 @@ html
     script(src='http://cdn.kendostatic.com/2013.1.226/js/kendo.all.min.js')
     
   body(class='k-content')
-    div.usermenu
-        a.k-link(href='/') Home
-        a.k-link(href='/login') Login/Signup
-        a.k-link(href='/exam/') Exams
-        a.k-link(href='/courses') Courses
-        a.k-link(href='/logout') Logout
-    
+    include menu
     block content

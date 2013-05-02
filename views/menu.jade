@@ -1,0 +1,9 @@
+div.usermenu
+        a.k-link(href='/') Home
+        a.k-link(href='/exam/') Exams
+        a.k-link(href='/courses') Courses
+        
+        if user
+            a.k-link(href='/logout') Logout (#{user.firstname})
+        else
+            a.k-link(href='/login') Login/Signup
