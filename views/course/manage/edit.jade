@@ -109,10 +109,15 @@ block content
             $('#courseForm').submit(function(evt) {
 
                 var formular = $(this);
-                var studentData = studentsInCourse.dataSource.data()[0].children.transport.data.categoryItems;
+                var studentDataSrc = studentsInCourse.dataSource.data()[0];
+                var studentData = studentDataSrc.categoryItems;
+
+                if(studentData.length < 1) {
+                    studentData = studentsInCourse.dataSource.data()[0].children.transport.data.categoryItems;
+                }
 
                 studentData.forEach(function(item, index) {
                     formular.append('<input type="hidden" name="userlist[]" value="' + item._id + '" />');
-                        });
+                });
 
             });
