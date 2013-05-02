@@ -1,119 +1,118 @@
 extends ../../layout
 
 block content
-	p=message
+    p= message
 
-	h1=title
+    h1= title
 
-	form#courseForm.k-content(action='/course/update/', method='post')
-		
-		table
-			tr
-				th
-					label(for='name')
-						| Name:
-				td
-					input#name.k-textbox(type='text', name='name', value='#{course.name}', required='true')
+    form#courseForm.k-content(action='/course/update/', method='post')
 
-			tr
-				th
-					label(for='year')
-						| Year:
-				td
-					input#year.k-textbox(type='text', name='year', value='#{course.year}', required='true')
+        table
+            tr
+                th
+                    label(for='name')
+                        | Name:
+                td
+                    input#name.k-textbox(type='text', name='name', value='#{course.name}', required='true')
 
-			tr
-				th
-					label(for='Term')
-						| Term
-				td
-					select.k-header(name='term')
-						option(selected= course.term == 'winter') winter
-						option(selected= course.term == 'summer') summer
+            tr
+                th
+                    label(for='year')
+                        | Year:
+                td
+                    input#year.k-textbox(type='text', name='year', value='#{course.year}', required='true')
 
-			tr
-				th
-					label
-						| Students:
-				td
-					div#allStudents
-					div#studentsInCourse
+            tr
+                th
+                    label(for='Term')
+                        | Term
+                td
+                    select.k-header(name='term')
+                        option(selected= course.term == 'winter') winter
+                        option(selected= course.term == 'summer') summer
 
-			tr
-				td
-					&nbsp;
-				td
-					br
+            tr
+                th
+                    label
+                        | Students:
+                td
+                    div#allStudents
+                        div#studentsInCourse
+
+                            tr
+                                td
+                                    &nbsp;
+                td
                     input.k-button(type='submit', value='Create Course')
                     input(type='hidden', name='courseId', value='#{course.id}')
 
 
-		script
-			var alphabeticallyOrderedStudents = new kendo.data.HierarchicalDataSource({
-				transport: {
-					read: {
-						url: '/api/students/az/4',
-						dataType: 'json'
-					}
-				},
-				schema: {
-					model: {
-						children: 'categoryItems'
-					}
-				}
-			});
+        script
+            var alphabeticallyOrderedStudents = new kendo.data.HierarchicalDataSource({
+                transport: {
+                    read: {
+                        url: '/api/students/az/4',
+                        dataType: 'json'
+                    }
+                },
+                schema: {
+                    model: {
+                        children: 'categoryItems'
+                    }
+                }
+            });
 
-			var studentDataInCourse = new kendo.data.HierarchicalDataSource({
-				transport: {
-					read: {
-						url: '/api/students/course/#{course.id}',
-						dataType: 'json'
-					}
-				},
-				schema: {
-					model: {
-						children: 'categoryItems'
-					}
-				}
-			});
+            var studentDataInCourse = new kendo.data.HierarchicalDataSource({
+                transport: {
+                    read: {
+                        url: '/api/students/course/#{course.id}',
+                        dataType: 'json'
+                    }
+                },
+                schema: {
+                    model: {
+                        children: 'categoryItems'
+                    }
+                }
+            });
 
-			$('#allStudents').kendoTreeView({
-				dragAndDrop: true,
-				dataSource: alphabeticallyOrderedStudents,
-				dataTextField: ['categoryName', 'lastname' ]
-			}).data('kendoTreeView');
+            $('#allStudents').kendoTreeView({
+                dragAndDrop: true,
+                dataSource: alphabeticallyOrderedStudents,
+                dataTextField: ['categoryName', 'lastname' ]
+            }).data('kendoTreeView');
 
 
-			var studentsInCourse = $('#studentsInCourse').kendoTreeView({
-				dragAndDrop: true,
-				dataSource: studentDataInCourse,
-				dataTextField: ['categoryName', 'lastname' ]
-			}).data('kendoTreeView');
+            var studentsInCourse = $('#studentsInCourse').kendoTreeView({
+                dragAndDrop: true,
+                dataSource: studentDataInCourse,
+                dataTextField: ['categoryName', 'lastname' ]
+            }).data('kendoTreeView');
 
-			$('#allStudents, #studentsInCourse').data('kendoTreeView').bind('drag', function(e) {
-				if($(e.dropTarget).hasClass('k-in')) {
-					if($(e.dropTarget).hasClass('k-state-hover')) {
-						if($(e.dropTarget).offsetParent().hasClass('k-treeview-lines')) {
-							console.log($(e.dropTarget));
-						} else {
-							e.setStatusClass('k-denied');
-						}
-					} else {
-						e.setStatusClass('k-denied');
-					}
-				} else {
-					e.setStatusClass('k-denied');
-				}
-				
-			});
+            $('#allStudents, #studentsInCourse').data('kendoTreeView').bind('drag', function(e) {
+                if($(e.dropTarget).hasClass('k-in')) {
+                    if($(e.dropTarget).hasClass('k-state-hover')) {
+                        if($(e.dropTarget).offsetParent().hasClass('k-treeview-lines')) {
+                            console.log($(e.dropTarget));
+                        } else {
+                            e.setStatusClass('k-denied');
+                        }
+                    } else {
+                        e.setStatusClass('k-denied');
+                    }
+                } else {
+                    e.setStatusClass('k-denied');
+                }
 
-			$('#courseForm').submit(function(evt) {
+            });
 
-				var formular = $(this);
-				var studentData = studentsInCourse.dataSource.data()[0].children.transport.data.categoryItems;
+            $('#courseForm').submit(function(evt) {
 
-				studentData.forEach(function(item, index) {
-					formular.append('<input type="hidden" name="userlist[]" value="' + item._id + '" />');
-				});
+                var formular = $(this);
+                var studentData = studentsInCourse.dataSource.data()[0].children.transport.data.categoryItems;
 
-			});
+                studentData.forEach(function(item, index) {
+                    formular.append('<input type="hidden" name="userlist[]" value="' + item._id + '" />');
+                        });
+
+            });

@@ -50,11 +50,10 @@ module.exports = function(app, ensureLoggedIn, async, User, Course){
         console.log(updateData);
         console.log('---');
 
-        console.log(req.body);
+        console.log("courseId");
+        console.log(req.body.courseId);
 
 		Course.update( { _id: req.body.courseId }, updateData, function(err, affected) {
-            //console.log("id: " + req.body.courseId);
-            console.log("update course");
 			if(err) {
                 console.log(err);
 				res.redirect('/course/view/' + req.body.courseId);
