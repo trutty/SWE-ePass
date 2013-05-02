@@ -270,6 +270,7 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 				examBody.criteria = criterias;
 
 				Exam.update( { _id: selectedExam }, examBody, function(err, affected) {
+                    console.log(examBody);
 
 					if(err) {
 						console.log('Update Exam Error: %s', err);
