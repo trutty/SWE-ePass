@@ -51,6 +51,7 @@ module.exports = function(app, ensureLoggedIn, async, User, Course){
         console.log('---');
 
 		Course.update( { _id: req.body.courseId }, updateData, function(err, affected) {
+            consoe.log("id: " + req.body.courseId);
             console.log("update course");
 			if(err) {
                 console.log(err);
