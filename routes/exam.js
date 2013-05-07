@@ -95,10 +95,7 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 
 		], function(error) {
             
-            console.log("Exam:\n-------");
-			console.log(exam);
-            console.log("--------");
-
+            
 			res.render('exam/manage/new', {
 				title: exam == null ? 'New Exam' : 'Update Exam',
 	    		message: req.flash('error'),
@@ -168,16 +165,22 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 		ensureLoggedIn('/login'),
 		function (req, res) {
 
-
 		Exam
 			.findOne({ _id : req.params.selectedExam })
 			.populate('user')
-			.populate('course')
+			.populate('course', 'userlist')
 			.populate('assessor')
 			.populate('criteria')
 			.exec( function( err, docsExam ) {
 				if(!err) {
-					res.render('exam/manage/assess', {
+
+                    console.log("Exam:\n-------");
+                    console.log(docsExam);
+                    console.log("--------");
+                    console.log(docsExam.course);
+                    console.log("--------");
+					
+                    res.render('exam/manage/assess', {
 						title: 'Assess Exam',
 			    		message: req.flash('error'),
 						exam: docsExam,
@@ -323,7 +326,7 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 			console.log(error);
 			console.log(criteria);
 			console.log('mäh');
-		})
+		});
 
 		Exam.findById(req.params.selectedExam, function(error, exam) {
 			exam.criteria.forEach(function(item, index) {
