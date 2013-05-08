@@ -115,6 +115,7 @@ app.configure('development', function(){
   app.use(express.errorHandler());
 });
 
+//small test for git
 mongoose.connect("mongodb://moep_mongoadmin:idHemRog@localhost:20869/admin", function(err){
     if(err) console.log(err);
 });
