@@ -1,171 +1,180 @@
 extends ../../layout
 
 block content
-	p= message
+    form#examUpdate.k-content(action='/exam/assess/' + exam.id, method='post')
+        table
+            tr
+                th
+                    label(for='name')
+                        | Name:
+                td
+                    input#name.k-textbox(type='text', name='name', disabled, value= exam.name)
 
-	h1= title
+            tr
+                th
+                    label(for='user')
+                        | Tutor:
+                td
+                    input#tutor.k-textbox(type='text', name='tutor', disabled, value= exam.user.name)
 
-	form#examUpdate.k-content(action='/exam/assess/' + exam.id, method='post')
-		table
-			tr
-				th
-					label(for='name')
-						| Name:
-				td
-					input#name.k-textbox(type='text', name='name', disabled, value= exam.name)
+            tr
+                th
+                    label(for='assessor')
+                        | Assessor:
+                td
+                    each item in exam.assessor
+                        input.k-textbox(type='text', name='assessor[]', disabled, value= item.name)
+                        br
 
-			tr
-				th
-					label(for='user')
-						| Tutor:
-				td
-					input#tutor.k-textbox(type='text', name='tutor', disabled, value= exam.user.name)
-					
-			tr
-				th
-					label(for='assessor')
-						| Assessor:
-				td
-					each item in exam.assessor
-						input.k-textbox(type='text', name='assessor[]', disabled, value= item.name)
-						br
+            tr
+                th
+                    label(for='course')
+                        | Student:
+                td
+                    select.k-header(name='student')
+                        each course in courses
+                            optgroup(label='#{course.name}')
+                            each student in course.students
+                                option(value='#{student.id}') #{student.lastname}, #{student.firstname}
 
-			tr
-				th
-					label(for='course')
-						| Student:
-				td
-					select.k-header(name='student')
-						each item in exam.course
-							option #{item.name}
+            tr
+                th
+                    label(for='lecture')
+                        | Lecture:
+                td
+                    input#lecture.k-textbox(type='text', name='lecture', required='true', disabled, value= exam.lecture)
 
-			tr
-				th
-					label(for='lecture')
-						| Lecture:
-				td
-					input#lecture.k-textbox(type='text', name='lecture', required='true', disabled, value= exam.lecture)
+            tr
+                th
+                    label(for='date')
+                        | Date: 
+                td
+                    input#date.k-textbox(type='text', name='date', disabled, value= exam.date)
 
-			tr
-				th
-					label(for='date')
-						| Date: 
-				td
-					input#date.k-textbox(type='text', name='date', disabled, value= exam.date)
+            tr
+                th
+                    label(for='duration')
+                        | Duration in minutes: 
+                td
+                    input#duration.k-textbox(type='number', name='duration', min='0', disabled, value= exam.duration)
 
-			tr
-				th
-					label(for='duration')
-						| Duration in minutes: 
-				td
-					input#duration.k-textbox(type='number', name='duration', min='0', disabled, value= exam.duration)
+            tr
+                th
+                    label(for='maxPoints')
+                        | Maximum Points: 
+                td
+                    input#maxPoints.k-textbox(type='number', name='maxPoints', min='0', disabled, value= exam.maxPoints)
+                    input#assessMaxPoints.k-textbox(type='number', name='assessMaxPoints', min='0')
 
-			tr
-				th
-					label(for='maxPoints')
-						| Maximum Points: 
-				td
-					input#maxPoints.k-textbox(type='number', name='maxPoints', min='0', disabled, value= exam.maxPoints)
-					input#assessMaxPoints.k-textbox(type='number', name='assessMaxPoints', min='0')
+            tr
+                th
+                    label(for='criteria')
+                        | Criteria:
+                td	
+                    ul.criteria
+                        each crit, i in exam.criteria
+                            if crit != null
+                                li
+                                    input.k-textbox(type='hidden', name='criteria[#{i}][id]', required='true', readonly, value= crit._id)
+                                    input.criteriaName.k-textbox(type='text', name='criteria[#{i}][name]', required='true', placeholder='Name', readonly, value= crit.name)
+                                    input.criteriaDesc.k-textbox(type='text', name='criteria[#{i}][description]', placeholder='Description', readonly, value= crit.description)
+                                    input.criteriaScore.k-textbox(type='number', min='0', name='criteria[#{i}][score]', required='true', placeholder='Score', readonly, value= crit.score)
 
-			tr
-				th
-					label(for='criteria')
-						| Criteria:
-				td	
-					ul.criteria
-						each crit, i in exam.criteria
-							if crit != null
-								li
-									input.k-textbox(type='hidden', name='criteria[#{i}][id]', required='true', readonly, value= crit._id)
-									input.criteriaName.k-textbox(type='text', name='criteria[#{i}][name]', required='true', placeholder='Name', readonly, value= crit.name)
-									input.criteriaDesc.k-textbox(type='text', name='criteria[#{i}][description]', placeholder='Description', readonly, value= crit.description)
-									input.criteriaScore.k-textbox(type='number', min='0', name='criteria[#{i}][score]', required='true', placeholder='Score', readonly, value= crit.score)
+                                    if crit.subcriteria.length == 0
+                                        input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][assessScore]', required='true')
+                                    else
+                                        input.assessScore.k-button(type='hidden', min='0', name='criteria[#{i}][assessScore]', required='true')
 
-									if crit.subcriteria.length == 0
-										input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][assessScore]', required='true')
+                                    ul.subcriteria
+                                        each subcrit, n in crit.subcriteria
+                                            if subcrit != null
+                                                li.subcriteria
+                                                    input.k-textbox.subcriteriaName(type='text', required='true', placeholder='Name', name='criteria[#{i}][subcriteria][#{n}][name]', readonly, value= subcrit.name)
+                                                    input.k-textbox.subcriteriaDesc(type='text', placeholder='Description', name='criteria[#{i}][subcriteria][#{n}][description]', readonly, value= subcrit.description)
+                                                    input.k-textbox.subcriteriaScore(type='number', min='0', required='true', placeholder='Score', name='criteria[#{i}][subcriteria][#{n}][score]', readonly, value= subcrit.score)
+                                                    input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][subcriteria][#{n}][assessScore]', required='true')
 
-									ul.subcriteria
-										each subcrit, n in crit.subcriteria
-											if subcrit != null
-												li.subcriteria
-													input.k-textbox(type='hidden', required='true', name='criteria[#{i}][subcriteria][#{n}][id]', readonly, value= subcrit._id)
-													input.k-textbox.subcriteriaName(type='text', required='true', placeholder='Name', name='criteria[#{i}][subcriteria][#{n}][name]', readonly, value= subcrit.name)
-													input.k-textbox.subcriteriaDesc(type='text', placeholder='Description', name='criteria[#{i}][subcriteria][#{n}][description]', readonly, value= subcrit.description)
-													input.k-textbox.subcriteriaScore(type='number', min='0', required='true', placeholder='Score', name='criteria[#{i}][subcriteria][#{n}][score]', readonly, value= subcrit.score)
-													input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][subcriteria][#{n}][assessScore]', required='true')
+            tr
+                td
+                    input(class='k-button', type='submit', value='Save')
+                td
+            
+            tr
+                td
+                    
+                td
+                    p#pointsError
 
-			tr
-				td
-					input(class='k-button', type='submit', value='Save')
-				td
+    script
+        
+        $('#examUpdate').submit(function (e) {
+        
+            $('#pointsError').html('');
+            var overallCriteriaPoints = Number(0);
+            var criteriaPoints = Number(0);
+            var error = false;
 
-			tr
-				td
+            $('ul.criteria > li').each(function (index) {
 
-				td
-					p#pointsError
+                var hasSubcriteria = ($(this).children('ul').children('li').length > 0) ? true : false;
+                var subcriteriaPoints = Number(0);
+                var singleCriteriaPoints = Number(0);
+                var crit = false;
+                var subcrit = false;
+                error = false;
+                
+                criteriaPoints = Number($(this).children('.criteriaScore').val());
 
+                if (hasSubcriteria) {
 
-	script
+                    var subcriterias = $(this).children('ul').children('li');
+                    subcriterias.each(function (index) {
 
-		$('#examUpdate').submit(function (e) {
+                        var assessCriteria = Number($(this).children('.assessCriteria').val());
 
-			$('#pointsError').html('');
-			var overallCriteriaPoints = Number(0);
-			var criteriaPoints = Number(0);
-			var error = false;
+                        if (assessCriteria > Number($(this).children('.subcriteriaScore').val())) {
+                            error = true;
+                        } else {
+                            subcriteriaPoints += assessCriteria;
+                        }
 
-			$('ul.criteria > li').each(function (index) {
+                    });
 
-				var hasSubcriteria = ($(this).children('ul').children('li').length > 0) ? true : false;
-				var subcriteriaPoints = Number(0);
-				var singleCriteriaPoints = Number(0);
-				var crit = false;
-				var subcrit = false;
-				error = false;
+                    $(this).children('.assessScore').val(subcriteriaPoints);
+                    
+                    subcrit = true;
+                    overallCriteriaPoints += subcriteriaPoints;
 
-				criteriaPoints = Number($(this).children('.criteriaScore').val());
+                } else {
 
-				if (hasSubcriteria) {
-					
-					var subcriterias = $(this).children('ul').children('li');
-					subcriterias.each(function (index) {
+                    singleCriteriaPoints = Number($(this).children('.assessCriteria').val());
 
-						var assessCriteria = Number($(this).children('.assessCriteria').val());
+                    if (singleCriteriaPoints > Number($(this).children('.criteriaScore').val())) {
+                        error = true;
+                    }
 
-						if (assessCriteria > Number($(this).children('.subcriteriaScore').val())) {
-							error = true;
-						} else {
-							subcriteriaPoints += assessCriteria;
-						}
+                    crit = true;
+                    overallCriteriaPoints += singleCriteriaPoints;
 
-					});
+                }
 
-					subcrit = true;
+                if (subcrit && subcriteriaPoints > criteriaPoints) {
+                    error = true;
+                } else if (crit && singleCriteriaPoints > singleCriteriaPoints)   {
+                    error = true;
+                }
 
-				} else {
+                if (error) {
+                    $('#pointsError').append('To many points were given at: <strong>'+$(this).children('input.criteriaName').val()+'</strong>.<br />');
+                    return false;
+                }
 
-					singleCriteriaPoints = Number($(this).children('.assessCriteria').val());
-					crit = true;
+            });
 
-				}
-
-				if (subcrit && subcriteriaPoints > criteriaPoints) {
-					error = true;
-				} else if (crit && criteriaPoints > singleCriteriaPoints) {
-					error = true;
-				}
-
-				if (error) {
-					$('#pointsError').append('To many points were given at: <strong>'+$(this).children('input.criteriaName').val()+'</strong>.<br />');
-					return false;
-				}
-
-			});
-
-		if (error) {
-			return false;
-		}
-
-		});
+            if (error) {
+                return false;
+            } else {
+                $('#assessMaxPoints').val(overallCriteriaPoints);
+            }
+            
+        });

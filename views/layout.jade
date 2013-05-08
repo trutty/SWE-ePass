@@ -13,4 +13,10 @@ html
     
   body(class='k-content')
     include menu
+
+    if (typeof(message) !== 'undefined' && message != '')
+        p.error= message
+    
+    h1= title
+
     block content

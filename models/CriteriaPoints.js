@@ -4,7 +4,8 @@ module.exports = function( mongoose, Schema ){
 
 		user:		{ type: Schema.ObjectId, ref: 'User', required: true },
 		criteria:	{ type: Schema.ObjectId, ref: 'Criteria', required: true },
-		points:		{ type: Number, required: true }
+		points:		{ type: Number, required: true },
+        subpoints:  []
 
 	});
 

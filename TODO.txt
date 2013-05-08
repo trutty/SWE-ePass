@@ -3,6 +3,12 @@ TODO:
 
 	Einpflege der Daten
 	===
+    
+    Datenbankkonsistenz:
+    [x] Beim Löschen eines Examens alle bewerteten Examen entfernen
+        [x] gleiches gilt für Criteria
+    [x] Beim Löschen eines Kurses -> in Exam die Userlist updaten
+    [x] Beim Löschen eines Studenten -> aus Kurs entfernen
 
 	Erstellung Kriterien: [√]
 	[√]	Bezeichnung
@@ -25,7 +31,7 @@ TODO:
 	[x]	Punktevergabe des Examens (Marc)
 
 	Examensverwaltung:
-	[x] Editieren des Examens (Marc: Datenbank aktualisieren)
+	[√] Editieren des Examens (Marc: Datenbank aktualisieren)
 	[x] Löschen des Examens (Chris: Testen mit bewertetem Examen)
 
 	Benutzerregistrierung:
@@ -46,9 +52,6 @@ TODO:
 	[√]	Jahrgang
 	[√]	Liste der Benutzer des Kurses (Hidden fields für Form)
 	[√] Dropdown für Semester (winter/summer)
-
-	Kursverwaltung:
-	[x]	Bei Änderung der Benutzer/Jahrgangs/Bezeichnung des Kurses (Marc)
 
 	Zuweisung von Benutzern/Gruppen zu Examen: [√]
 	[√]	Liste der Accessoren/Kurse -> In 2 Tabellen

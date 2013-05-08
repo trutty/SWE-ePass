@@ -3,7 +3,13 @@ div.usermenu
         a.k-link(href='/exam/') Exams
         a.k-link(href='/courses') Courses
         
-        if user
+        if (typeof(user) !== 'undefined')
+            a.k-link(href='/profile') Profile
             a.k-link(href='/logout') Logout (#{user.firstname})
+            if (user.role == 'manager')
+                a.k-link(href='/user') Manage users
         else
             a.k-link(href='/login') Login/Signup
+
+        
+

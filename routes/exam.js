@@ -2,7 +2,7 @@
  * Routes for exam creation, manipulation and view
  */
 
-module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, ExamPoints, async){
+module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, ExamPoints, CriteriaPoints, async){
 
 	// exam overview
 	app.get('/exam',
@@ -95,7 +95,10 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 
 		], function(error) {
             
-            
+            console.log("Exam:\n-------");
+			console.log(exam);
+            console.log("--------");
+
 			res.render('exam/manage/new', {
 				title: exam == null ? 'New Exam' : 'Update Exam',
 	    		message: req.flash('error'),
@@ -165,22 +168,16 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 		ensureLoggedIn('/login'),
 		function (req, res) {
 
+
 		Exam
 			.findOne({ _id : req.params.selectedExam })
 			.populate('user')
-			.populate('course', 'userlist')
+			.populate('course')
 			.populate('assessor')
 			.populate('criteria')
 			.exec( function( err, docsExam ) {
 				if(!err) {
-
-                    console.log("Exam:\n-------");
-                    console.log(docsExam);
-                    console.log("--------");
-                    console.log(docsExam.course);
-                    console.log("--------");
-					
-                    res.render('exam/manage/assess', {
+					res.render('exam/manage/assess', {
 						title: 'Assess Exam',
 			    		message: req.flash('error'),
 						exam: docsExam,
@@ -222,12 +219,13 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 			req.body.criteria.forEach(function (item, index) {
 				var newCriteria = new Criteria(item);
 				newCriteria.save(function(err) {
-					console.log("err" + err);
+					if(err)
+						console.log("criteria creation err: " + err);
 				});
 				criterias.push(newCriteria.id);
 			});
-		} else {
-			criterias = examBody.criteria;
+
+			examBody.criteria = criterias;
 		}
 
 		if(selectedExam) {

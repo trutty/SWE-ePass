@@ -5,6 +5,16 @@ body {
 a {
   color: #00B7FF;
 }
+.info,
+.error {
+  display: inline-block;
+  padding: 5px;
+  background: #eff62d;
+}
+.error {
+  color: #8c0819;
+  background: #f99aa6;
+}
 .usermenu a.k-link {
   margin-right: 20px;
 }

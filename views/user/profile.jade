@@ -1,0 +1,42 @@
+extends ../layout
+
+block content
+	form#userProfile.k-content(action='/exam/assess/' + 'userid', method='post')
+		table
+			tr
+				th Firstname
+				td ---
+
+			tr
+				th Lastname
+				td ---
+
+			tr
+				th Student Number
+				td ---
+
+			tr
+				th Email
+				td ---
+
+			tr
+				th Role
+				td ---
+
+			tr
+				th &nbsp;
+				td &nbsp;
+
+			tr
+				th Username
+				td ---
+
+			tr
+				th Password
+				td ---
+
+			tr
+				th Repeat Password
+				td ---
+
+		p.info Role and username can only be changed by staff/managers.
