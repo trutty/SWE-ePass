@@ -148,6 +148,7 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 
 			});
 
+        /*
 		res.render('exam/manage/new', {
 				title: exam == null ? 'New Exam' : 'Update Exam',
 	    		message: req.flash('error'),
@@ -158,6 +159,7 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 				exam: exam,
 				user: req.user
 			});
+        */
 		
 	});
 
@@ -206,7 +208,6 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 
 	app.get('/exam/delete/:selectedExam', ensureLoggedIn('/login'), function (req, res) {
 
-		// TODO do a cascaded deletion
 		Exam.remove( { _id: req.params.selectedExam }, function (err, aff) {
 			if (err) {
 				console.log(err);
