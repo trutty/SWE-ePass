@@ -40,10 +40,14 @@ TODO:
 	[√]	E-Mail Adresse
 	[√]	Matrikelnummer
 
-	Benutzerverwaltung: (Joscha)
-	[x]	Nur E-Mail ändern
+    Benutzerverwaltung: (Marc)
+    [x] E-Mail ändern
+    [x] Passwort ändern
+
+	Managerverwaltung: (Joscha)
+	[√]	Nur E-Mail ändern
 	[x]	Passwort ändern
-	[x]	Gruppenzugehörigkeit (Regelung über die Manageransicht)
+	[√]	Gruppenzugehörigkeit (Regelung über die Manageransicht)
 		Managerverwaltungsansicht:
 		[x]	Benutzerliste mit Lösch- und Editierfunktion (Erweiterte Benutzerverwaltung mit ACTIVE/USERNAME/ect. editierbarkeit)
 
@@ -58,14 +62,13 @@ TODO:
 		-Martin Mustermann [x]
 		-Martina Musterfrau [x]
 		[autocomplete: Martin must]
-		
 
 	Ausgabe der Daten
 	===
 
 	Anzeige der Examen/Aufgaben:
 	[x]	Anzeige der Examen-Details
-	[x]	Anzeige der Punkte/Bewertung
+	[x]	Anzeige der Punkte/Bewertung (Kendoo, Mathe, etc.)
 	[x]	Anzeige der Kriteriendetails
 
 	Liste der geschriebenen Examen: [√]
