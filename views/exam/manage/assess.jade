@@ -185,9 +185,27 @@ block content
 
         var updateCurrentStudent = function(studentId) {
 
-            $.getJSON('/api/exampoints/#{exam.id}/' + studentId, function(data) {
+            $('#assessMaxPoints').val('');
+            $('input.assessCriteria').val('');
 
-                console.log(data);
+            $.getJSON('/api/exampoints/#{exam.id}/' + studentId, function(examPoints) {
+
+                if(examPoints) {
+                    $('#assessMaxPoints').val(examPoints.points);
+                    examPoints.criteriaPoints.forEach(function(crit, index) {
+                        var criteria = $('input:hidden').filter(function() { return $(this).val() === crit.criteria; }).parent();
+                        var subcriterias = criteria.find('.subcriteria');
+
+                        criteria.children('.assessCriteria').val(crit.points);
+                        crit.subpoints.forEach(function(subcrit, index) {
+                            
+                            var subcriteria = subcriterias.find('input:hidden').filter(function() { return $(this).val() === subcrit.myId; }).parent();
+                            subcriteria.children('.assessCriteria').val(subcrit.assessScore);
+
+                        });
+
+                    });
+                }
 
             });
 
