@@ -116,7 +116,7 @@ app.configure('development', function(){
 });
 
 //small test for git
-mongoose.connect("mongodb://localhost:27017/epass", function(err){
+mongoose.connect("mongodb://moep_mongoadmin:idHemRog@localhost:20869/admin", function(err){
     if(err) console.log(err);
 });
 
