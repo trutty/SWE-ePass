@@ -126,3 +126,9 @@ block content
 		}
 		
 		autoComplete('user', !{JSON.stringify(users)});
+
+		var userForm = kendo.observable({
+			password: '',
+			passwordConfirm : ''
+			});
+		kendo.bind($('#userForm'), userForm);

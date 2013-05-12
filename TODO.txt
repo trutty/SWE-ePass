@@ -26,9 +26,9 @@ TODO:
 	[√]	Bearbeitungszeit
 	[√] Kurse aus Datenbank per id raussuchen und als Objekt übergeben
 
-	Punktevergabe Examen:
+	Punktevergabe Examen: [√]
 	[√]	Anzeige des Examens (Chris: Update maxpoints, bewerten von usern)
-	[x]	Punktevergabe des Examens (Marc)
+	[√]	Punktevergabe des Examens (Marc)
 
 	Examensverwaltung:
 	[√] Editieren des Examens (Marc: Datenbank aktualisieren)

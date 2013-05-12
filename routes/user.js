@@ -65,31 +65,31 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
                 });
 
             } else {
-
-                console.log('PING');
-                console.log(req.body);
-                var updateData = {
-                    firstname		: req.body.firstname,
-                    lastname		: req.body.lastname,
-                    username		: req.body.username,
-                    studentNumber  	: req.body.studentNumber,
-                    emailAddress 	: req.body.emailAddress,
-                    password 		: req.body.password,
-                    role			: req.body.role,
-                };
-
+            
                 if (req.body.deleteUser = 'on'){
                     //delete shit;
                 };
+                User.findOne( { _id : req.body.studentid }, function (err, student) {
+                    
 
-                User.update( { _id : req.body.studentid }, updateData, function (err, affected) {
-                    console.log('UPDATE');
-                    if(err) {
-                        console.log(err);
-                        res.redirect('/user');
-                    } else {
-                        res.redirect('/user');
-                    }
+                    student.set('firstname', req.body.firstname);
+                    student.set('lastname', req.body.lastname);
+                    student.set('username', req.body.username);
+                    student.set('studentNumber', req.body.studentNumber);
+                    student.set('emailAddress', req.body.emailAddress);
+                    student.set('password', req.body.password);
+                    student.set('passwordConfirm', req.body.passwordConfirm);
+                    student.set('role', req.body.role);
+
+                    student.save(function(err) {
+                        if(err) {
+                            console.log(err);
+                            res.redirect('/user');
+                        } else {
+                            console.log(student);
+                            res.redirect('/user');
+                        }
+                    });
 
                 });
             }
