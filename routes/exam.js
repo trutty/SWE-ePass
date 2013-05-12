@@ -198,7 +198,7 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 						});
 
 					});
-					
+
                 }
 			});
 
@@ -334,6 +334,60 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 		ensureLoggedIn('/login'),
 		function (req, res) {
 
+			async.waterfall([
+
+				function (callback) {
+
+					ExamPoints.findOne(
+						{
+							'user': req.body.student,
+							'exam': req.params.selectedExam
+						})
+						.populate('criteriaPoints')
+						.exec(function(err, doc) {
+							callback(err, doc);
+						});
+
+				},
+
+				function ( examPoint, callback ) {
+
+					if(examPoint != null) {
+
+						console.log(examPoint);
+
+					} else {
+
+						async.forEach(req.body.criteria, function(criteria, callback) {
+							var criteriaPoint = new CriteriaPoints();
+
+							criteriaPoint.set('user', req.body.student);
+							criteriaPoint.set('criteria', criteria.id);
+							criteriaPoint.set('points', criteria.assessScore);
+
+							criteria.subcriteria.forEach(function(subcriteria) {
+								criteriaPoint.subpoints[subcriteria.myId] = subcriteria.assessScore;
+							});
+
+							criteriaPoint.save(function(err) {
+								callback(err, criteriaPoint);
+							});
+
+						}, function(err, criterias) {
+
+							examPoint = new ExamPoints();
+							console.log(criterias);
+
+						});
+
+					}
+
+					callback(null, 'three');
+				}
+
+			], function(err, result) {
+
+			});
 
 		Criteria.findById('515bee674b2dd9d2c5000004', function(error, criteria) {
 			console.log("muh");

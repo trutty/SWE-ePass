@@ -89,6 +89,7 @@ block content
                                         each subcrit, n in crit.subcriteria
                                             if subcrit != null
                                                 li.subcriteria
+                                                    input.k-textbox.subcriteriaMyId(type='hidden', name='criteria[#{i}][subcriteria][#{n}][myId]', readonly, value= subcrit.myId)
                                                     input.k-textbox.subcriteriaName(type='text', required='true', placeholder='Name', name='criteria[#{i}][subcriteria][#{n}][name]', readonly, value= subcrit.name)
                                                     input.k-textbox.subcriteriaDesc(type='text', placeholder='Description', name='criteria[#{i}][subcriteria][#{n}][description]', readonly, value= subcrit.description)
                                                     input.k-textbox.subcriteriaScore(type='number', min='0', required='true', placeholder='Score', name='criteria[#{i}][subcriteria][#{n}][score]', readonly, value= subcrit.score)
