@@ -1,9 +1,6 @@
 extends ../../layout
 
 block content
-	p=message
-
-	h1=title
 
 	form#userForm.k-content(action='/user/update', method='post')
 
@@ -13,41 +10,94 @@ block content
 					label(for='user')
 						| User:
 				td
-					input#user#.k-textbox(type='text', name='user#', value='#{user.user#}', required='true')
+					input#user.k-textbox(type='text', name='user', required='true')
+			tr
+				th
+					label(for='firstname')
+						| Firstname:
+				td
+					input#firstname.k-textbox(type='text', name='firstname', placeholder='Martin'
+						data-bind='value: firstname', pattern="^[A-Za-z-'\\]+$")
 
+			tr
+				th
+					label(for='lastname')
+						| Lastname:
+				td
+					input#lastname.k-textbox(type='text', name='lastname', placeholder='Mustermann'
+						data-bind='value: lastname', pattern="^[A-Za-z-'\\]+$")
 
+			tr
+				th
+					label(for='username')
+						| Username:
+				td
+					input#username.k-textbox(type='text', name='username',
+						data-bind='value: username', pattern="^[a-z0-9_-]{3,16}$")
 
+			tr
+				th
+					label(for='studentNumber')
+						| Student Number:
+				td
+					input#studentNumber.k-textbox(type='text', name='studentNumber', placeholder='1230004'
+						data-bind='value: studentNumber')
 
+			tr
+				th
+					label(for='emailAddress')
+						| Email:
+				td
+					input#emailAddress.k-textbox(type='email', name='emailAddress', placeholder='martin@mustermann.de'
+						data-bind='value: emailAddress')
 
+			tr
+				th
+					label(for='password')
+						| Password:
+				td
+					input#password.k-textbox(type='password', name='password',
+						data-bind='value: password')
 
-script
-	function autoComplete(ele, data) {
-				$('#' + ele).kendoAutoComplete({
-					dataSource: data,
-					filter: 'contains',
-					ignoreCase: true,
-					dataTextField: 'name',
-					placeholder: 'search string...',
-					change: function(e) {
-						var selections = $(this.element).parent().next();
-						var curData = this.dataItem(this.current().index());
+			tr
+				th
+					label(for='passwordConfirm')
+						| Repeat Password:
+				td
+					input#passwordConfirm.k-textbox(type='password', name='passwordConfirm',
+						data-bind='value: passwordConfirm')
 
-						if(curData.id) {
-							selections.append("<li class='removeSelection'>" + curData.name + "<span>x</span><input type='hidden' class='k-textbox' name='" + ele + "[]' value='" + curData.id + "' /></li>");
-						}
+			tr
+				th
+					label(for='id')	
+				td
+					input#_id.k-textbox(type='hidden', name='_id', data-bind='value :_id')	
 
-						if(curData._id) {
-							selections.append("<li class='removeSelection'>" + curData.name + "<span>x</span><input type='hidden' class='k-textbox' name='" + ele + "[]' value='" + curData._id + "' /></li>");
-						}
-
-						if(ele == 'tutor') {
-							tutorAutocomplete.enable(false);
-						}
-						this.value('');
-					}
-				});
-			}
-	fillUsers(user);
-	console.log('blub');
-	console.log(users);		
-	autoComplete('userForm', !{JSON.stringify(users)});
+			tr
+				td
+					&nbsp;
+				td.button
+					input.k-button(type='submit', value='Save')
+	script
+		
+		function autoComplete(ele, data) {
+			$('#' + ele).kendoAutoComplete({
+				dataSource: data,
+				filter: 'contains',
+				ignoreCase: true,
+				dataTextField: 'name',
+				placeholder: 'search string...',
+				change: function(e) {
+					var curData = this.dataItem(this.current().index());
+					console.log(curData);
+					$('#firstname').val(curData.firstname);
+					$('#lastname').val(curData.lastname);
+					$('#username').val(curData.username);
+					$('#studentNumber').val(curData.studentNumber);
+					$('#emailAddress').val(curData.emailAddress);
+					this.value('');
+				}
+			});
+		}
+		
+		autoComplete('user', !{JSON.stringify(users)});

@@ -15,52 +15,68 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 
 	});
 
-	app.get('/user', ensureLoggedIn('/login'), function (req, res) {
-		User.find({}, function (err, docs){
-			res.render('user/manage/edit', {
-				title: 'Users',
-				message: req.flash('error'),
-				user: docs,
-				users: null
-			});
-		});
-	});
+	
 
 	app.post('/user/update/', ensureLoggedIn('/login'), 
 		function (req, res) {
-		
-		var updateData = {
-			emailAddress 	: req.body.email,
-			password 		: req.body.password,
-		};
 
-		User.update( { _studentNumber : req.body._studentNumber }, updateData, function (err, affected) {
-			if(err) {
-				console.log(err);
-				res.redirect('/user/manage/' + req.body.studentNumber);
-			} else {
-				res.redirect('/user');
+			var updateData = {
+				firstname		: req.body.firstname,
+				lastname		: req.body.lastname,
+				username		: req.body.username,
+				studentNumber  	: req.body.studentNumber,
+				emailAddress 	: req.body.emailAddress,
+				password 		: req.body.password,
+			};
+
+			User.update( { _id : req.body._id }, updateData, function (err, affected) {
+				console.log('UPDATE');
+				if(err) {
+					console.log(err);
+					res.redirect('/user/manage/' + req.body._id);
+				} else {
+					res.redirect('/user');
+				}
+
+			});
+		});
+
+
+	app.get('/user', ensureLoggedIn('/login'), function (req, res) {
+		async.parallel([
+			function (callback) {
+
+				var users = [];
+
+				User.find( {}, function (err, docsUser) {
+					docsUser.forEach(function(item){
+						var user 			= {};
+						user.name 			= item.name;
+						user.firstname		= item.firstname;
+						user.lastname		= item.lastname;
+						user._id 			= item._id;
+						user.username		= item.username;
+						user.emailAddress	= item.emailAddress;
+						user.studentNumber 	= item.studentNumber;
+
+						users.push(user);
+					});
+
+					callback(err, users);
+				});
 			}
-			
+		],
+		function (err, result) {
+			res.render('user/manage/edit', {
+				title: 'Users',
+				message: req.flash('error'),
+				user: req.user,
+				users: result[0]
+			});
 		});
 	});
+	
 
-	var fillUsers = function (user) {
-		var users = [];
-
-			User.find( {}, function (err, docsUser) {
-				docsUser.forEach(function(item){
-					var user 		= {};
-					user.name 		= item.name;
-					user.firstname	= item.firstname;
-					user.lastname	= item.lastname;
-					user._id 		= item._id;
-
-					users.push(user);
-				});
-
-				callback(err);
-			});
-	}
+	
 }
 
