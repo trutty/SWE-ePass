@@ -174,37 +174,31 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 			.exec( function( err, docsExam ) {
 				if(!err) {
 
-                    var students = [];
+					var courses = [];
+					async.forEach(docsExam.course, function(item, callback) {
 
-                    async.series([
-                        function (callback) {
-                            docsExam.course.forEach(function(item, index) {
-                        
-                                 User.find({'_id': 
-                                     { $in: item.userlist }
-                                 },
-                        
-                                 function(err, docs) {
-                                    students.push(docs);
-                                    callback(err);
-                                 });
+						User.find({'_id': { $in: item.userlist }},
+							function(err, docs) {
 
-                            });
-                        }
-                    ], function (error) {
-                        
-                        console.log("Students:\n--------");
-                        console.log(students[0]);
-                        console.log("---------");
-				        
-                        res.render('exam/manage/assess', {
-						    title: 'Assess Exam',
-			    		    message: req.flash('error'),
-						    exam: docsExam,
-                            studentArr: students,
-					        user: req.user
-                        });
-                    });
+								var course = item.toObject();
+								course.userlist = docs;
+								courses.push(course);
+
+								callback();
+							});
+
+					}, function(err) {
+
+						res.render('exam/manage/assess', {
+							'title': 'Assess Exam',
+							'message': req.flash('error'),
+							'exam': docsExam,
+							'courses': courses,
+							'user': req.user
+						});
+
+					});
+					
                 }
 			});
 

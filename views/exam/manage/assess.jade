@@ -34,7 +34,7 @@ block content
                     select.k-header(name='student')
                         each course in courses
                             optgroup(label='#{course.name}')
-                            each student in course.students
+                            each student in course.userlist
                                 option(value='#{student.id}') #{student.lastname}, #{student.firstname}
 
             tr
