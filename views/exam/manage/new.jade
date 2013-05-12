@@ -117,6 +117,7 @@ block content
 												each subcrit, n in crit.subcriteria
 													if subcrit != null
 														li.subcriteria
+															input.k-textbox(type='hidden', name='criteria[#{i}][subcriteria][#{n}][myId]', value= subcrit.myId)
 															input.k-textbox.subcriteriaName(type='text', required='true', placeholder='Name', name='criteria[#{i}][subcriteria][#{n}][name]', value= subcrit.name)
 															input.k-textbox.subcriteriaDesc(type='text', placeholder='Description', name='criteria[#{i}][subcriteria][#{n}][description]', value= subcrit.description)
 															input.k-textbox.subcriteriaScore(type='number', min='0', required='true', placeholder='Score', name='criteria[#{i}][subcriteria][#{n}][score]', value= subcrit.score)
@@ -182,6 +183,7 @@ block content
 
 			$('.addChild').live('click' ,function(e) {
 				var subcriteria = $("<li class='subcriteria'>"+
+					"<input class='k-textbox subcriteriaMyId' type='hidden'>"+
 					"<input class='k-textbox subcriteriaName' type='text' required='true' placeholder='Name'>"+
 					"<input class='k-textbox subcriteriaDesc' type='text' placeholder='Description'>"+
 					"<input class='k-textbox subcriteriaScore' type='number' min='0' required='true' placeholder='Score'>"+
@@ -208,6 +210,7 @@ block content
 
 				$(this).parent().data('subcriterias', subcriterias);
 
+				subcriteria.children('input.subcriteriaMyId').attr('name', 'criteria['+indexCriteria+'][subcriteria]['+subcriterias+'][myId]').attr('value', new Date().getTime());
 				subcriteria.children('input.subcriteriaName').attr('name', 'criteria['+indexCriteria+'][subcriteria]['+subcriterias+'][name]').attr('value', '');
 				subcriteria.children('input.subcriteriaDesc').attr('name', 'criteria['+indexCriteria+'][subcriteria]['+subcriterias+'][description]').attr('value', '');
 				subcriteria.children('input.subcriteriaScore').attr('name', 'criteria['+indexCriteria+'][subcriteria]['+subcriterias+'][score]').attr('value', '');
