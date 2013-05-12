@@ -20,7 +20,8 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 			res.render('user/manage/edit', {
 				title: 'Users',
 				message: req.flash('error'),
-				user: docs
+				user: docs,
+				users: null
 			});
 		});
 	});

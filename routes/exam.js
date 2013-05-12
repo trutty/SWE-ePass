@@ -95,9 +95,6 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 
 		], function(error) {
             
-            console.log("Exam:\n-------");
-			console.log(exam);
-            console.log("--------");
 
 			res.render('exam/manage/new', {
 				title: exam == null ? 'New Exam' : 'Update Exam',
@@ -168,7 +165,6 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 		ensureLoggedIn('/login'),
 		function (req, res) {
 
-
 		Exam
 			.findOne({ _id : req.params.selectedExam })
 			.populate('user')
@@ -177,13 +173,39 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 			.populate('criteria')
 			.exec( function( err, docsExam ) {
 				if(!err) {
-					res.render('exam/manage/assess', {
-						title: 'Assess Exam',
-			    		message: req.flash('error'),
-						exam: docsExam,
-						user: req.user
-					});
-				}
+
+                    var students = [];
+
+                    async.series([
+                        function (callback) {
+                            docsExam.course.forEach(function(item, index) {
+                        
+                                 User.find({'_id': 
+                                     { $in: item.userlist }
+                                 },
+                        
+                                 function(err, docs) {
+                                    students.push(docs);
+                                    callback(err);
+                                 });
+
+                            });
+                        }
+                    ], function (error) {
+                        
+                        console.log("Students:\n--------");
+                        console.log(students[0]);
+                        console.log("---------");
+				        
+                        res.render('exam/manage/assess', {
+						    title: 'Assess Exam',
+			    		    message: req.flash('error'),
+						    exam: docsExam,
+                            studentArr: students,
+					        user: req.user
+                        });
+                    });
+                }
 			});
 
 	});
