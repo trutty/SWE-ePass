@@ -66,9 +66,7 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 
             } else {
             
-                if (req.body.deleteUser = 'on'){
-                    //delete shit;
-                };
+                
                 User.findOne( { _id : req.body.studentid }, function (err, student) {
                     
 
