@@ -1,6 +1,8 @@
 extends ../../layout
 
 block content
+	p= message
+
 	a.k-link(href='/exam/new') Create New Exam
 
 	table
@@ -25,5 +27,6 @@ block content
 				td
 					a.k-link(href='/exam/view/#{item.id}') view 
 					a.k-link(href='/exam/edit/#{item.id}') edit 
-					a.k-link(href='/exam/assess/#{item.id}') assess 
+					if user.role != "tutor"
+						a.k-link(href='/exam/assess/#{item.id}') assess 
 					a.k-link(href='/exam/delete/#{item.id}') delete 

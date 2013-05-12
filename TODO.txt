@@ -7,7 +7,7 @@ TODO:
     Datenbankkonsistenz:
     [x] Beim Löschen eines Examens alle bewerteten Examen entfernen
         [x] gleiches gilt für Criteria
-    [x] Beim Löschen eines Kurses -> in Exam die Courselist updaten
+    [√] Beim Löschen eines Kurses -> in Exam die Courselist updaten
     [x] Beim Löschen eines Studenten -> aus Kurs entfernen
 
 	Erstellung Kriterien: [√]
