@@ -2,41 +2,61 @@ extends ../layout
 
 block content
 	form#userProfile.k-content(action='/exam/assess/' + 'userid', method='post')
+		p.info Most information can only be changed by staff/managers, you may edit your mail address and password.
 		table
 			tr
-				th Firstname
-				td ---
+				th
+					label(for='firstname') Firstname
+				td
+					input#firstname.k-textbox(type='text', name='firstname', disabled=true, value=user.firstname)
 
 			tr
-				th Lastname
-				td ---
+				th
+					label(for='lastname') Lastname
+				td
+					input#lastname.k-textbox(type='text', name='lastname', disabled=true, value=user.lastname)
 
 			tr
-				th Student Number
-				td ---
+				th
+					label(for='studentNumber') Student Number
+				td
+					input#studentNumber.k-textbox(type='text', name='studentNumber', disabled=true, value=user.studentNumber)
 
 			tr
-				th Email
-				td ---
+				th
+					label(for='username') Username
+				td
+					input#username.k-textbox(type='text', name='username', disabled=true, value=user.username)
 
 			tr
-				th Role
-				td ---
+				th
+					label(for='role') Role
+				td
+					input#role.k-textbox(type='text', name='role', disabled=true, value=user.role)
 
 			tr
 				th &nbsp;
 				td &nbsp;
 
 			tr
-				th Username
-				td ---
+				th
+					label(for='emailAddress') Email Address
+				td
+					input#emailAddress.k-textbox(type='text', name='emailAddress', value=user.emailAddress)
 
 			tr
-				th Password
-				td ---
+				th
+					label(for='password') Password
+				td
+					input#password.k-textbox(type='password', name='password')
 
 			tr
-				th Repeat Password
-				td ---
+				th
+					label(for='passwordConfirm') Repeat Password
+				td
+					input#passwordConfirm.k-textbox(type='password', name='passwordConfirm')
 
-		p.info Role and username can only be changed by staff/managers.
+			tr
+				th &nbsp;
+				td.button
+					input.k-button(type='submit', value='Save')

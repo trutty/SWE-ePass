@@ -43,6 +43,16 @@ module.exports = function(app, User, Course, Exam, ExamPoints){
 
 	});
 
+	app.get('/api/userlist', function (req, res) {
+		User.find( {}, function (err, docsUser) {
+
+			var users = [];
+			docsUser.forEach(function(user) { users.push(user.toObject({virtuals: true})); });
+			res.json(users);
+			
+		});
+	});
+
 	app.get('/api/students/:type/:attr', function (req, res) {
 		if(req.params.type == 'az') {
 			var splitting = req.params.attr;

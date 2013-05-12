@@ -81,10 +81,18 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
                     student.set('passwordConfirm', req.body.passwordConfirm);
                     student.set('role', req.body.role);
 
+                    student.set('newUser', true);
+
                     student.save(function(err) {
                         if(err) {
-                            console.log(err);
-                            res.redirect('/user');
+                            req.flash('error', err);
+
+                            res.render('user/manage/edit', {
+                                title: 'Users',
+                                message: req.flash('error'),
+                                user: req.user
+                            });
+
                         } else {
                             console.log(student);
                             res.redirect('/user');
@@ -97,40 +105,15 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 
 
 	app.get('/user', ensureLoggedIn('/login'), function (req, res) {
-		async.parallel([
-			function (callback) {
 
-				var users = [];
+        res.render('user/manage/edit', {
+            title: 'Users',
+            message: req.flash('error'),
+            user: req.user
+        });
 
-				User.find( {}, function (err, docsUser) {
-					docsUser.forEach(function(item){
-						var user 			= {};
-						user.name 			= item.name;
-						user.firstname		= item.firstname;
-						user.lastname		= item.lastname;
-						user._id 			= item._id;
-						user.username		= item.username;
-						user.emailAddress	= item.emailAddress;
-						user.studentNumber 	= item.studentNumber;
-						user.role			= item.role;
-
-
-						users.push(user);
-					});
-
-					callback(err, users);
-				});
-			}
-		],
-		function (err, result) {
-			res.render('user/manage/edit', {
-				title: 'Users',
-				message: req.flash('error'),
-				user: req.user,
-				users: result[0]
-			});
-		});
 	});
+
 	app.get('/user/manage/:selectedUser',
 		ensureLoggedIn('/login'),
 		function (req, res) {

@@ -125,10 +125,12 @@ block content
 			});
 		}
 		
-		autoComplete('user', !{JSON.stringify(users)});
+		$.getJSON('/api/userlist', function(users) {
+			autoComplete('user', users);
+		});
 
 		var userForm = kendo.observable({
 			password: '',
 			passwordConfirm : ''
 			});
-		kendo.bind($('#userForm'), userForm);
+		//kendo.bind($('#userForm'), userForm);
