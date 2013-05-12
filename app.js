@@ -125,7 +125,7 @@ mongoose.connect("mongodb://moep_mongoadmin:idHemRog@localhost:20869/admin", fun
 require('./routes')(app, User, passport); // user auth
 require('./routes/exam')(app, ensureLoggedIn, User, Course, Criteria, Exam, ExamPoints, CriteriaPoints, async);
 require('./routes/criteria')(app, ensureLoggedIn);
-require('./routes/course')(app, ensureLoggedIn, async, User, Course);
+require('./routes/course')(app, ensureLoggedIn, async, User, Course, Exam);
 require('./routes/api')(app, User, Course, null);
 require('./routes/user')(app, ensureLoggedIn, async, User, Course);
 

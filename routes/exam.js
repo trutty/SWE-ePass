@@ -334,13 +334,9 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 		ensureLoggedIn('/login'),
 		function (req, res) {
 
-
-		Criteria.findById('515bee674b2dd9d2c5000004', function(error, criteria) {
-			console.log("muh");
-			console.log(error);
-			console.log(criteria);
-			console.log('mäh');
-		});
+        console.log("BODY");
+        console.log(req.body);
+        console.log("------");
 
 		Exam.findById(req.params.selectedExam, function(error, exam) {
 			exam.criteria.forEach(function(item, index) {

@@ -7,7 +7,7 @@ TODO:
     Datenbankkonsistenz:
     [x] Beim Löschen eines Examens alle bewerteten Examen entfernen
         [x] gleiches gilt für Criteria
-    [x] Beim Löschen eines Kurses -> in Exam die Userlist updaten
+    [x] Beim Löschen eines Kurses -> in Exam die Courselist updaten
     [x] Beim Löschen eines Studenten -> aus Kurs entfernen
 
 	Erstellung Kriterien: [√]
@@ -27,7 +27,7 @@ TODO:
 	[√] Kurse aus Datenbank per id raussuchen und als Objekt übergeben
 
 	Punktevergabe Examen:
-	[x]	Anzeige des Examens (Chris: Update maxpoints, bewerten von usern)
+	[√]	Anzeige des Examens (Chris: Update maxpoints, bewerten von usern)
 	[x]	Punktevergabe des Examens (Marc)
 
 	Examensverwaltung:
