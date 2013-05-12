@@ -40,9 +40,9 @@ TODO:
 	[√]	E-Mail Adresse
 	[√]	Matrikelnummer
 
-    Benutzerverwaltung: (Marc)
-    [x] E-Mail ändern
-    [x] Passwort ändern
+    Benutzerverwaltung: (Marc) [√]
+    [√] E-Mail ändern
+    [√] Passwort ändern
 
 	Managerverwaltung: (Joscha) [√]
 	[√]	Nur E-Mail ändern
