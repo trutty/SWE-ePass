@@ -19,32 +19,80 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 
 	app.post('/user/update', ensureLoggedIn('/login'), 
 		function (req, res) {
-			console.log('PING');
-			console.log(req.body);
-			var updateData = {
-				firstname		: req.body.firstname,
-				lastname		: req.body.lastname,
-				username		: req.body.username,
-				studentNumber  	: req.body.studentNumber,
-				emailAddress 	: req.body.emailAddress,
-				password 		: req.body.password,
-				role			: req.body.role,
-			};
+            if (req.body.deleteUser != undefined) {
 
-			if (req.body.deleteUser = 'on'){
-				//delete shit;
-			};
+                    var studentID = req.body.studentid;
+                    async.series([
+                    function (callback) {
+                        Course
+                        .find({})
+                        .populate('userlist')
+                        .exec(function (err, courses) {
 
-			User.update( { _id : req.body.studentid }, updateData, function (err, affected) {
-				console.log('UPDATE');
-				if(err) {
-					console.log(err);
-					res.redirect('/user');
-				} else {
-					res.redirect('/user');
-				}
+                            async.forEach(courses, function (course, index) {
 
-			});
+                                var courseBody = course;
+                                course.userlist.forEach(function (user, i) {
+                                    if(user.id == studentID) {
+                                        courseBody.userlist.splice(i, 1);
+                                    }
+                                });
+
+                                var updateData = { userlist: courseBody.userlist };
+                                Course.update({ _id: course.id }, updateData, function (err, affected) {
+                                    if (err)
+                                        console.log(err);
+                                });
+
+                            });
+
+                            callback(err);
+
+                        });
+                    },
+                    function (callback) {
+                        User.remove( { _id: req.body.studentid }, function (err, affected) {
+                            if(err) {
+                                console.log(err);
+                            }
+                        });
+
+                        callback();
+                    }
+                ],
+                function (error, result) {
+                    res.redirect('/');
+                });
+
+            } else {
+
+                console.log('PING');
+                console.log(req.body);
+                var updateData = {
+                    firstname		: req.body.firstname,
+                    lastname		: req.body.lastname,
+                    username		: req.body.username,
+                    studentNumber  	: req.body.studentNumber,
+                    emailAddress 	: req.body.emailAddress,
+                    password 		: req.body.password,
+                    role			: req.body.role,
+                };
+
+                if (req.body.deleteUser = 'on'){
+                    //delete shit;
+                };
+
+                User.update( { _id : req.body.studentid }, updateData, function (err, affected) {
+                    console.log('UPDATE');
+                    if(err) {
+                        console.log(err);
+                        res.redirect('/user');
+                    } else {
+                        res.redirect('/user');
+                    }
+
+                });
+            }
 		});
 
 
