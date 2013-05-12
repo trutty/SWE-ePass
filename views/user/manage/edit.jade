@@ -1,9 +1,6 @@
 extends ../../layout
 
 block content
-	p=message
-
-	h1=title
 
 	form#userForm.k-content(action='/user/update', method='post')
 
@@ -13,41 +10,37 @@ block content
 					label(for='user')
 						| User:
 				td
-					input#user#.k-textbox(type='text', name='user#', value='#{user.user#}', required='true')
+					input#user.k-textbox(type='text', name='user', required='true')
 
+	script
+		
+		function autoComplete(ele, data) {
+			console.log('PENIS');
+			$('#' + ele).kendoAutoComplete({
+				dataSource: data,
+				filter: 'contains',
+				ignoreCase: true,
+				dataTextField: 'name',
+				placeholder: 'search string...',
+				change: function(e) {
+					console.log('PENIS1');
+					var selections = $(this.element).parent().next();
+					var curData = this.dataItem(this.current().index());
 
-
-
-
-
-script
-	function autoComplete(ele, data) {
-				$('#' + ele).kendoAutoComplete({
-					dataSource: data,
-					filter: 'contains',
-					ignoreCase: true,
-					dataTextField: 'name',
-					placeholder: 'search string...',
-					change: function(e) {
-						var selections = $(this.element).parent().next();
-						var curData = this.dataItem(this.current().index());
-
-						if(curData.id) {
-							selections.append("<li class='removeSelection'>" + curData.name + "<span>x</span><input type='hidden' class='k-textbox' name='" + ele + "[]' value='" + curData.id + "' /></li>");
-						}
-
-						if(curData._id) {
-							selections.append("<li class='removeSelection'>" + curData.name + "<span>x</span><input type='hidden' class='k-textbox' name='" + ele + "[]' value='" + curData._id + "' /></li>");
-						}
-
-						if(ele == 'tutor') {
-							tutorAutocomplete.enable(false);
-						}
-						this.value('');
+					if(curData.id) {
+						selections.append("<li class='removeSelection'>" + curData.name + "<span>x</span><input type='hidden' class='k-textbox' name='" + ele + "[]' value='" + curData.id + "' /></li>");
 					}
-				});
-			}
-	fillUsers(user);
-	console.log('blub');
-	console.log(users);		
-	autoComplete('userForm', !{JSON.stringify(users)});
+
+					if(curData._id) {
+						selections.append("<li class='removeSelection'>" + curData.name + "<span>x</span><input type='hidden' class='k-textbox' name='" + ele + "[]' value='" + curData._id + "' /></li>");
+					}
+
+					if(ele == 'tutor') {
+						tutorAutocomplete.enable(false);
+					}
+					this.value('');
+				}
+			});
+		}
+		
+		autoComplete('user', !{JSON.stringify(users)});
