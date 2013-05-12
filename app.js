@@ -51,7 +51,7 @@ app.configure(function(){
   app.use(express.cookieParser());
   app.use(express.session(
     {
-      secret: 'cockring'
+      secret: 'thereisahell'
     }
   ));
   app.use(flash());

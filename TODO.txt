@@ -4,11 +4,11 @@ TODO:
 	Einpflege der Daten
 	===
     
-    Datenbankkonsistenz:
-    [x] Beim Löschen eines Examens alle bewerteten Examen entfernen
-        [x] gleiches gilt für Criteria
+    Datenbankkonsistenz: [√]
+    [√] Beim Löschen eines Examens alle bewerteten Examen entfernen
+        [√] gleiches gilt für Criteria
     [√] Beim Löschen eines Kurses -> in Exam die Courselist updaten
-    [x] Beim Löschen eines Studenten -> aus Kurs entfernen
+    [√] Beim Löschen eines Studenten -> aus Kurs entfernen
 
 	Erstellung Kriterien: [√]
 	[√]	Bezeichnung
@@ -30,11 +30,11 @@ TODO:
 	[√]	Anzeige des Examens (Chris: Update maxpoints, bewerten von usern)
 	[√]	Punktevergabe des Examens (Marc)
 
-	Examensverwaltung:
+	Examensverwaltung: [√]
 	[√] Editieren des Examens (Marc: Datenbank aktualisieren)
-	[x] Löschen des Examens (Chris: Testen mit bewertetem Examen)
+	[√] Löschen des Examens (Chris: Testen mit bewertetem Examen)
 
-	Benutzerregistrierung:
+	Benutzerregistrierung: [√]
 	[√]	Vornamen, Nachnamen
 	[√]	Loginnamen
 	[√]	E-Mail Adresse
@@ -44,12 +44,12 @@ TODO:
     [x] E-Mail ändern
     [x] Passwort ändern
 
-	Managerverwaltung: (Joscha)
+	Managerverwaltung: (Joscha) [√]
 	[√]	Nur E-Mail ändern
-	[x]	Passwort ändern
+	[√]	Passwort ändern
 	[√]	Gruppenzugehörigkeit (Regelung über die Manageransicht)
 		Managerverwaltungsansicht:
-		[x]	Benutzerliste mit Lösch- und Editierfunktion (Erweiterte Benutzerverwaltung mit ACTIVE/USERNAME/ect. editierbarkeit)
+		[√]	Benutzerliste mit Lösch- und Editierfunktion (Erweiterte Benutzerverwaltung mit ACTIVE/USERNAME/ect. editierbarkeit)
 
 	Kurse erstellen: [√]
 	[√]	Bezeichnung des Kurses

@@ -3,7 +3,7 @@ var upper_profile = new Array();
 var tolerance = double;
 
 score = function(lower_profile, upper_profile, tolerance){
-	if (array_sum(upper_profile)=0) {
+	if (array_sum(upper_profile) == 0) {
 		return score = 0;
 	};
 	var min_score = Math.min(rank(upper_profile), (1 - rank(lower_profile)));
@@ -56,7 +56,7 @@ your_grade_new = function(myScore, model){
 	var rounded_score = ((Math.floor(myScore *100000000))/100000000);
 	switch model {
 		case "DHBW" : 
-				your_grade_new = Math.min(5, 7 - 6 * rounded_score);
+			your_grade_new = Math.min(5, 7 - 6 * rounded_score);
 		case "PASS_1" :
 			your_grade_new = 1 + 4 * Math.pow((1 - rounded_score ^ 1.508),(1 / 1.508));
 		case "PASS_2" :
