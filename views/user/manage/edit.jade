@@ -1,6 +1,8 @@
 extends ../../layout
 
+
 block content
+	- var roles= ["manager", "assessor", "tutor", "user", "student"]
 
 	form#userForm.k-content(action='/user/update', method='post')
 
@@ -10,7 +12,7 @@ block content
 					label(for='user')
 						| User:
 				td
-					input#user.k-textbox(type='text', name='user', required='true')
+					input#user.k-textbox(type='text', name='user')
 			tr
 				th
 					label(for='firstname')
@@ -53,6 +55,15 @@ block content
 
 			tr
 				th
+					label(for='role')
+						| Role:
+				td 
+					select#role.k-header(name='role')
+						each role in roles
+							option #{role}
+
+			tr
+				th
 					label(for='password')
 						| Password:
 				td
@@ -71,7 +82,7 @@ block content
 				th
 					label(for='id')	
 				td
-					input#_id.k-textbox(type='hidden', name='_id', data-bind='value :_id')	
+					input#studentid.k-textbox(type='hidden', name='studentid', data-bind='value :_id')	
 
 			tr
 				td
@@ -95,6 +106,14 @@ block content
 					$('#username').val(curData.username);
 					$('#studentNumber').val(curData.studentNumber);
 					$('#emailAddress').val(curData.emailAddress);
+					$('#studentid').val(curData._id);
+					console.log(curData.role);
+					$.each($('#role option'), function(index, item) {
+						if (item.text == curData.role) {
+							$(item).attr('selected', 'selected');
+							console.log(index);
+						}
+					});
 					this.value('');
 				}
 			});
