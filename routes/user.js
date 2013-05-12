@@ -31,6 +31,10 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 				role			: req.body.role,
 			};
 
+			if (req.body.deleteUser = 'on'){
+				//delete shit;
+			};
+
 			User.update( { _id : req.body.studentid }, updateData, function (err, affected) {
 				console.log('UPDATE');
 				if(err) {

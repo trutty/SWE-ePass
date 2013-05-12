@@ -89,6 +89,12 @@ block content
 					&nbsp;
 				td.button
 					input.k-button(type='submit', value='Save')
+
+			tr 
+				td
+					label(for='Delete') Delete user
+				td.button
+					input(type='checkbox', name='deleteUser', data-bind='value')
 	script
 		
 		function autoComplete(ele, data) {
