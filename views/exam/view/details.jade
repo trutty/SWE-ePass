@@ -1,4 +1,296 @@
 extends ../../layout
 
 block content
-	p= exam
+
+		table
+			tr
+				th
+					label(for='name')
+						| Name:
+				td
+					input#name(class='k-textbox', type='text', name='name', required='true', value= examName)
+
+			tr
+				th
+					label(for='user')
+						| Tutor:
+				td
+					input#tutor.k-textbox(type='text', name='tutor', value= examTutor)
+					ul.selections.tutorSelection
+						if exam != null
+							li.removeSelection
+								| #{exam.user.firstname} #{exam.user.lastname}
+								input.k-textbox(type='hidden', name='tutor[]', value= exam.user.id)
+								span x
+					
+			tr
+				th
+					label(for='assessor')
+						| Assessor:
+				td
+					input#assessor.k-textbox(type='text', name='assessor')
+					ul.selections
+						if exam != null
+							each item in exam.assessor
+								li.removeSelection
+									| #{item.name}
+									input.k-textbox(type='hidden', name='assessor[]', value= item.id)
+									span x
+
+			tr
+				th
+					label(for='course')
+						| Course:
+				td
+					input#course.k-textbox(type='text', name='course')
+					ul.selections
+						if exam != null
+							each item in exam.course
+								li.removeSelection
+									| #{item.name}
+									input.k-textbox(type='hidden', name='course[]', value= item.id)
+									span x
+
+			tr
+				th
+					label(for='lecture')
+						| Lecture:
+				td
+					input#lecture(class='k-textbox', type='text', name='lecture', required='true', value= examLecture)
+
+			tr
+				th
+					label(for='date')
+						| Date: 
+				td
+					input#date(name='date', required='true', style='width:15.4em;', value= examDate)
+
+			tr
+				th
+					label(for='duration')
+						| Duration in minutes: 
+				td
+					input#duration(class='k-textbox', type='number', name='duration', min='0', required='true', value= examDuration)
+
+			tr
+				th
+					label(for='maxPoints')
+						| Maximum Points: 
+				td
+					input#maxPoints(class='k-textbox', type='number', name='maxPoints', min='0', required='true', value= examMaxPoints)
+
+			tr
+				th
+					label(for='criteria')
+						| Criteria:
+				td	
+					ul.criteria
+						if exam != undefined
+							each crit, i in exam.criteria
+								if crit != null
+									li
+										input.k-textbox(type='hidden', name='criteria[#{i}][id]', required='true', value= crit._id)
+										input.criteriaName.k-textbox(type='text', name='criteria[#{i}][name]', required='true', placeholder='Name', value= crit.name)
+										input.criteriaDesc.k-textbox(type='text', name='criteria[#{i}][description]', placeholder='Description', value= crit.description)
+										input.criteriaScore.k-textbox(type='number', min='0', name='criteria[#{i}][score]', required='true', placeholder='Score', value= crit.score)
+										input.addCriteria.k-button(type='button', value='+')
+										input.removeCriteria.k-button(type='button', value='-')
+										input.addChild.k-button(type='button', value='Add Child')
+										ul.subcriteria
+											if crit.subcriteria != null
+												each subcrit, n in crit.subcriteria
+													if subcrit != null
+														li.subcriteria
+															input.k-textbox.subcriteriaName(type='text', required='true', placeholder='Name', name='criteria[#{i}][subcriteria][#{n}][name]', value= subcrit.name)
+															input.k-textbox.subcriteriaDesc(type='text', placeholder='Description', name='criteria[#{i}][subcriteria][#{n}][description]', value= subcrit.description)
+															input.k-textbox.subcriteriaScore(type='number', min='0', required='true', placeholder='Score', name='criteria[#{i}][subcriteria][#{n}][score]', value= subcrit.score)
+															input.addChild.k-button(type='button', value='+')
+															input.removeCriteria.k-button(type='button', value='-')
+
+						else
+							li
+								input.criteriaName.k-textbox(type='text', name='criteria[0][name]', required='true', placeholder='Name')
+								input.criteriaDesc.k-textbox(type='text', name='criteria[0][description]', placeholder='Description')
+								input.criteriaScore.k-textbox(type='number', min='0', name='criteria[0][score]', required='true', placeholder='Score')
+								input.addCriteria.k-button(type='button', value='+')
+								input.removeCriteria.k-button(type='button', value='-')
+								input.addChild.k-button(type='button', value='Add Child')
+								ul.subcriteria
+
+			tr
+				td
+					input(class='k-button', type='submit', value='Save')
+				td
+
+			tr
+				td
+
+				td
+					p#pointsError
+
+		script
+
+			var firstCriteria = $('ul.criteria li:first');
+			firstCriteria.data('index', 0);
+			firstCriteria.data('subcriterias', 0);
+			var exam = "#{examName}";
+
+			var criteriaIndex;
+
+			if (exam == "") {	
+				criteriaIndex = 0;
+			} else {
+				criteriaIndex = $('ul.criteria > li').length - 1;
+				$('ul.criteria > li').each( function (index, item) {
+					$(this).data('index', index);
+					console.log(index);
+					$(this).data('subcriterias', $(this).find('li.subcriteria').length - 1);
+				});
+
+			}
+
+			$('.addCriteria').click(function(e) {
+				var criteriaTemplate = $('ul.criteria li:first').clone(true, true);
+				criteriaTemplate.find('input[type="hidden"]').remove();
+				criteriaIndex++;
+
+				criteriaTemplate.data('index', criteriaIndex);
+				criteriaTemplate.data('subcriterias', 0);
+				criteriaTemplate.children('input.criteriaName').attr('name', 'criteria[' + criteriaIndex + '][name]').attr('value', '');
+				criteriaTemplate.children('input.criteriaDesc').attr('name', 'criteria[' + criteriaIndex + '][description]').attr('value', '');
+				criteriaTemplate.children('input.criteriaScore').attr('name', 'criteria[' + criteriaIndex + '][score]').attr('value', '');
+				criteriaTemplate.children('ul.subcriteria').children().remove();
+
+				$(this).parent().after(criteriaTemplate);
+			});
+
+			$('.addChild').live('click' ,function(e) {
+				var subcriteria = $("<li class='subcriteria'>"+
+					"<input class='k-textbox subcriteriaName' type='text' required='true' placeholder='Name'>"+
+					"<input class='k-textbox subcriteriaDesc' type='text' placeholder='Description'>"+
+					"<input class='k-textbox subcriteriaScore' type='number' min='0' required='true' placeholder='Score'>"+
+					"<input class='k-button addChild' type='button' value='+'>"+
+					"<input class='k-button removeCriteria' type='button' value='-'></li>");
+
+				var areWeInSubcriteria = $(this).parent().hasClass('subcriteria');
+
+				var subcriterias;
+				var indexCriteria;
+				if(areWeInSubcriteria) {
+					subcriterias = $(this).parent().parent().parent().data('subcriterias');
+					//subcriterias = ($(this).parent().parent().children('li.subcriteria').length - 1);
+					indexCriteria = $(this).parent().parent().parent().data('index');
+					subcriterias++;
+					$(this).parent().parent().parent().data('subcriterias', subcriterias);
+				} else {
+					subcriterias = $(this).parent().data('subcriterias');
+					//subcriterias = ($(this).parent().children('ul.subcriteria').children('li.subcriteria').length - 1);
+					indexCriteria = $(this).parent().data('index');
+					subcriterias++;
+					$(this).parent().data('subcriterias', subcriterias);
+				}
+
+				$(this).parent().data('subcriterias', subcriterias);
+
+				subcriteria.children('input.subcriteriaName').attr('name', 'criteria['+indexCriteria+'][subcriteria]['+subcriterias+'][name]').attr('value', '');
+				subcriteria.children('input.subcriteriaDesc').attr('name', 'criteria['+indexCriteria+'][subcriteria]['+subcriterias+'][description]').attr('value', '');
+				subcriteria.children('input.subcriteriaScore').attr('name', 'criteria['+indexCriteria+'][subcriteria]['+subcriterias+'][score]').attr('value', '');
+
+				if(areWeInSubcriteria) {
+					$(this).parent().after(subcriteria);
+				} else {
+					$(this).siblings('ul.subcriteria').append(subcriteria);
+				}
+
+			});
+
+			$('.removeCriteria').live('click', function(e) {
+				if($(this).parent().hasClass('subcriteria')) {
+					$(this).parent().remove();
+				} else {
+					if($('ul.criteria > li').length > 1) {
+						$(this).parent().remove();
+					}
+				}				
+			});
+
+			function autoComplete(ele, data) {
+				$('#' + ele).kendoAutoComplete({
+					dataSource: data,
+					filter: 'contains',
+					ignoreCase: true,
+					dataTextField: 'name',
+					placeholder: 'search string...',
+					change: function(e) {
+						var selections = $(this.element).parent().next();
+						var curData = this.dataItem(this.current().index());
+
+						if(curData.id) {
+							selections.append("<li class='removeSelection'>" + curData.name + "<span>x</span><input type='hidden' class='k-textbox' name='" + ele + "[]' value='" + curData.id + "' /></li>");
+						}
+
+						if(curData._id) {
+							selections.append("<li class='removeSelection'>" + curData.name + "<span>x</span><input type='hidden' class='k-textbox' name='" + ele + "[]' value='" + curData._id + "' /></li>");
+						}
+
+						if(ele == 'tutor') {
+							tutorAutocomplete.enable(false);
+						}
+						this.value('');
+					}
+				});
+			}
+
+			autoComplete('course', !{JSON.stringify(courses)});
+			autoComplete('assessor', !{JSON.stringify(assessors)});
+			autoComplete('tutor', !{JSON.stringify(tutors)});
+			var tutorAutocomplete = $('#tutor').data("kendoAutoComplete");
+
+			$('.removeSelection').live('click', function(e){
+				if($(this).parent().hasClass('tutorSelection')) {
+					tutorAutocomplete.enable(true);
+				}
+				$(this).remove();
+			});
+
+			$('#date').kendoDateTimePicker({
+				value: new Date()
+			});
+
+			//check if specified points match max points - if not correct then return false (do not submit form)
+			$('#examNew').submit(function(e) {
+				$('#pointsError').html('');
+				//check if criteria points are correctly calculated
+				var maxPoints =  Number($('#maxPoints').val());
+				var overallCriteriaPoints = Number(0);
+				var criteriaPoints = Number(0);
+				var error = false;
+				//iterate over each criteria
+				$('ul.criteria > li').each(function (index) {
+					criteriaPoints = Number($(this).children('input.criteriaScore').val());
+					var subcriteriaPoints = Number(0);
+					var subcriterias = false;
+					//iterate over each subcriteria of current criteria
+					$(this).children('ul.subcriteria').children('li').each(function(index) {
+						subcriterias = true;
+						subcriteriaPoints += Number($(this).children('input.subcriteriaScore').val());
+					});
+					//check if summed subcriteria points match current criteria points
+					if(subcriterias && subcriteriaPoints != criteriaPoints) {
+						$('#pointsError').append('Summed up points do not match at: <strong>'+$(this).children('input.criteriaName').val()+'</strong>.<br />');
+						error = true;
+						return false;
+					}
+					//sum up criteria points
+					overallCriteriaPoints += criteriaPoints;
+				});
+				//check if summed up criteria points match max given points
+				if(!error && maxPoints != overallCriteriaPoints) {
+					$('#pointsError').append('Maximum points do not match summed up criteria points.');
+					return false;
+				}
+
+				if (error) {
+					return false;
+				}
+			});

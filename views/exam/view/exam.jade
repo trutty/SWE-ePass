@@ -1,8 +1,6 @@
 extends ../../layout
 
 block content
-	p= message
-
 	a.k-link(href='/exam/new') Create New Exam
 
 	table
@@ -26,7 +24,7 @@ block content
 					| #{item.date.getFullYear()}
 				td
 					a.k-link(href='/exam/view/#{item.id}') view 
-					a.k-link(href='/exam/edit/#{item.id}') edit 
-					if user.role != "tutor"
+					if user.role == ("tutor" || "manager")
+						a.k-link(href='/exam/edit/#{item.id}') edit 
 						a.k-link(href='/exam/assess/#{item.id}') assess 
-					a.k-link(href='/exam/delete/#{item.id}') delete 
+						a.k-link(href='/exam/delete/#{item.id}') delete 
