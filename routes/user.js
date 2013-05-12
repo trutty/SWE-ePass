@@ -13,6 +13,24 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 
 	app.post('/profile', ensureLoggedIn('/login'), function(req, res) {
 
+        var user = req.user;
+        user.set('emailAddress', req.body.emailAddress);
+
+        if(req.body.password)
+            user.set('password', req.body.password);
+
+        if(req.body.passwordConfirm)
+            user.set('passwordConfirm', req.body.passwordConfirm);
+
+        user.save(function(err) {
+            if(err)
+                for(var errorField in err.errors) {
+                    req.flash('error', err.errors[errorField].message);
+                }
+
+            res.redirect('/profile');
+        });
+
 	});
 
 	
@@ -77,11 +95,15 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
                     student.set('username', req.body.username);
                     student.set('studentNumber', req.body.studentNumber);
                     student.set('emailAddress', req.body.emailAddress);
-                    student.set('password', req.body.password);
-                    student.set('passwordConfirm', req.body.passwordConfirm);
                     student.set('role', req.body.role);
 
-                    student.set('newUser', true);
+                    if(req.body.password)
+                        student.set('password', req.body.password);
+
+                    if(req.body.passwordConfirm)
+                        student.set('passwordConfirm', req.body.passwordConfirm);
+
+                    
 
                     student.save(function(err) {
                         if(err) {
