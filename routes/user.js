@@ -21,14 +21,19 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 		function (req, res) {
 
 			var updateData = {
-				emailAddress 	: req.body.email,
+				firstname		: req.body.firstname,
+				lastname		: req.body.lastname,
+				username		: req.body.username,
+				studentNumber  	: req.body.studentNumber,
+				emailAddress 	: req.body.emailAddress,
 				password 		: req.body.password,
 			};
 
-			User.update( { _studentNumber : req.body._studentNumber }, updateData, function (err, affected) {
+			User.update( { _id : req.body._id }, updateData, function (err, affected) {
+				console.log('UPDATE');
 				if(err) {
 					console.log(err);
-					res.redirect('/user/manage/' + req.body.studentNumber);
+					res.redirect('/user/manage/' + req.body._id);
 				} else {
 					res.redirect('/user');
 				}
@@ -45,11 +50,14 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 
 				User.find( {}, function (err, docsUser) {
 					docsUser.forEach(function(item){
-						var user 		= {};
-						user.name 		= item.name;
-						user.firstname	= item.firstname;
-						user.lastname	= item.lastname;
-						user._id 		= item._id;
+						var user 			= {};
+						user.name 			= item.name;
+						user.firstname		= item.firstname;
+						user.lastname		= item.lastname;
+						user._id 			= item._id;
+						user.username		= item.username;
+						user.emailAddress	= item.emailAddress;
+						user.studentNumber 	= item.studentNumber;
 
 						users.push(user);
 					});
