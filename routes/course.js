@@ -3,7 +3,7 @@
  * Routes for course creation, manipulation and view
  */
 
-module.exports = function(app, ensureLoggedIn, async, User, Course){
+module.exports = function(app, ensureLoggedIn, async, User, Course, Exam) {
 
 	app.get('/courses',
 		ensureLoggedIn('/login'),
@@ -62,14 +62,48 @@ module.exports = function(app, ensureLoggedIn, async, User, Course){
 		ensureLoggedIn('/login'),
 		function (req, res) {
 
-		// check if a user in in the course, if true than do not delete
-		Course.remove( { _id: req.params.selectedCourse }, function (err, affected) {
-			if(err) {
-				console.log(err);
-			}
-		});
+        var courseID = req.params.selectedCourse;
+        async.series([
+            function (callback) {
+                Exam
+                .find({})
+                .populate('course')
+                .exec(function (err, exams) {
 
-		res.redirect('/courses');
+                    async.forEach(exams, function (exam, index) {
+
+                        var examBody = exam;
+                        exam.course.forEach(function (course, i) {
+                            if(course.id == courseID) {
+                                examBody.course.splice(i, 1);
+                            }
+                        });
+
+                        var updateData = { course: examBody.course };
+                        Exam.update({ _id: exam.id }, updateData, function (err, affected) {
+                            if (err)
+                                console.log(err);
+                        });
+
+                    });
+
+                    callback(err);
+
+                });
+            },
+            function (callback) {
+                Course.remove( { _id: req.params.selectedCourse }, function (err, affected) {
+                    if(err) {
+                        console.log(err);
+                    }
+                });
+
+                callback();
+            }
+        ],
+        function (error, result) {
+            res.redirect('/courses');
+        });
 
 	});
 

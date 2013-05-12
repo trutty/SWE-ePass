@@ -125,7 +125,7 @@ mongoose.connect("mongodb://localhost:27017/epass", function(err){
 require('./routes')(app, User, passport); // user auth
 require('./routes/exam')(app, ensureLoggedIn, User, Course, Criteria, Exam, ExamPoints, CriteriaPoints, async);
 require('./routes/criteria')(app, ensureLoggedIn);
-require('./routes/course')(app, ensureLoggedIn, async, User, Course);
+require('./routes/course')(app, ensureLoggedIn, async, User, Course, Exam);
 require('./routes/api')(app, User, Course, Exam, ExamPoints);
 require('./routes/user')(app, ensureLoggedIn, async, User, Course);
 
