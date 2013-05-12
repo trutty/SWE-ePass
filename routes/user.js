@@ -17,9 +17,10 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 
 	
 
-	app.post('/user/update/', ensureLoggedIn('/login'), 
+	app.post('/user/update', ensureLoggedIn('/login'), 
 		function (req, res) {
-
+			console.log('PING');
+			console.log(req.body);
 			var updateData = {
 				firstname		: req.body.firstname,
 				lastname		: req.body.lastname,
@@ -27,13 +28,14 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 				studentNumber  	: req.body.studentNumber,
 				emailAddress 	: req.body.emailAddress,
 				password 		: req.body.password,
+				role			: req.body.role,
 			};
 
-			User.update( { _id : req.body._id }, updateData, function (err, affected) {
+			User.update( { _id : req.body.studentid }, updateData, function (err, affected) {
 				console.log('UPDATE');
 				if(err) {
 					console.log(err);
-					res.redirect('/user/manage/' + req.body._id);
+					res.redirect('/user');
 				} else {
 					res.redirect('/user');
 				}
@@ -58,6 +60,8 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 						user.username		= item.username;
 						user.emailAddress	= item.emailAddress;
 						user.studentNumber 	= item.studentNumber;
+						user.role			= item.role;
+
 
 						users.push(user);
 					});
@@ -74,6 +78,23 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 				users: result[0]
 			});
 		});
+	});
+	app.get('/user/manage/:selectedUser',
+		ensureLoggedIn('/login'),
+		function (req, res) {
+
+		User
+			.findById(req.params.selectedUser)
+			.exec(function (err, docs) {
+
+				res.render('user/manage/edit', {
+			  		title: 'Edit User',
+			  		message: req.flash('error'),
+			  		user: docs
+			  	});
+
+			})
+
 	});
 	
 
