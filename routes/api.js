@@ -30,7 +30,18 @@ var alphabet = [
 
 ];
 
-module.exports = function(app, User, Course, Exam){
+module.exports = function(app, User, Course, Exam, ExamPoints){
+
+	app.get('/api/exampoints/:examId/:userId', function (req, res) {
+		console.log('get: %s, %s', req.params.examId, req.params.userId);
+		
+		ExamPoints.findOne({'exam': req.params.examId, 'user': req.params.userId})
+			.populate('criteriaPoints')
+			.exec(function(err, doc) {
+				res.json(doc);
+		});
+
+	});
 
 	app.get('/api/students/:type/:attr', function (req, res) {
 		if(req.params.type == 'az') {

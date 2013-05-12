@@ -179,3 +179,26 @@ block content
             }
             
         });
+
+    
+    script
+
+        var updateCurrentStudent = function(studentId) {
+
+            $.getJSON('/api/exampoints/#{exam.id}/' + studentId, function(data) {
+
+                console.log(data);
+
+            });
+
+        };
+
+        
+
+
+
+        updateCurrentStudent($('select[name=student]').val());
+
+        $('select[name=student]').change(function(){
+            updateCurrentStudent($(this).val());
+        });

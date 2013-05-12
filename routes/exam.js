@@ -353,11 +353,45 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 				function ( examPoint, callback ) {
 
 					if(examPoint != null) {
+						
+						//collection.update(selector, document, {upsert:true});
+						var criteriaPoints = [];
+						async.forEach(req.body.criteria, function(criteria, callback) {
 
-						console.log(examPoint);
+							CriteriaPoints.findOne(
+								{
+									'user': req.body.student,
+									'criteria': criteria.id
+								}, function(err, cp) {
+
+									cp.set('points', criteria.assessScore);
+									cp.set('subpoints', []);
+
+									if(criteria.subcriteria != undefined)
+										criteria.subcriteria.forEach(function(subcriteria) {
+											cp.subpoints.push({'myId': subcriteria.myId, 'assessScore': subcriteria.assessScore});
+										});
+
+									cp.save(function(err) {
+										criteriaPoints.push(cp);
+										callback(err);
+									})
+
+								}
+							);
+
+						}, function(err) {
+
+							examPoint.set('points', req.body.assessMaxPoints);
+							examPoint.set('criteriaPoints', criteriaPoints);
+
+							callback(err, examPoint);
+
+						});
 
 					} else {
 
+						var criteriaPoints = [];
 						async.forEach(req.body.criteria, function(criteria, callback) {
 							var criteriaPoint = new CriteriaPoints();
 
@@ -365,58 +399,44 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 							criteriaPoint.set('criteria', criteria.id);
 							criteriaPoint.set('points', criteria.assessScore);
 
-							criteria.subcriteria.forEach(function(subcriteria) {
-								criteriaPoint.subpoints[subcriteria.myId] = subcriteria.assessScore;
-							});
+							if(criteria.subcriteria != undefined)
+								criteria.subcriteria.forEach(function(subcriteria) {
+									criteriaPoint.subpoints.push({'myId': subcriteria.myId, 'assessScore': subcriteria.assessScore});
+								});
 
 							criteriaPoint.save(function(err) {
-								callback(err, criteriaPoint);
+								criteriaPoints.push(criteriaPoint);
+								callback(err);
 							});
 
-						}, function(err, criterias) {
+						}, function(err) {
 
 							examPoint = new ExamPoints();
-							console.log(criterias);
+
+							examPoint.set('user', req.body.student);
+							examPoint.set('exam', req.params.selectedExam);
+							examPoint.set('points', req.body.assessMaxPoints);
+							examPoint.set('criteriaPoints', criteriaPoints);
+
+							callback(err, examPoint);
 
 						});
 
 					}
-
-					callback(null, 'three');
 				}
 
 			], function(err, result) {
 
+				result.save(function(error) {
+					if(error) {
+						console.log(error);
+						res.redirect('/exam/assess/' + req.params.selectedExam);
+					} else {
+						res.redirect('/exam');
+					}
+				});
+
 			});
-
-		Criteria.findById('515bee674b2dd9d2c5000004', function(error, criteria) {
-			console.log("muh");
-			console.log(error);
-			console.log(criteria);
-			console.log('mäh');
-		});
-
-		Exam.findById(req.params.selectedExam, function(error, exam) {
-			exam.criteria.forEach(function(item, index) {
-				console.log(item._id);
-			});
-		});
-
-
-		/*
-		var criteriaBody = req.body;
-		criteriaBody.criteria = req.body.criteria;
-
-		console.log(criteriaBody.criteria[0].subcriteria[1]);
-
-		var criteria = new Criteria(criteriaBody.criteria);
-		criteria.save(function (err) {
-			if (err) {
-				console.log(err);
-				res.redirect('/exam/assess/' + req.params.selectedExam);
-			}
-		});
-		*/
 
 	});	
 

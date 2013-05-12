@@ -126,7 +126,7 @@ require('./routes')(app, User, passport); // user auth
 require('./routes/exam')(app, ensureLoggedIn, User, Course, Criteria, Exam, ExamPoints, CriteriaPoints, async);
 require('./routes/criteria')(app, ensureLoggedIn);
 require('./routes/course')(app, ensureLoggedIn, async, User, Course);
-require('./routes/api')(app, User, Course, null);
+require('./routes/api')(app, User, Course, Exam, ExamPoints);
 require('./routes/user')(app, ensureLoggedIn, async, User, Course);
 
 app.enable('trust proxy');
