@@ -11,7 +11,6 @@ block content
 		examLecture = exam.lecture
 		examDate = exam.date
 		examDuration = exam.duration
-		examMaxPoints = exam.maxPoints
 		examTolerance = exam.tolerance
 	else
 		action = '/exam/new/'
@@ -20,7 +19,6 @@ block content
 		examLecture = undefined
 		examDate = undefined
 		examDuration = undefined
-		examMaxPoints = undefined
 		examTolerance = undefined
 
 	form#examNew.k-content(action= action, method='post')
@@ -101,8 +99,11 @@ block content
 				td
 					select.gradeType.k-header(name='gradeType')
 						each gType in gradeType
-							if gType + "" == exam.gradeType + ""
-								option(value=gType, selected=true) #{gType}
+							if exam != undefined || exam != null
+								if gType + "" == exam.gradeType + ""
+									option(value=gType, selected=true) #{gType}
+								else
+									option(value=gType) #{gType}
 							else
 								option(value=gType) #{gType}
 
@@ -113,8 +114,11 @@ block content
 				td
 					select.mapping.k-header(name='mapping')
 						each map in mapping
-							if map + "" == exam.mapping + ""
-								option(value=map, selected=true) #{map}
+							if exam != undefined || exam != null
+								if map + "" == exam.mapping + ""
+									option(value=map, selected=true) #{map}
+								else
+									option(value=map) #{map}
 							else
 								option(value=map) #{map}
 
@@ -124,13 +128,6 @@ block content
 						| Duration in minutes: 
 				td
 					input#duration(class='k-textbox', type='number', name='duration', min='0', required='true', value= examDuration)
-
-			tr
-				th
-					label(for='maxPoints')
-						| Maximum Points: 
-				td
-					input#maxPoints(class='k-textbox', type='number', name='maxPoints', min='0', required='true', value= examMaxPoints)
 
 			tr
 				th
@@ -146,13 +143,6 @@ block content
 										input.criteriaName.k-textbox(type='text', name='criteria[#{i}][name]', required='true', placeholder='Name', value= crit.name)
 										input.criteriaDesc.k-textbox(type='text', name='criteria[#{i}][description]', placeholder='Description', value= crit.description)
 										input.criteriaScore.k-textbox(type='number', min='0', name='criteria[#{i}][score]', required='true', placeholder='Score', value= crit.score)
-										select.criteriaClass.k-header(name='criteria[#{i}][classification]')
-											each classi in classification
-												if classi + "" == crit.classification + ""
-													option(value=classi, selected=true) #{classi}
-												else
-													option(value=classi) #{classi}
-
 										input.addCriteria.k-button(type='button', value='+')
 										input.removeCriteria.k-button(type='button', value='-')
 										input.addChild.k-button(type='button', value='Add Child')
@@ -173,10 +163,6 @@ block content
 								input.criteriaName.k-textbox(type='text', name='criteria[0][name]', required='true', placeholder='Name')
 								input.criteriaDesc.k-textbox(type='text', name='criteria[0][description]', placeholder='Description')
 								input.criteriaScore.k-textbox(type='number', min='0', name='criteria[0][score]', required='true', placeholder='Score')
-								select.criteriaClass.k-header(name='criteria[0][classification]')
-									each classi in classification
-										option(value=classi) #{classi}
-
 								input.addCriteria.k-button(type='button', value='+')
 								input.removeCriteria.k-button(type='button', value='-')
 								input.addChild.k-button(type='button', value='Add Child')
@@ -192,6 +178,15 @@ block content
 
 				td
 					p#pointsError
+
+		script
+			$('select[name=gradeType]').change(function(){
+				if($(this).val() == 'continuous') {
+					$('.criteriaScore, .subcriteriaScore').val(1.0).attr('readonly', true);
+				} else {
+					$('.criteriaScore, .subcriteriaScore').val('').attr('readonly', false);
+				}
+			});
 
 		script
 
@@ -221,11 +216,13 @@ block content
 
 				criteriaTemplate.data('index', criteriaIndex);
 				criteriaTemplate.data('subcriterias', 0);
-				criteriaTemplate.children('select.criteriaClass').attr('name', 'criteria[' + criteriaIndex + '][classification]');
 				criteriaTemplate.children('input.criteriaName').attr('name', 'criteria[' + criteriaIndex + '][name]').attr('value', '');
 				criteriaTemplate.children('input.criteriaDesc').attr('name', 'criteria[' + criteriaIndex + '][description]').attr('value', '');
 				criteriaTemplate.children('input.criteriaScore').attr('name', 'criteria[' + criteriaIndex + '][score]').attr('value', '');
 				criteriaTemplate.children('ul.subcriteria').children().remove();
+
+				if($('select[name=gradeType]').val() == 'continuous')
+					criteriaTemplate.children('input.criteriaScore').attr('value', 1.0);
 
 				$(this).parent().after(criteriaTemplate);
 			});
@@ -263,6 +260,9 @@ block content
 				subcriteria.children('input.subcriteriaName').attr('name', 'criteria['+indexCriteria+'][subcriteria]['+subcriterias+'][name]').attr('value', '');
 				subcriteria.children('input.subcriteriaDesc').attr('name', 'criteria['+indexCriteria+'][subcriteria]['+subcriterias+'][description]').attr('value', '');
 				subcriteria.children('input.subcriteriaScore').attr('name', 'criteria['+indexCriteria+'][subcriteria]['+subcriterias+'][score]').attr('value', '');
+
+				if($('select[name=gradeType]').val() == 'continuous')
+					subcriteria.children('input.subcriteriaScore').attr('value', 1.0).attr('readonly', true);
 
 				if(areWeInSubcriteria) {
 					$(this).parent().after(subcriteria);
@@ -326,39 +326,39 @@ block content
 			});
 
 			//check if specified points match max points - if not correct then return false (do not submit form)
-			$('#examNew').submit(function(e) {
-				$('#pointsError').html('');
-				//check if criteria points are correctly calculated
-				var maxPoints =  Number($('#maxPoints').val());
-				var overallCriteriaPoints = Number(0);
-				var criteriaPoints = Number(0);
-				var error = false;
-				//iterate over each criteria
-				$('ul.criteria > li').each(function (index) {
-					criteriaPoints = Number($(this).children('input.criteriaScore').val());
-					var subcriteriaPoints = Number(0);
-					var subcriterias = false;
-					//iterate over each subcriteria of current criteria
-					$(this).children('ul.subcriteria').children('li').each(function(index) {
-						subcriterias = true;
-						subcriteriaPoints += Number($(this).children('input.subcriteriaScore').val());
-					});
-					//check if summed subcriteria points match current criteria points
-					if(subcriterias && subcriteriaPoints != criteriaPoints) {
-						$('#pointsError').append('Summed up points do not match at: <strong>'+$(this).children('input.criteriaName').val()+'</strong>.<br />');
-						error = true;
-						return false;
-					}
-					//sum up criteria points
-					overallCriteriaPoints += criteriaPoints;
-				});
-				//check if summed up criteria points match max given points
-				if(!error && maxPoints != overallCriteriaPoints) {
-					$('#pointsError').append('Maximum points do not match summed up criteria points.');
-					return false;
-				}
+			//- $('#examNew').submit(function(e) {
+			//- 	$('#pointsError').html('');
+			//- 	//check if criteria points are correctly calculated
+			//- 	var maxPoints =  Number($('#maxPoints').val());
+			//- 	var overallCriteriaPoints = Number(0);
+			//- 	var criteriaPoints = Number(0);
+			//- 	var error = false;
+			//- 	//iterate over each criteria
+			//- 	$('ul.criteria > li').each(function (index) {
+			//- 		criteriaPoints = Number($(this).children('input.criteriaScore').val());
+			//- 		var subcriteriaPoints = Number(0);
+			//- 		var subcriterias = false;
+			//- 		//iterate over each subcriteria of current criteria
+			//- 		$(this).children('ul.subcriteria').children('li').each(function(index) {
+			//- 			subcriterias = true;
+			//- 			subcriteriaPoints += Number($(this).children('input.subcriteriaScore').val());
+			//- 		});
+			//- 		//check if summed subcriteria points match current criteria points
+			//- 		if(subcriterias && subcriteriaPoints != criteriaPoints) {
+			//- 			$('#pointsError').append('Summed up points do not match at: <strong>'+$(this).children('input.criteriaName').val()+'</strong>.<br />');
+			//- 			error = true;
+			//- 			return false;
+			//- 		}
+			//- 		//sum up criteria points
+			//- 		overallCriteriaPoints += criteriaPoints;
+			//- 	});
+			//- 	//check if summed up criteria points match max given points
+			//- 	if(!error && maxPoints != overallCriteriaPoints) {
+			//- 		$('#pointsError').append('Maximum points do not match summed up criteria points.');
+			//- 		return false;
+			//- 	}
 
-				if (error) {
-					return false;
-				}
-			});
+			//- 	if (error) {
+			//- 		return false;
+			//- 	}
+			//- });

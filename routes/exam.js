@@ -2,6 +2,8 @@
  * Routes for exam creation, manipulation and view
  */
 
+var gamma = require('gamma');
+
 //ref: http://dreaminginjavascript.wordpress.com
 function productRange(a, b) {
 	var product = a, i = a;
@@ -29,6 +31,83 @@ function array_sum(myArray) {
 	}
 	return sum;
 };
+
+//continuous
+rank = function(myArray){
+	myRank = 0;
+	for (var i = 1; i < myArray.length - 1; i++) {
+		if (myArray[i] > 0) {
+			myRank = myRank + Math.exp(Math.log(factorial(myArray[i] + i)) - Math.log(factorial(i+1)) - Math.log(factorial(myArray[i]))); 
+			//myRank2 = myRank + Math.exp(gamma.log(myArray[i] + i)) - gamma.log(i + 1) - gamma.log(myArray[i]);
+		}
+	}
+
+	myRank = (myRank / (myArray.length - 1));
+	return myRank;
+}
+
+score = function(lower_profile, upper_profile, tolerance){
+
+	if (array_sum(upper_profile) == 0) {
+		return 0;
+	}
+
+	var min_score = Math.min(rank(upper_profile), (1 - rank(lower_profile)));
+	var max_score = Math.max(rank(upper_profile), (1 - rank(lower_profile)));
+
+	var resultScore = ((1 - tolerance) * min_score + tolerance * max_score);
+	return resultScore;
+}
+
+function factorial(op) {
+ // Lanczos Approximation of the Gamma Function
+ // As described in Numerical Recipes in C (2nd ed. Cambridge University Press, 1992)
+ var z = op + 1;
+ var p = [1.000000000190015, 76.18009172947146, -86.50532032941677, 24.01409824083091, -1.231739572450155, 1.208650973866179e-3, -5.395239384953e-6];
+
+ var d1 = Math.sqrt(2 * Math.PI) / z;
+ var d2 = p[0];
+
+ for (var i = 1; i <= 6; ++i)
+  d2 += p[i] / (z + i);
+
+ var d3 = Math.pow((z + 5.5), (z + 0.5));
+ var d4 = Math.exp(-(z + 5.5));
+
+ d = d1 * d2 * d3 * d4;
+
+ return d;
+}
+
+
+
+
+
+// new score computation
+your_grade_new = function(myScore, model){
+	var your_grade_new = 0;
+	var rounded_score = ((Math.floor(myScore *100000000))/100000000);
+
+	console.log(model);
+
+	switch(model) {
+		case "dhbw" : 
+			your_grade_new = Math.min(5, 7 - 6 * rounded_score);
+			break;
+		case "pass1" :
+			your_grade_new = 1 + 4 * Math.pow((1 - Math.pow(rounded_score, 1.508)), (1 / 1.508));
+			break;
+		case "pass2" :
+			your_grade_new = Math.max(Math.pow((1 - Math.pow(rounded_score, 1.678)),(1 / 1.678)));
+			break;
+		case "pass3" :
+			your_grade_new = Math.max(1, 5 * Math.pow((1 - Math.pow(rounded_score, 1.508)),(1 / 1.508)));
+			break;
+	}
+
+	return your_grade_new;
+}
+
 
 module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, ExamPoints, CriteriaPoints, async){
 
@@ -191,10 +270,8 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 			classificationPoints[4] = 0;
 
 			results.examPoints.criteriaPoints.forEach(function (cp) {
-				results.exam.criteria.forEach(function (crit) {
-					if(cp.criteria + "" == crit._id + "") {
-						classificationPoints[parseInt(crit.classification) - 1] += parseInt(cp.points);
-					}
+				cp.points.forEach(function(item, index) {
+					classificationPoints[index] += parseFloat(item);
 				});
 			});
 
@@ -243,11 +320,17 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 				ls = efx / (profiles - 1);
 
 
-			console.log("tolerance: %s", results.exam.tolerance);
 			var tolerance = results.exam.tolerance;
+			tolerance = 0.8;
 
-			var tauScore = (1 - tolerance) * Math.min(us, ls) + tolerance * Math.max(us, ls);
-			var grade = Math.floor(Math.max(1, 5 * Math.pow((1 - Math.floor(Math.pow(tauScore, 1.508) * 1000) / 1000), (1 / 1.508))) * 100) / 100;
+			var tauScore = (1 - tolerance) * Math.min(us, ls) + tolerance * Math.max(us, ls);//TODO
+			if(results.exam.gradeType == 'continuous')
+				tauScore = score(cf, fc, tolerance);
+
+			tauScore = tauScore + 0.07; //tau-correction
+
+			//var grade = Math.floor(Math.max(1, 5 * Math.pow((1 - Math.floor(Math.pow(tauScore, 1.508) * 1000) / 1000), (1 / 1.508))) * 100) / 100;
+			var grade = your_grade_new(tauScore, results.exam.mapping);
 
 			var discrete = {
 				'xf': xf,

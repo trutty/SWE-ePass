@@ -1,7 +1,7 @@
 extends ../../layout
 
 block content
-	- var classification = [1, 2, 3, 4, 5]
+	- var scores = [0, 1, 2, 3, 4]
 
 	div.k-content
 		table
@@ -64,48 +64,78 @@ block content
 
 			tr
 				th
-					label(for='maxPoints')
-						| Maximum Points: 
-				td
-					input#maxPoints(class='k-textbox', disabled, type='number', name='maxPoints', min='0', required='true', value= exam.maxPoints)
-					input#maxAssessPoints(class='k-textbox', disabled, type='number', name='maxAssessPoints', min='0', required='true', value= examPoints.points)
-
-			tr
-				th
 					label(for='criteria')
 						| Criteria:
 				td	
 					ul.criteria
-						if exam != undefined
-							each crit, i in exam.criteria
-								if crit != null
-									li
-										input.criteriaName.k-textbox(type='text', disabled, name='criteria[#{i}][name]', required='true', placeholder='Name', value= crit.name)
-										input.criteriaDesc.k-textbox(type='text', disabled, name='criteria[#{i}][description]', placeholder='Description', value= crit.description)
-										input.criteriaScore.k-textbox(type='number', min='0', disabled, name='criteria[#{i}][score]', required='true', placeholder='Score', value= crit.score)
-										each critPt in examPoints.criteriaPoints
-											if critPt.criteria + "" === crit._id + ""
-												input.criteriaScore.criteriaAssessScore.k-textbox(type='number', min='0', disabled, name='criteria[#{i}][assessScore]', required='true', placeholder='Score', value= critPt.points)
-										input.criteriaClassi.k-textbox(type='number', disabled, name='criteria[#{i}][classification]', required='true', value= crit.classification)
-										ul.subcriteria
-											if crit.subcriteria != null
-												each subcrit, n in crit.subcriteria
-													if subcrit != null
-														li.subcriteria
-															input.k-textbox.subcriteriaName(type='text', disabled, required='true', placeholder='Name', name='criteria[#{i}][subcriteria][#{n}][name]', value= subcrit.name)
-															input.k-textbox.subcriteriaDesc(type='text', disabled, placeholder='Description', name='criteria[#{i}][subcriteria][#{n}][description]', value= subcrit.description)
-															input.k-textbox.subcriteriaScore(type='number', min='0', disabled, required='true', placeholder='Score', name='criteria[#{i}][subcriteria][#{n}][score]', value= subcrit.score)
-															each critPt in examPoints.criteriaPoints
-																each subCritPt in critPt.subpoints
-																	if subCritPt.myId + "" == subcrit.myId
-																		input.k-textbox.subcriteriaScore.subcriteriaAssessScore(type='number', min='0', disabled, required='true', placeholder='Score', name='criteria[#{i}][subcriteria][#{n}][assessScore]', value= subCritPt.assessScore)
+						each crit, i in exam.criteria
+							if crit != null
+								li
+									input.k-textbox(type='hidden', name='criteria[#{i}][id]', required='true', readonly, value= crit._id)
+									input.criteriaName.k-textbox(type='text', name='criteria[#{i}][name]', required='true', placeholder='Name', readonly, value= crit.name)
+									input.criteriaDesc.k-textbox(type='text', name='criteria[#{i}][description]', placeholder='Description', readonly, value= crit.description)
+									input.criteriaScore.k-textbox(type='number', min='0', name='criteria[#{i}][score]', required='true', placeholder='Score', readonly, value= crit.score)
 
-						else
-							li
-								input.criteriaName.k-textbox(type='text', name='criteria[0][name]', disabled, required='true', placeholder='Name')
-								input.criteriaDesc.k-textbox(type='text', name='criteria[0][description]', disabled, placeholder='Description')
-								input.criteriaScore.k-textbox(type='number', min='0', name='criteria[0][score]', disabled, required='true', placeholder='Score')
+									if crit.subcriteria.length == 0
+										//input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][assessScore]', required='true')
+										each score in scores
+											input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][assessScore][#{score}]', required = true, value = 0)
+									else
+										each score in scores
+											input.assessCriteria.k-button(type='hidden', name='criteria[#{i}][assessScore][#{score}]', required = true, value = 0)
+
+									ul.subcriteria
+										each subcrit, n in crit.subcriteria
+											if subcrit != null
+												li.subcriteria
+													input.k-textbox.subcriteriaMyId(type='hidden', name='criteria[#{i}][subcriteria][#{n}][myId]', readonly, value= subcrit.myId)
+													input.k-textbox.subcriteriaName(type='text', required='true', placeholder='Name', name='criteria[#{i}][subcriteria][#{n}][name]', readonly, value= subcrit.name)
+													input.k-textbox.subcriteriaDesc(type='text', placeholder='Description', name='criteria[#{i}][subcriteria][#{n}][description]', readonly, value= subcrit.description)
+													input.k-textbox.subcriteriaScore(type='number', min='0', required='true', placeholder='Score', name='criteria[#{i}][subcriteria][#{n}][score]', readonly, value= subcrit.score)
+													each score in scores
+														input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][subcriteria][#{n}][assessScore][#{score}]', required='true', value = 0)
 
 
 	if user.role == "student"
 		span(style='font-size:2em') Grade: #{grade.grade}
+
+
+
+	script
+
+		var updateCurrentStudent = function(studentId) {
+
+			$('input.assessCriteria').val(0);
+
+			$.getJSON('/api/exampoints/#{exam.id}/' + studentId, function(examPoints) {
+
+				if(examPoints) {
+					examPoints.criteriaPoints.forEach(function(crit, index) {
+						var criteria = $('input:hidden').filter(function() { return $(this).val() === crit.criteria; }).parent();
+						var subcriterias = criteria.find('.subcriteria');
+
+						criteria.children('.assessCriteria').each(function(index, point) {
+							$(point).val(crit.points[index]);
+						});
+
+						crit.subpoints.forEach(function(subcrit, index) {
+							
+							var subcriteria = subcriterias.find('input:hidden').filter(function() { return $(this).val() === subcrit.myId; }).parent();
+							subcriteria.children('.assessCriteria').each(function(index, point) {
+								$(point).val(subcrit.assessScore[index]);
+							});
+
+						});
+
+					});
+				}
+
+			});
+
+		};
+
+		
+
+
+
+		updateCurrentStudent("#{user.id}");

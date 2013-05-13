@@ -1,6 +1,8 @@
 extends ../../layout
 
 block content
+    - var scores = [0, 1, 2, 3, 4]
+
     form#examUpdate.k-content(action='/exam/assess/' + exam.id, method='post')
         table
             tr
@@ -60,14 +62,6 @@ block content
 
             tr
                 th
-                    label(for='maxPoints')
-                        | Maximum Points: 
-                td
-                    input#maxPoints.k-textbox(type='number', name='maxPoints', min='0', disabled, value= exam.maxPoints)
-                    input#assessMaxPoints.k-textbox(type='number', name='assessMaxPoints', min='0')
-
-            tr
-                th
                     label(for='criteria')
                         | Criteria:
                 td	
@@ -81,9 +75,14 @@ block content
                                     input.criteriaScore.k-textbox(type='number', min='0', name='criteria[#{i}][score]', required='true', placeholder='Score', readonly, value= crit.score)
 
                                     if crit.subcriteria.length == 0
-                                        input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][assessScore]', required='true')
+                                        each score in scores
+                                            if exam.gradeType == 'continuous'
+                                                input.assessCriteria.k-button(type='number', min='0', max='1', step='0.05', name='criteria[#{i}][assessScore][#{score}]', required = true, value = 0.00)
+                                            else
+                                                input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][assessScore][#{score}]', required = true, value = 0)
                                     else
-                                        input.assessScore.k-button(type='hidden', min='0', name='criteria[#{i}][assessScore]', required='true')
+                                        each score in scores
+                                            input.assessCriteria.k-button(type='hidden', name='criteria[#{i}][assessScore][#{score}]', required = true, value = 0)
 
                                     ul.subcriteria
                                         each subcrit, n in crit.subcriteria
@@ -93,7 +92,11 @@ block content
                                                     input.k-textbox.subcriteriaName(type='text', required='true', placeholder='Name', name='criteria[#{i}][subcriteria][#{n}][name]', readonly, value= subcrit.name)
                                                     input.k-textbox.subcriteriaDesc(type='text', placeholder='Description', name='criteria[#{i}][subcriteria][#{n}][description]', readonly, value= subcrit.description)
                                                     input.k-textbox.subcriteriaScore(type='number', min='0', required='true', placeholder='Score', name='criteria[#{i}][subcriteria][#{n}][score]', readonly, value= subcrit.score)
-                                                    input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][subcriteria][#{n}][assessScore]', required='true')
+                                                    each score in scores
+                                                        if exam.gradeType == 'continuous'
+                                                            input.assessCriteria.k-button(type='number', min='0', max='1', step='0.05', name='criteria[#{i}][subcriteria][#{n}][assessScore][#{score}]', required='true', value = 0.00)
+                                                        else
+                                                            input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][subcriteria][#{n}][assessScore][#{score}]', required='true', value = 0)
 
             tr
                 td
@@ -115,58 +118,47 @@ block content
             var criteriaPoints = Number(0);
             var error = false;
 
-            $('ul.criteria > li').each(function (index) {
+            $('ul.criteria > li').each(function (index, criteria) {
 
-                var hasSubcriteria = ($(this).children('ul').children('li').length > 0) ? true : false;
-                var subcriteriaPoints = Number(0);
-                var singleCriteriaPoints = Number(0);
-                var crit = false;
-                var subcrit = false;
-                error = false;
-                
-                criteriaPoints = Number($(this).children('.criteriaScore').val());
+                var subcriteriaPointsSum = [0, 0, 0, 0, 0];
+                // check for subcriteria
+                if($(criteria).children('.subcriteria').children('li').length > 0) {
+                    $(criteria).children('.subcriteria').children('li').each(function(index, subcriteria) {
 
-                if (hasSubcriteria) {
+                        var maximumSubCriteriaPoints = parseFloat($(subcriteria).children('.subcriteriaScore').val());
+                        var definedSubCriteriaPoints = 0.0;
 
-                    var subcriterias = $(this).children('ul').children('li');
-                    subcriterias.each(function (index) {
+                        $(subcriteria).children('.assessCriteria').each(function(index, point) {
+                            definedSubCriteriaPoints += parseFloat($(point).val());
+                            subcriteriaPointsSum[index] += parseFloat($(point).val());
+                        });
 
-                        var assessCriteria = Number($(this).children('.assessCriteria').val());
-
-                        if (assessCriteria > Number($(this).children('.subcriteriaScore').val())) {
+                        if(definedSubCriteriaPoints != maximumSubCriteriaPoints)
                             error = true;
-                        } else {
-                            subcriteriaPoints += assessCriteria;
-                        }
 
                     });
 
-                    $(this).children('.assessScore').val(subcriteriaPoints);
-                    
-                    subcrit = true;
-                    overallCriteriaPoints += subcriteriaPoints;
-
-                } else {
-
-                    singleCriteriaPoints = Number($(this).children('.assessCriteria').val());
-
-                    if (singleCriteriaPoints > Number($(this).children('.criteriaScore').val())) {
-                        error = true;
-                    }
-
-                    crit = true;
-                    overallCriteriaPoints += singleCriteriaPoints;
-
+                    $(criteria).children('.assessCriteria').each(function(index, point) {
+                        if("#{exam.gradeType}" == "continuous") {
+                            $(point).val(subcriteriaPointsSum[index] / $(criteria).children('.subcriteria').children('li').length);
+                        } else {
+                            $(point).val(subcriteriaPointsSum[index]);
+                        }
+                    });
                 }
 
-                if (subcrit && subcriteriaPoints > criteriaPoints) {
+                var maximumCriteriaPoints = parseFloat($(criteria).children('.criteriaScore').val());
+                var definedCriteriaPoints = 0.0;
+
+                $(criteria).children('.assessCriteria').each(function(index, point) {
+                    definedCriteriaPoints += parseFloat($(point).val());
+                });
+
+                if(Math.ceil(definedCriteriaPoints) != Math.ceil(maximumCriteriaPoints))
                     error = true;
-                } else if (crit && singleCriteriaPoints > singleCriteriaPoints)   {
-                    error = true;
-                }
 
                 if (error) {
-                    $('#pointsError').append('To many points were given at: <strong>'+$(this).children('input.criteriaName').val()+'</strong>.<br />');
+                    $('#pointsError').append('Wrong amount of points was given at: <strong>'+$(this).children('input.criteriaName').val()+'</strong>.<br />');
                     return false;
                 }
 
@@ -174,8 +166,6 @@ block content
 
             if (error) {
                 return false;
-            } else {
-                $('#assessMaxPoints').val(overallCriteriaPoints);
             }
             
         });
@@ -185,22 +175,25 @@ block content
 
         var updateCurrentStudent = function(studentId) {
 
-            $('#assessMaxPoints').val('');
-            $('input.assessCriteria').val('');
+            $('input.assessCriteria').val(0);
 
             $.getJSON('/api/exampoints/#{exam.id}/' + studentId, function(examPoints) {
 
                 if(examPoints) {
-                    $('#assessMaxPoints').val(examPoints.points);
                     examPoints.criteriaPoints.forEach(function(crit, index) {
                         var criteria = $('input:hidden').filter(function() { return $(this).val() === crit.criteria; }).parent();
                         var subcriterias = criteria.find('.subcriteria');
 
-                        criteria.children('.assessCriteria').val(crit.points);
+                        criteria.children('.assessCriteria').each(function(index, point) {
+                            $(point).val(crit.points[index]);
+                        });
+
                         crit.subpoints.forEach(function(subcrit, index) {
                             
                             var subcriteria = subcriterias.find('input:hidden').filter(function() { return $(this).val() === subcrit.myId; }).parent();
-                            subcriteria.children('.assessCriteria').val(subcrit.assessScore);
+                            subcriteria.children('.assessCriteria').each(function(index, point) {
+                                $(point).val(subcrit.assessScore[index]);
+                            });
 
                         });
 

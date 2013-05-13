@@ -9,7 +9,6 @@ module.exports = function( mongoose, Schema ){
 		lecture:	{ type: String, required: true },
 		date:		{ type: Date, required: true, default: new Date() },
 		duration:	{ type: Number },
-		maxPoints:	{ type: Number, required: true },
 		criteria:	[{ type: Schema.ObjectId, ref: 'Criteria'}],
 		
 		tolerance:	{ type: Number, default: 0.25, required: true },
