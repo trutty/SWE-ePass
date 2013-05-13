@@ -85,27 +85,30 @@ function factorial(op) {
 
 // new score computation
 your_grade_new = function(myScore, model){
-	var your_grade_new = 0;
-	var rounded_score = ((Math.floor(myScore *100000000))/100000000);
+	var grade = 0;
+	var rounded_score = Number(((Math.floor(myScore *100000000))/100000000));
 
 	console.log(model);
+    console.log(myScore);
+    console.log(rounded_score);
 
 	switch(model) {
 		case "dhbw" : 
-			your_grade_new = Math.min(5, 7 - 6 * rounded_score);
+			grade = Math.min(5, 7 - 6 * rounded_score);
 			break;
 		case "pass1" :
-			your_grade_new = 1 + 4 * Math.pow((1 - Math.pow(rounded_score, 1.508)), (1 / 1.508));
+			grade = 1 + 4 * Math.pow((1 - Math.pow(rounded_score, 1.508)), (1 / 1.508));
 			break;
 		case "pass2" :
-			your_grade_new = Math.max(Math.pow((1 - Math.pow(rounded_score, 1.678)),(1 / 1.678)));
+			grade = Math.max(Math.pow((1 - Math.pow(rounded_score, 1.678)),(1 / 1.678)));
 			break;
 		case "pass3" :
-			your_grade_new = Math.max(1, 5 * Math.pow((1 - Math.pow(rounded_score, 1.508)),(1 / 1.508)));
+			grade = Math.max(1, 5 * Math.pow((1 - Math.pow(rounded_score, 1.508)),(1 / 1.508)));
 			break;
 	}
 
-	return your_grade_new;
+    console.log(grade);
+	return grade;
 }
 
 
@@ -320,7 +323,10 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 
 			var xf = [];
 			for (var i = 0; i < classificationPoints.length; i++) {
-				xf[i] = combinations(cf[i]+i, i+1);
+                if (cf[i] == 0)
+                    xf[i] = 0;
+                else
+                    xf[i] = combinations(cf[i]+i, i+1);
 			};
 
 			xf.splice(xf.length - 1, 1);
@@ -328,7 +334,10 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 
 			var fx = [];
 			for (var i = 0; i < classificationPoints.length; i++) {
-				fx[i] = combinations(fc[i]+classificationPoints.length-i-1, classificationPoints.length-i);
+                if (fc[i] == 0)
+                    fx[i] = 0;
+                else
+				    fx[i] = combinations(fc[i]+classificationPoints.length-i-1, classificationPoints.length-i);
 			};
 
 			fx.splice(0, 1);
@@ -338,22 +347,37 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 			var profiles = combinations(n+classificationPoints.length-1, classificationPoints.length-1);
 
 			var us = 1;
-			if(profiles - 1 > 0)
+			if(profiles != 1)
 				us = 1 - exf / (profiles - 1);
 
 			var ls = 0;
-			if(profiles - 1 > 0)
+			if(profiles != 1)
 				ls = efx / (profiles - 1);
 
+            //us = Math.ceil(us*10000)/10000;
+            //ls = Math.ceil(ls*10000)/10000;
+
+            console.log("profiles: " + profiles);
+            console.log("upper: " + us);
+            console.log("lower: " + ls);
 
 			var tolerance = results.exam.tolerance;
-			tolerance = 0.8;
 
 			var tauScore = (1 - tolerance) * Math.min(us, ls) + tolerance * Math.max(us, ls);//TODO
 			if(results.exam.gradeType == 'continuous')
 				tauScore = score(cf, fc, tolerance);
 
-			tauScore = tauScore + 0.07; //tau-correction
+            console.log("tauscore: " + tauScore);
+
+
+            var partOne = (1.0 - tolerance) * Math.min(us,ls);
+            var partTwo = tolerance * Math.max(us,ls);
+
+            console.log('t1: ' + partOne);
+            console.log('t2: ' + partTwo);
+            console.log('ts: ' + (partOne + partTwo));
+
+			//tauScore = tauScore + 0.07; //tau-correction
 
 			//var grade = Math.floor(Math.max(1, 5 * Math.pow((1 - Math.floor(Math.pow(tauScore, 1.508) * 1000) / 1000), (1 / 1.508))) * 100) / 100;
 			var grade = your_grade_new(tauScore, results.exam.mapping);

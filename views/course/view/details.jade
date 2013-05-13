@@ -1,4 +1,35 @@
 extends ../../layout
 
 block content
-	p= course
+    form#courseForm.k-content(action='#', method='post')
+
+        table
+            tr
+                th
+                    label(for='name')
+                        | Name:
+                td
+                    input#name.k-textbox(type='text', disabled='true', name='name', value='#{course.name}', required='true')
+
+            tr
+                th
+                    label(for='year')
+                        | Year:
+                td
+                    input#year.k-textbox(type='text', disabled='true', name='year', value='#{course.year}', required='true')
+
+            tr
+                th
+                    label(for='Term')
+                        | Term
+                td
+                    input#term.k-textbox(type='text', disabled='true', name='term', value='#{course.term}')
+
+            tr
+                th
+                    label
+                        | Students:
+                td
+                    select
+                        each user in course.userlist
+                            option #{user.lastname}, #{user.firstname}
