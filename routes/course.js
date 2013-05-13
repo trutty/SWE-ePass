@@ -3,10 +3,11 @@
  * Routes for course creation, manipulation and view
  */
 
-module.exports = function(app, ensureLoggedIn, async, User, Course, Exam) {
+module.exports = function(app, ensureLoggedIn, async, User, Course, Exam, requireRoles) {
 
 	app.get('/courses',
 		ensureLoggedIn('/login'),
+		requireRoles(['tutor', 'assessor', 'student', 'manager']),
 		function (req, res) {
 
 		Course.find({}, function (err, docs) {
@@ -24,6 +25,7 @@ module.exports = function(app, ensureLoggedIn, async, User, Course, Exam) {
 
 	app.post('/course/new',
 		ensureLoggedIn('/login'),
+		requireRoles(['tutor', 'manager']),
 		function (req, res) {
 
 		var course = new Course(req.body);
@@ -37,6 +39,7 @@ module.exports = function(app, ensureLoggedIn, async, User, Course, Exam) {
 
 	app.post('/course/update/',
 		ensureLoggedIn('/login'),
+		requireRoles(['tutor', 'manager']),
 		function (req, res) {
 
 		var updateData = {
@@ -60,6 +63,7 @@ module.exports = function(app, ensureLoggedIn, async, User, Course, Exam) {
 
 	app.get('/course/delete/:selectedCourse',
 		ensureLoggedIn('/login'),
+		requireRoles(['tutor', 'manager']),
 		function (req, res) {
 
         var courseID = req.params.selectedCourse;
@@ -109,6 +113,7 @@ module.exports = function(app, ensureLoggedIn, async, User, Course, Exam) {
 
 	app.get('/course/new',
 		ensureLoggedIn('/login'),
+		requireRoles(['tutor', 'manager']),
 		function (req, res) {
 
 		User.find({}, function (err, docs) {
@@ -128,6 +133,7 @@ module.exports = function(app, ensureLoggedIn, async, User, Course, Exam) {
 	// exam edit
 	app.get('/course/edit/:selectedCourse',
 		ensureLoggedIn('/login'),
+		requireRoles(['tutor', 'manager']),
 		function (req, res) {
 
 		Course
@@ -149,6 +155,7 @@ module.exports = function(app, ensureLoggedIn, async, User, Course, Exam) {
 	// Course detail view
 	app.get('/course/view/:selectedCourse',
 		ensureLoggedIn('/login'),
+		requireRoles(['tutor', 'assessor', 'student', 'manager']),
 		function (req, res) {
 
 		Course

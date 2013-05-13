@@ -1,5 +1,5 @@
 TODO:
-	[x]	Accesslevels for User, e.g. Dozent -> Cirteria+Exam, Accessor -> Exam, UserPoints, Student -> UserPoints
+	[√]	Accesslevels for User, e.g. Dozent -> Cirteria+Exam, Accessor -> Exam, UserPoints, Student -> UserPoints
 
 	Einpflege der Daten
 	===
@@ -66,10 +66,9 @@ TODO:
 	Ausgabe der Daten
 	===
 
-	Anzeige der Examen/Aufgaben:
-	[x]	Anzeige der Examen-Details
-	[x]	Anzeige der Punkte/Bewertung (Kendoo, Mathe, etc.)
-	[x]	Anzeige der Kriteriendetails
+	Anzeige der Examen/Aufgaben: [√]
+	[√]	Anzeige der Examen-Details
+	[√]	Anzeige der Punkte/Bewertung (Kendoo, Mathe, etc.)
 
 	Liste der geschriebenen Examen: [√]
 	[√]	Liste der zum Studenten/Dozenten/Assessor zugehörigen Examen

@@ -91,25 +91,14 @@ passport.use(new LocalStrategy(
   }
 ));
 
-// app.use(function(req, res, next){
-//     // set current_user
-
-//     //console.log(req.session);
-
-//     if(req.session.user_id){
-//         User.find({
-//             _id: req.session.user_id
-//         }, function(err, docs){
-//             if(docs.length == 1){
-//                 req.current_user = docs[0];
-//             }
-//             next();
-//         });
-//     }
-//     else{
-//         next();
-//     }
-// });
+var requireRoles = function(roles) {
+  return function(req, res, next) {
+    if(req.user && roles.indexOf(req.user.role) > -1)
+      next();
+    else
+      res.send(403);
+  }
+}
 
 app.configure('development', function(){
   app.use(express.errorHandler());
@@ -122,12 +111,12 @@ mongoose.connect("mongodb://localhost:27017/epass", function(err){
 
 
 // Routes
-require('./routes')(app, User, passport); // user auth
-require('./routes/exam')(app, ensureLoggedIn, User, Course, Criteria, Exam, ExamPoints, CriteriaPoints, async);
-require('./routes/criteria')(app, ensureLoggedIn);
-require('./routes/course')(app, ensureLoggedIn, async, User, Course, Exam);
-require('./routes/api')(app, User, Course, Exam, ExamPoints);
-require('./routes/user')(app, ensureLoggedIn, async, User, Course);
+require('./routes')(app, User, passport, requireRoles); // user auth
+require('./routes/exam')(app, ensureLoggedIn, User, Course, Criteria, Exam, ExamPoints, CriteriaPoints, async, requireRoles);
+require('./routes/criteria')(app, ensureLoggedIn, requireRoles);
+require('./routes/course')(app, ensureLoggedIn, async, User, Course, Exam, requireRoles);
+require('./routes/api')(app, User, Course, Exam, ExamPoints, requireRoles);
+require('./routes/user')(app, ensureLoggedIn, async, User, Course, requireRoles);
 
 app.enable('trust proxy');
 http.createServer(app).listen(app.get('port'), function(){

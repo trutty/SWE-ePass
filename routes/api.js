@@ -30,9 +30,9 @@ var alphabet = [
 
 ];
 
-module.exports = function(app, User, Course, Exam, ExamPoints){
+module.exports = function(app, User, Course, Exam, ExamPoints, requireRoles){
 
-	app.get('/api/exampoints/:examId/:userId', function (req, res) {
+	app.get('/api/exampoints/:examId/:userId', requireRoles(['tutor', 'assessor', 'student', 'manager']), function (req, res) {
 		console.log('get: %s, %s', req.params.examId, req.params.userId);
 		
 		ExamPoints.findOne({'exam': req.params.examId, 'user': req.params.userId})
@@ -43,7 +43,7 @@ module.exports = function(app, User, Course, Exam, ExamPoints){
 
 	});
 
-	app.get('/api/userlist', function (req, res) {
+	app.get('/api/userlist', requireRoles(['tutor', 'manager']), function (req, res) {
 		User.find( {}, function (err, docsUser) {
 
 			var users = [];
@@ -53,7 +53,7 @@ module.exports = function(app, User, Course, Exam, ExamPoints){
 		});
 	});
 
-	app.get('/api/students/:type/:attr', function (req, res) {
+	app.get('/api/students/:type/:attr', requireRoles(['tutor', 'manager']), function (req, res) {
 		if(req.params.type == 'az') {
 			var splitting = req.params.attr;
 

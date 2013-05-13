@@ -1,9 +1,9 @@
 /* Rules for user management, creation and view */
 
 
-module.exports = function(app, ensureLoggedIn, async, User, Course) {
+module.exports = function(app, ensureLoggedIn, async, User, Course, requireRoles) {
 
-	app.get('/profile', ensureLoggedIn('/login'), function(req, res) {
+	app.get('/profile', ensureLoggedIn('/login'), requireRoles(['user', 'tutor', 'assessor', 'student', 'manager']), function(req, res) {
 		res.render('user/profile', {
 			title: 'Profile',
 			message: req.flash('error'),
@@ -11,7 +11,7 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 		});
 	});
 
-	app.post('/profile', ensureLoggedIn('/login'), function(req, res) {
+	app.post('/profile', ensureLoggedIn('/login'), requireRoles(['user', 'tutor', 'assessor', 'student', 'manager']), function(req, res) {
 
         var user = req.user;
         user.set('emailAddress', req.body.emailAddress);
@@ -35,7 +35,9 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 
 	
 
-	app.post('/user/update', ensureLoggedIn('/login'), 
+	app.post('/user/update',
+        ensureLoggedIn('/login'), 
+        requireRoles(['manager']),
 		function (req, res) {
             if (req.body.deleteUser != undefined) {
 
@@ -124,7 +126,7 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 		});
 
 
-	app.get('/user', ensureLoggedIn('/login'), function (req, res) {
+	app.get('/user', ensureLoggedIn('/login'), requireRoles(['manager']), function (req, res) {
 
         res.render('user/manage/edit', {
             title: 'Users',
@@ -136,6 +138,7 @@ module.exports = function(app, ensureLoggedIn, async, User, Course) {
 
 	app.get('/user/manage/:selectedUser',
 		ensureLoggedIn('/login'),
+        requireRoles(['manager']),
 		function (req, res) {
 
 		User

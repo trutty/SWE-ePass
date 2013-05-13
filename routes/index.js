@@ -3,7 +3,7 @@
  * Routes for User auth
  */
 
-module.exports = function(app, User, passport){
+module.exports = function(app, User, passport, requireRoles){
 
     app.get('/', function(req, res) {
         res.render('index', { title: 'SWE ePass', user: req.user });

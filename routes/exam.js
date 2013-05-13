@@ -109,11 +109,12 @@ your_grade_new = function(myScore, model){
 }
 
 
-module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, ExamPoints, CriteriaPoints, async){
+module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, ExamPoints, CriteriaPoints, async, requireRoles){
 
 	// exam overview
 	app.get('/exam',
 		ensureLoggedIn('/login'),
+		requireRoles(['tutor', 'assessor', 'student', 'manager']),
 		function (req, res) {
 
 
@@ -220,6 +221,7 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 
 	app.get('/exam/new',
 		ensureLoggedIn('/login'),
+		requireRoles(['tutor', 'manager']),
 		function (req, res) {
 
 		createEditExam(req, res, null);
@@ -227,6 +229,7 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 
 	app.get('/exam/edit/:selectedExam',
 		ensureLoggedIn('/login'),
+		requireRoles(['tutor', 'manager']),
 		function (req, res) {
 
 		createEditExam(req, res, req.params.selectedExam);
@@ -235,6 +238,7 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 	// exam detail view
 	app.get('/exam/view/:selectedExam',
 		ensureLoggedIn('/login'),
+		requireRoles(['tutor', 'assessor', 'student', 'manager']),
 		function (req, res) {
 
 		async.parallel({
@@ -365,6 +369,7 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 
 	app.get('/exam/assess/:selectedExam',
 		ensureLoggedIn('/login'),
+		requireRoles(['tutor', 'assessor', 'manager']),
 		function (req, res) {
 
 		Exam
@@ -406,7 +411,7 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 
 	});
 
-	app.get('/exam/delete/:selectedExam', ensureLoggedIn('/login'), function (req, res) {
+	app.get('/exam/delete/:selectedExam', ensureLoggedIn('/login'), requireRoles(['tutor', 'manager']), function (req, res) {
 
 		Exam.remove( { _id: req.params.selectedExam }, function (err, aff) {
 			if (err) {
@@ -521,6 +526,7 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 
 	app.post('/exam/new',
 		ensureLoggedIn('/login'),
+		requireRoles(['tutor', 'manager']),
 		function (req, res) {
 
 		saveOrUpdateExam(req, res, null);
@@ -528,6 +534,7 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 
 	app.post('/exam/update/:selectedExam',
 		ensureLoggedIn('/login'),
+		requireRoles(['tutor', 'manager']),
 		function (req, res) {
 
 		saveOrUpdateExam(req, res, req.params.selectedExam);
@@ -535,6 +542,7 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 
 	app.post('/exam/assess/:selectedExam',
 		ensureLoggedIn('/login'),
+		requireRoles(['tutor', 'assessor', 'manager']),
 		function (req, res) {
 
 			async.waterfall([
