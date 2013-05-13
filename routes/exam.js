@@ -123,14 +123,35 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 		Exam
 			.find({})
 			.populate('course', 'userlist')
-			.or([{'assessor': req.user.id}, {'user': req.user.id}, {'course.userlist': req.user.id}])
+			//.or([{'assessor': req.user.id}, {'user': req.user.id}, {'course.userlist': req.user.id}])
 			.exec(function (error, docs) {
-				res.render('exam/view/exam', {
+                var exams = [];
+                docs.forEach(function(exam, index) {
+                    if(exam.user == req.user.id)
+                        if(exams.indexOf(exam) < 0)
+                            exams.push(exam);
+
+                    if(exam.assessor.indexOf(req.user.id) > -1)
+                        if(exams.indexOf(exam) < 0)
+                            exams.push(exam);
+
+                    exam.course.forEach(function(course, index) {
+                        course.userlist.forEach(function(userid, index) {
+                            if(userid + "" == req.user.id + "")
+                                if(exams.indexOf(exam) < 0)
+                                    exams.push(exam);
+                        });
+                    });
+                });
+	
+                
+                res.render('exam/view/exam', {
 					title: 'Exams',
 					message: req.flash('error'),
-					exam: docs,
+					exam: exams,
 					user: req.user
 				});
+
 			});
 
 	});
@@ -273,11 +294,12 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 			classificationPoints[3] = 0;
 			classificationPoints[4] = 0;
 
-			results.examPoints.criteriaPoints.forEach(function (cp) {
-				cp.points.forEach(function(item, index) {
-					classificationPoints[index] += parseFloat(item);
-				});
-			});
+            if(results.examPoints)
+    			results.examPoints.criteriaPoints.forEach(function (cp) {
+	    			cp.points.forEach(function(item, index) {
+		    			classificationPoints[index] += parseFloat(item);
+			    	});
+    			});
 
 			var cf = [];
 			for (var i = 0; i < classificationPoints.length; i++) {
