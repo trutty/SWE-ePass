@@ -10,7 +10,11 @@ module.exports = function( mongoose, Schema ){
 		date:		{ type: Date, required: true, default: new Date() },
 		duration:	{ type: Number },
 		maxPoints:	{ type: Number, required: true },
-		criteria:	[{ type: Schema.ObjectId, ref: 'Criteria'}]
+		criteria:	[{ type: Schema.ObjectId, ref: 'Criteria'}],
+		
+		tolerance:	{ type: Number, default: 0.25, required: true },
+		gradeType:	{ type: String, enum: ['discrete', 'continuous'], default: 'discrete', required: true},
+		mapping:	{ type: String, enum: ['dhbw', 'pass1', 'pass2', 'pass3'], default: 'dhbw', required: true}
 
 	});
 

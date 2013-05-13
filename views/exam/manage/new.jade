@@ -1,6 +1,10 @@
 extends ../../layout
 
 block content
+	- var classification = [1, 2, 3, 4, 5]
+	- var gradeType = ['discrete', 'continuous']
+	- var mapping = ['dhbw', 'pass1', 'pass2', 'pass3']
+
 	if exam != null
 		action = '/exam/update/' + exam.id
 		examName = exam.name
@@ -8,6 +12,7 @@ block content
 		examDate = exam.date
 		examDuration = exam.duration
 		examMaxPoints = exam.maxPoints
+		examTolerance = exam.tolerance
 	else
 		action = '/exam/new/'
 		examName = undefined
@@ -16,6 +21,7 @@ block content
 		examDate = undefined
 		examDuration = undefined
 		examMaxPoints = undefined
+		examTolerance = undefined
 
 	form#examNew.k-content(action= action, method='post')
 		table
@@ -83,6 +89,37 @@ block content
 
 			tr
 				th
+					label(for='tolerance')
+						| Tolerance:
+				td
+					input#tolerance(class='k-textbox', type='number', name='tolerance', min='0', max='1', step='0.05', value= examTolerance)
+
+			tr
+				th
+					label(for='gradeType')
+						| Grade Type:
+				td
+					select.gradeType.k-header(name='gradeType')
+						each gType in gradeType
+							if gType + "" == exam.gradeType + ""
+								option(value=gType, selected=true) #{gType}
+							else
+								option(value=gType) #{gType}
+
+			tr
+				th
+					label(for='mapping')
+						| Mapping:
+				td
+					select.mapping.k-header(name='mapping')
+						each map in mapping
+							if map + "" == exam.mapping + ""
+								option(value=map, selected=true) #{map}
+							else
+								option(value=map) #{map}
+
+			tr
+				th
 					label(for='duration')
 						| Duration in minutes: 
 				td
@@ -109,6 +146,13 @@ block content
 										input.criteriaName.k-textbox(type='text', name='criteria[#{i}][name]', required='true', placeholder='Name', value= crit.name)
 										input.criteriaDesc.k-textbox(type='text', name='criteria[#{i}][description]', placeholder='Description', value= crit.description)
 										input.criteriaScore.k-textbox(type='number', min='0', name='criteria[#{i}][score]', required='true', placeholder='Score', value= crit.score)
+										select.criteriaClass.k-header(name='criteria[#{i}][classification]')
+											each classi in classification
+												if classi + "" == crit.classification + ""
+													option(value=classi, selected=true) #{classi}
+												else
+													option(value=classi) #{classi}
+
 										input.addCriteria.k-button(type='button', value='+')
 										input.removeCriteria.k-button(type='button', value='-')
 										input.addChild.k-button(type='button', value='Add Child')
@@ -129,6 +173,10 @@ block content
 								input.criteriaName.k-textbox(type='text', name='criteria[0][name]', required='true', placeholder='Name')
 								input.criteriaDesc.k-textbox(type='text', name='criteria[0][description]', placeholder='Description')
 								input.criteriaScore.k-textbox(type='number', min='0', name='criteria[0][score]', required='true', placeholder='Score')
+								select.criteriaClass.k-header(name='criteria[0][classification]')
+									each classi in classification
+										option(value=classi) #{classi}
+
 								input.addCriteria.k-button(type='button', value='+')
 								input.removeCriteria.k-button(type='button', value='-')
 								input.addChild.k-button(type='button', value='Add Child')
@@ -173,6 +221,7 @@ block content
 
 				criteriaTemplate.data('index', criteriaIndex);
 				criteriaTemplate.data('subcriterias', 0);
+				criteriaTemplate.children('select.criteriaClass').attr('name', 'criteria[' + criteriaIndex + '][classification]');
 				criteriaTemplate.children('input.criteriaName').attr('name', 'criteria[' + criteriaIndex + '][name]').attr('value', '');
 				criteriaTemplate.children('input.criteriaDesc').attr('name', 'criteria[' + criteriaIndex + '][description]').attr('value', '');
 				criteriaTemplate.children('input.criteriaScore').attr('name', 'criteria[' + criteriaIndex + '][score]').attr('value', '');

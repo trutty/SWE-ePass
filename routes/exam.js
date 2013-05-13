@@ -2,6 +2,34 @@
  * Routes for exam creation, manipulation and view
  */
 
+//ref: http://dreaminginjavascript.wordpress.com
+function productRange(a, b) {
+	var product = a, i = a;
+
+	while (i++ < b) {
+		product *= i;
+	}
+
+	return product;
+}
+
+function combinations(n, k) {
+	if (n == k) {
+		return 1;
+	} else {
+		k = Math.max(k, n - k);
+		return productRange(k+1, n) / productRange(1, n-k);
+	}
+}
+
+function array_sum(myArray) {
+	var sum = 0;
+	for (var i = 0; i < myArray.length; i++) {
+		sum = sum + myArray[i];
+	}
+	return sum;
+};
+
 module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, ExamPoints, CriteriaPoints, async){
 
 	// exam overview
@@ -130,36 +158,125 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 		ensureLoggedIn('/login'),
 		function (req, res) {
 
+		async.parallel({
 
-		Exam
-			.findById(req.params.selectedExam)
-			.populate('user')
-			.populate('assessor')
-			.populate('course')
-			.populate('criteria')
-			.exec(function (error, docs) {
+			exam: function(callback) {
+				Exam
+					.findById(req.params.selectedExam)
+					.populate('user')
+					.populate('assessor')
+					.populate('course')
+					.populate('criteria')
+					.exec(function (error, doc) {
+						callback(error, doc);
+					});
+			},
 
-				res.render('exam/view/details', {
-					title: 'Exam Details',
-					message: req.flash('error'),
-					exam: docs,
-					user: req.user
+			examPoints: function(callback) {
+				ExamPoints
+					.findOne({'exam': req.params.selectedExam, 'user': req.user})
+					.populate('criteriaPoints')
+					.exec(function (error, doc) {
+						callback(error, doc);
+					});
+			}
+
+		}, function(err, results) {
+
+			var classificationPoints = [];
+			classificationPoints[0] = 0;
+			classificationPoints[1] = 0;
+			classificationPoints[2] = 0;
+			classificationPoints[3] = 0;
+			classificationPoints[4] = 0;
+
+			results.examPoints.criteriaPoints.forEach(function (cp) {
+				results.exam.criteria.forEach(function (crit) {
+					if(cp.criteria + "" == crit._id + "") {
+						classificationPoints[parseInt(crit.classification) - 1] += parseInt(cp.points);
+					}
 				});
-
 			});
 
-        /*
-		res.render('exam/manage/new', {
-				title: exam == null ? 'New Exam' : 'Update Exam',
-	    		message: req.flash('error'),
-	    		tutors: tutors,
-	    		registered: req.user,
-				courses: courses,
-				assessors: assessors.concat(tutors),
-				exam: exam,
-				user: req.user
+			var cf = [];
+			for (var i = 0; i < classificationPoints.length; i++) {
+				cf[i] = classificationPoints[i];
+				for (var j = 0; j < i; j++) {
+					cf[i] += classificationPoints[j];
+				};
+			};
+
+
+			var fc = [];
+			for (var i = 0; i < classificationPoints.length; i++) {
+				fc[i] = classificationPoints[i];
+				for (var j = i+1; j < classificationPoints.length; j++) {
+					fc[i] += classificationPoints[j];
+				};
+			};
+
+			var xf = [];
+			for (var i = 0; i < classificationPoints.length; i++) {
+				xf[i] = combinations(cf[i]+i, i+1);
+			};
+
+			xf.splice(xf.length - 1, 1);
+			var exf = array_sum(xf);
+
+			var fx = [];
+			for (var i = 0; i < classificationPoints.length; i++) {
+				fx[i] = combinations(fc[i]+classificationPoints.length-i-1, classificationPoints.length-i);
+			};
+
+			fx.splice(0, 1);
+			var efx = array_sum(fx);
+
+			var n = array_sum(classificationPoints);
+			var profiles = combinations(n+classificationPoints.length-1, classificationPoints.length-1);
+
+			var us = 1;
+			if(profiles - 1 > 0)
+				us = 1 - exf / (profiles - 1);
+
+			var ls = 0;
+			if(profiles - 1 > 0)
+				ls = efx / (profiles - 1);
+
+
+			console.log("tolerance: %s", results.exam.tolerance);
+			var tolerance = results.exam.tolerance;
+
+			var tauScore = (1 - tolerance) * Math.min(us, ls) + tolerance * Math.max(us, ls);
+			var grade = Math.floor(Math.max(1, 5 * Math.pow((1 - Math.floor(Math.pow(tauScore, 1.508) * 1000) / 1000), (1 / 1.508))) * 100) / 100;
+
+			var discrete = {
+				'xf': xf,
+				'cf': cf,
+				'pts': classificationPoints,
+				'fc': fc,
+				'fx': fx,
+				'exf': exf,
+				'efx': efx,
+				'n': n,
+				'profiles': profiles,
+				'us': us,
+				'ls': ls,
+				'tauScore': tauScore,
+				'grade': grade
+			}
+
+			var grade = discrete;
+
+			res.render('exam/view/details', {
+				title: 'Exam Details',
+				message: req.flash('error'),
+				exam: results.exam,
+				examPoints: results.examPoints,
+				user: req.user,
+				grade: grade
 			});
-        */
+		});
+
 		
 	});
 
@@ -230,6 +347,8 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 		examBody.course 	= req.body.course;
 		examBody.assessor 	= req.body.assessor;
 		examBody.user 		= req.body.tutor[0];
+
+		console.log(req.body);
 
 		var criterias = [];
 		if(!selectedExam) {
@@ -364,6 +483,12 @@ module.exports = function (app, ensureLoggedIn, User, Course, Criteria, Exam, Ex
 									'user': req.body.student,
 									'criteria': criteria.id
 								}, function(err, cp) {
+
+									if(!cp) {
+										cp = new CriteriaPoints();
+										cp.set('user', req.body.student);
+										cp.set('criteria', criteria.id);
+									}
 
 									cp.set('points', criteria.assessScore);
 									cp.set('subpoints', []);
