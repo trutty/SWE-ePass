@@ -24,7 +24,7 @@ block content
 					| #{item.date.getFullYear()}
 				td
 					a.k-link(href='/exam/view/#{item.id}') view 
-					if user.role == ("tutor" || "manager")
+					if ["assessor", "manager", "tutor"].indexOf(user.role) >= 0
 						a.k-link(href='/exam/edit/#{item.id}') edit 
 						a.k-link(href='/exam/assess/#{item.id}') assess 
 						a.k-link(href='/exam/delete/#{item.id}') delete 

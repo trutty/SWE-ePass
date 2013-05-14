@@ -99,3 +99,7 @@ ul.criteria .assessCriteria {
   border-left: 2px solid #CF291A;
   padding-left: 10px;
 }
+#examUpdate ul.criteria {
+  padding-top: 60px;
+  background: url('../images/smileys.jpg') 100% 0 no-repeat;
+}
