@@ -33,8 +33,6 @@ var alphabet = [
 module.exports = function(app, User, Course, Exam, ExamPoints, requireRoles){
 
 	app.get('/api/exampoints/:examId/:userId', requireRoles(['tutor', 'assessor', 'student', 'manager']), function (req, res) {
-		console.log('get: %s, %s', req.params.examId, req.params.userId);
-		
 		ExamPoints.findOne({'exam': req.params.examId, 'user': req.params.userId})
 			.populate('criteriaPoints')
 			.exec(function(err, doc) {
@@ -79,7 +77,7 @@ module.exports = function(app, User, Course, Exam, ExamPoints, requireRoles){
 				
 				var re = new RegExp('^([' + item[0][0] + '-' + item[1][0] + '])', 'i');
 
-				User.find({ lastname: re }, function (err, docs) {
+				User.find({ lastname: re, role: 'student' }, function (err, docs) {
 					var cat = {};
 					cat.categoryName = item[0][0] + '-' + item[1][0];
 					cat.categoryItems = docs;
