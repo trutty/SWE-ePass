@@ -4,96 +4,97 @@ block content
 	- var scores = [0, 1, 2, 3, 4]
 
 	div.k-content
-		table
-			tr
-				th
-					label(for='name')
-						| Name:
-				td
-					input#name(class='k-textbox', disabled, type='text', name='name', required='true', value= exam.name)
+		form
+			table
+				tr
+					th
+						label(for='name')
+							| Name:
+					td
+						input#name(class='k-textbox', disabled, type='text', name='name', required='true', value= exam.name)
 
-			tr
-				th
-					label(for='user')
-						| Tutor:
-				td
-					ul.selections.tutorSelection
-							li.removeSelection
-								| #{exam.user.firstname} #{exam.user.lastname}
-					
-			tr
-				th
-					label(for='assessor')
-						| Assessor:
-				td
-					ul.selections
-							each item in exam.assessor
+				tr
+					th
+						label(for='user')
+							| Tutor:
+					td
+						ul.selections.tutorSelection
 								li.removeSelection
-									| #{item.name}
+									| #{exam.user.firstname} #{exam.user.lastname}
+						
+				tr
+					th
+						label(for='assessor')
+							| Assessor:
+					td
+						ul.selections
+								each item in exam.assessor
+									li.removeSelection
+										| #{item.name}
 
-			tr
-				th
-					label(for='course')
-						| Course:
-				td
-					ul.selections
-							each item in exam.course
-								li.removeSelection
-									| #{item.name}
+				tr
+					th
+						label(for='course')
+							| Course:
+					td
+						ul.selections
+								each item in exam.course
+									li.removeSelection
+										| #{item.name}
 
-			tr
-				th
-					label(for='lecture')
-						| Lecture:
-				td
-					input#lecture(class='k-textbox', disabled, type='text', name='lecture', required='true', value= exam.lecture)
+				tr
+					th
+						label(for='lecture')
+							| Lecture:
+					td
+						input#lecture(class='k-textbox', disabled, type='text', name='lecture', required='true', value= exam.lecture)
 
-			tr
-				th
-					label(for='date')
-						| Date: 
-				td
-					input#date(name='date', disabled, required='true', style='width:15.4em;', value= exam.date)
+				tr
+					th
+						label(for='date')
+							| Date: 
+					td
+						input#date(name='date', disabled, required='true', style='width:15.4em;', value= exam.date)
 
-			tr
-				th
-					label(for='duration')
-						| Duration in minutes: 
-				td
-					input#duration(class='k-textbox', disabled, type='number', name='duration', min='0', required='true', value= exam.duration)
+				tr
+					th
+						label(for='duration')
+							| Duration in minutes: 
+					td
+						input#duration(class='k-textbox', disabled, type='number', name='duration', min='0', required='true', value= exam.duration)
 
-			tr
-				th
-					label(for='criteria')
-						| Criteria:
-				td	
-					ul.criteria
-						each crit, i in exam.criteria
-							if crit != null
-								li
-									input.k-textbox(type='hidden', name='criteria[#{i}][id]', required='true', readonly, value= crit._id)
-									input.criteriaName.k-textbox(type='text', name='criteria[#{i}][name]', required='true', placeholder='Name', readonly, value= crit.name)
-									input.criteriaDesc.k-textbox(type='text', name='criteria[#{i}][description]', placeholder='Description', readonly, value= crit.description)
-									input.criteriaScore.k-textbox(type='number', min='0', name='criteria[#{i}][score]', required='true', placeholder='Score', readonly, value= crit.score)
+				tr
+					th
+						label(for='criteria')
+							| Criteria:
+					td	
+						ul.criteria
+							each crit, i in exam.criteria
+								if crit != null
+									li
+										input.k-textbox(type='hidden', disabled, name='criteria[#{i}][id]', required='true', readonly, value= crit._id)
+										input.criteriaName.k-textbox(type='text', disabled,  name='criteria[#{i}][name]', required='true', placeholder='Name', readonly, value= crit.name)
+										input.criteriaDesc.k-textbox(type='text', disabled, name='criteria[#{i}][description]', placeholder='Description', readonly, value= crit.description)
+										input.criteriaScore.k-textbox(type='number', min='0', disabled, nname='criteria[#{i}][score]', required='true', placeholder='Score', readonly, value= crit.score)
 
-									if crit.subcriteria.length == 0
-										//input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][assessScore]', required='true')
-										each score in scores
-											input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][assessScore][#{score}]', required = true, value = 0)
-									else
-										each score in scores
-											input.assessCriteria.k-button(type='hidden', name='criteria[#{i}][assessScore][#{score}]', required = true, value = 0)
+										if crit.subcriteria.length == 0
+											//input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][assessScore]', required='true')
+											each score in scores
+												input.assessCriteria.k-button(type='number', disabled, nmin='0', name='criteria[#{i}][assessScore][#{score}]', required = true, value = 0)
+										else
+											each score in scores
+												input.assessCriteria.k-button(type='hidden', disabled,  name='criteria[#{i}][assessScore][#{score}]', required = true, value = 0)
 
-									ul.subcriteria
-										each subcrit, n in crit.subcriteria
-											if subcrit != null
-												li.subcriteria
-													input.k-textbox.subcriteriaMyId(type='hidden', name='criteria[#{i}][subcriteria][#{n}][myId]', readonly, value= subcrit.myId)
-													input.k-textbox.subcriteriaName(type='text', required='true', placeholder='Name', name='criteria[#{i}][subcriteria][#{n}][name]', readonly, value= subcrit.name)
-													input.k-textbox.subcriteriaDesc(type='text', placeholder='Description', name='criteria[#{i}][subcriteria][#{n}][description]', readonly, value= subcrit.description)
-													input.k-textbox.subcriteriaScore(type='number', min='0', required='true', placeholder='Score', name='criteria[#{i}][subcriteria][#{n}][score]', readonly, value= subcrit.score)
-													each score in scores
-														input.assessCriteria.k-button(type='number', min='0', name='criteria[#{i}][subcriteria][#{n}][assessScore][#{score}]', required='true', value = 0)
+										ul.subcriteria
+											each subcrit, n in crit.subcriteria
+												if subcrit != null
+													li.subcriteria
+														input.k-textbox.subcriteriaMyId(type='hidden',disabled,  name='criteria[#{i}][subcriteria][#{n}][myId]', readonly, value= subcrit.myId)
+														input.k-textbox.subcriteriaName(type='text', disabled, required='true', placeholder='Name', name='criteria[#{i}][subcriteria][#{n}][name]', readonly, value= subcrit.name)
+														input.k-textbox.subcriteriaDesc(type='text', disabled,  placeholder='Description', name='criteria[#{i}][subcriteria][#{n}][description]', readonly, value= subcrit.description)
+														input.k-textbox.subcriteriaScore(type='number', min='0', disabled, required='true', placeholder='Score', name='criteria[#{i}][subcriteria][#{n}][score]', readonly, value= subcrit.score)
+														each score in scores
+															input.assessCriteria.k-button(type='number', disabled, min='0', name='criteria[#{i}][subcriteria][#{n}][assessScore][#{score}]', required='true', value = 0)
 
 
 	if user.role == "student"
